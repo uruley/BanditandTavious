@@ -47,6 +47,9 @@ func _on_host_pressed():
 	var room_port = 8080 + room_number  # Example: Room 1 -> Port 8081, Room 2 -> Port 8082
 	Network.start_host(room_port)
 
+func _on_single_player_pressed():
+	_on_host_pressed()
+
 func _on_join_pressed():
 	menu.hide()
 	# show message and send 
@@ -70,7 +73,7 @@ func _on_join_pressed():
 
 	
 func _add_player(id: int, player_info : Dictionary):
-	if players_container.has_node(str(id)) or not multiplayer.is_server() or id == 1:
+	if players_container.has_node(str(id)) or not multiplayer.is_server():
 		return
 	var player = player_scene.instantiate()
 	player.name = str(id)
@@ -104,7 +107,6 @@ func sync_player_position(id: int, new_position: Vector3):
 		
 @rpc("any_peer", "call_local")
 func sync_player_skin(id: int, skin_name: String):
-	if id == 1: return # ignore host
 	var player = players_container.get_node(str(id))
 	if player:
 		player.set_player_skin(skin_name)
