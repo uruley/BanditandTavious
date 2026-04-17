@@ -1,3 +1,11 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
@@ -6,12 +14,16 @@ config/name="godot-3d-multiplayer-enhanced"
 config/description="This is a template for a 3D multiplayer game developed in the Godot engine."
 config/tags=PackedStringArray("3d", "network")
 run/main_scene="res://level/scenes/level.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.png"
 
 [autoload]
 
 Network="*res://level/scripts/network.gd"
+
+[dotnet]
+
+project/assembly_name="godot-3d-multiplayer-enhanced"
 
 [editor]
 
