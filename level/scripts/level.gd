@@ -26,11 +26,12 @@ func _ready():
 
 	menu.show()
 	multiplayer_chat.set_process_input(true)
-	if not multiplayer.is_server():
-		return
-		
+	
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
 	multiplayer.peer_disconnected.connect(_remove_player)
+	
+	if not multiplayer.is_server():
+		return
 	
 func _on_player_connected(peer_id, player_info):
 	for id in Network.players.keys():

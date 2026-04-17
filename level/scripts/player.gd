@@ -27,7 +27,7 @@ func _enter_tree():
 	$SpringArmOffset/SpringArm3D/Camera3D.current = is_multiplayer_authority()
 	
 func _ready():
-	if multiplayer.is_server():
+	if multiplayer.is_server() and not is_multiplayer_authority():
 		$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	
 func _physics_process(delta):
