@@ -13,6 +13,12 @@ func _physics_process(delta):
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		var collider = collision.get_collider()
+		
+		# Ignore the person who shot this bullet
+		if collider.name.is_valid_int():
+			if collider.name.to_int() == shooter_id:
+				return
+
 		if collider.has_method("take_damage"):
 			collider.take_damage(damage, shooter_id)
 		queue_free()
