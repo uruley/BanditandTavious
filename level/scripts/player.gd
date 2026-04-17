@@ -7,6 +7,9 @@ const JUMP_VELOCITY = 10
 
 @onready var nickname: Label3D = $PlayerNick/Nickname
 @onready var chat_label: Label3D = $PlayerChat/Text
+@onready var muzzle: Node3D = $Muzzle
+
+var bullet_scene = preload("res://level/scenes/bullet.tscn")
 
 @export_category("Objects")
 @export var _body: Node3D = null
@@ -49,6 +52,10 @@ func _physics_process(delta):
 		velocity.y -= gravity * delta
 	
 	_move()
+	
+	if Input.is_action_just_pressed("shoot"):
+		shoot()
+		
 	move_and_slide()
 	_body.animate(velocity)
 	_check_fall_and_respawn()
@@ -137,3 +144,25 @@ func display_chat_message(message: String):
 	chat_label.show()  # Ensure the label is visible
 	await get_tree().create_timer(10.0).timeout  # Correctly wait for the timeout signal
 	chat_label.hide()  # Hide the message after 5 seconds
+
+func shoot():
+	var bullet_pos = muzzle.global_position
+	var bullet_dir = -global_transform.basis.z # Shoot forward
+	# If we want to shoot where camera is looking:
+	if _spring_arm_offset:
+		bullet_dir = -_spring_arm_offset.global_transform.basis.z
+	
+	spawn_bullet.rpc(bullet_pos, bullet_dir)
+
+@rpc("any_peer", "call_local")
+func spawn_bullet(pos: Vector3, dir: Vector3):
+	var bullet = bullet_scene.instantiate()
+	get_tree().root.add_child(bullet)
+	bullet.global_position = pos
+	bullet.velocity = dir.normalized() * bullet.speed
+	bullet.shooter_id = name.to_int()
+
+func take_damage(_amount: int, _from_id: int):
+	# Simple respawn on hit
+	global_position = _respawn_point
+	velocity = Vector3.ZERO
