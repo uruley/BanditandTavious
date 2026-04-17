@@ -3,6 +3,7 @@ extends Node3D
 @onready var skin_input: LineEdit = $Menu/MainContainer/MainMenu/Option2/SkinInput
 @onready var nick_input: LineEdit = $Menu/MainContainer/MainMenu/Option1/NickInput
 @onready var room_input: LineEdit = $Menu/MainContainer/MainMenu/Option5/RoomInput
+@onready var ip_input: LineEdit = $Menu/MainContainer/MainMenu/Option6/IPInput
 @onready var players_container: Node3D = $PlayersContainer
 @onready var menu: Control = $Menu
 @export var player_scene: PackedScene
@@ -58,7 +59,10 @@ func _on_join_pressed():
 
 	var room_number = room_input.text.to_int()
 	var room_port = 8080 + room_number  # Example: Room 1 -> Port 8081, Room 2 -> Port 8082
-	Network.join_game(nick_input.text.strip_edges(), skin_input.text.strip_edges().to_lower(), room_port)
+	var server_ip = ip_input.text.strip_edges()
+	if not server_ip:
+		server_ip = "127.0.0.1"
+	Network.join_game(nick_input.text.strip_edges(), skin_input.text.strip_edges().to_lower(), room_port, server_ip)
 
 	# Wait a short time to ensure the game loads properly
 	await get_tree().process_frame

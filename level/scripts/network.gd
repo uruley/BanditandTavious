@@ -34,9 +34,9 @@ func start_host(port: int = DEFAULT_PORT):
 	players[1] = player_info
 	player_connected.emit(1, player_info)
 	
-func join_game(nickname: String, skin_color: String, port: int = DEFAULT_PORT):
+func join_game(nickname: String, skin_color: String, port: int = DEFAULT_PORT, ip_address: String = SERVER_ADDRESS):
 	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_client(SERVER_ADDRESS, port)
+	var error = peer.create_client(ip_address, port)
 	if error:
 		return error
 
