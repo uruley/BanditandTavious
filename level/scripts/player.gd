@@ -32,8 +32,10 @@ func _enter_tree():
 func _ready():
 	await get_tree().process_frame
 	if is_multiplayer_authority():
-		$SpringArmOffset/SpringArm3D/Camera3D.current = true
-		print("DEBUG: Camera activated for local player: ", name)
+		var cam = $SpringArmOffset/SpringArm3D/Camera3D
+		cam.current = true
+		cam.make_current() # Force it!
+		print("DEBUG: Camera FORCED current for local player: ", name)
 	elif multiplayer.is_server():
 		$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	else:

@@ -52,12 +52,10 @@ func _on_single_player_pressed():
 	_on_host_pressed()
 
 func _on_join_pressed():
+	print("DEBUG: Join pressed, hiding menu...")
 	menu.hide()
-	# show message and send 
-	message.show()	
-	send.show()
-
-	# hide chat and chat_title
+	message.hide()	
+	send.hide()
 	chat.hide()
 	chat_title.hide()
 
