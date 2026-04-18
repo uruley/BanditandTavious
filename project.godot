@@ -13,7 +13,7 @@ config_version=5
 config/name="godot-3d-multiplayer-enhanced"
 config/description="This is a template for a 3D multiplayer game developed in the Godot engine."
 config/tags=PackedStringArray("3d", "network")
-run/main_scene="res://level/scenes/level.tscn"
+run/main_scene="res://level/scenes/Mainland.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.png"
 
