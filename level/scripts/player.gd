@@ -26,20 +26,29 @@ var _respawn_point = Vector3(0, 5, 0)
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _enter_tree():
-	set_multiplayer_authority(str(name).to_int())
-	$SpringArmOffset/SpringArm3D/Camera3D.current = is_multiplayer_authority()
+	$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	
 func _ready():
-	await get_tree().process_frame
-	if is_multiplayer_authority():
-		var cam = $SpringArmOffset/SpringArm3D/Camera3D
-		cam.current = true
-		cam.make_current() # Force it!
-		print("DEBUG: Camera FORCED current for local player: ", name)
-	elif multiplayer.is_server():
-		$SpringArmOffset/SpringArm3D/Camera3D.current = false
-	else:
-		$SpringArmOffset/SpringArm3D/Camera3D.current = false
+	if not await _configure_multiplayer_state():
+		push_warning("Player spawned without a replicated peer id: %s" % name)
+
+func _configure_multiplayer_state() -> bool:
+	var cam = $SpringArmOffset/SpringArm3D/Camera3D
+	for _attempt in 4:
+		await get_tree().process_frame
+		var peer_id = str(name).to_int()
+		var local_peer_id = multiplayer.get_unique_id()
+		if peer_id <= 0 or local_peer_id <= 0:
+			continue
+		set_multiplayer_authority(peer_id)
+		var is_local_player = peer_id == local_peer_id
+		cam.current = is_local_player
+		if is_local_player:
+			cam.make_current() # Force it once the replicated peer id is stable.
+			print("DEBUG: Camera FORCED current for local player: ", name)
+		return true
+	cam.current = false
+	return false
 	
 func _physics_process(delta):
 	if not is_multiplayer_authority(): return

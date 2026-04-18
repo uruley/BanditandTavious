@@ -15,6 +15,7 @@ extends Node3D
 @onready var chat_title: Label = $MultiplayerChat/ChatTitle
 @onready var multiplayer_chat: Control = $MultiplayerChat
 var chat_visible = false
+var join_in_progress = false
 
 func _ready():
 	# multiplayer_chat.hide()
@@ -28,6 +29,9 @@ func _ready():
 	multiplayer_chat.set_process_input(true)
 	
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
+	Network.connect("connected_ok", Callable(self, "_on_connected_ok"))
+	Network.connect("connection_failed", Callable(self, "_on_connection_failed"))
+	Network.connect("server_disconnected", Callable(self, "_on_server_disconnected"))
 	multiplayer.peer_disconnected.connect(_remove_player)
 	
 func _on_player_connected(peer_id, player_info):
@@ -65,16 +69,23 @@ func _add_player(id: int, player_info : Dictionary):
 func _on_host_pressed():
 	menu.hide()
 	multiplayer_chat.hide()
+	join_in_progress = false
 	var room_number = room_input.text.to_int()
 	var room_port = 8080 + room_number  # Example: Room 1 -> Port 8081, Room 2 -> Port 8082
-	Network.start_host(room_port)
+	var error = Network.start_host(room_port)
+	if error != OK:
+		menu.show()
+		return
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _on_single_player_pressed():
 	_on_host_pressed()
 
 func _on_join_pressed():
-	print("DEBUG: Join pressed, hiding menu...")
-	menu.hide()
+	if join_in_progress:
+		return
+	print("DEBUG: Join pressed, attempting connection...")
+	join_in_progress = true
 	message.hide()	
 	send.hide()
 	chat.hide()
@@ -85,28 +96,45 @@ func _on_join_pressed():
 	var server_ip = ip_input.text.strip_edges()
 	if not server_ip:
 		server_ip = "127.0.0.1"
-	Network.join_game(nick_input.text.strip_edges(), skin_input.text.strip_edges().to_lower(), room_port, server_ip)
-
-	# Wait a short time to ensure the game loads properly
-	await get_tree().process_frame
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)  # Capture the mouse after joining
-
-	
-func _add_player(id: int, player_info : Dictionary):
-	if players_container.has_node(str(id)) or not multiplayer.is_server():
+	var error = Network.join_game(nick_input.text.strip_edges(), skin_input.text.strip_edges().to_lower(), room_port, server_ip)
+	if error != OK:
+		join_in_progress = false
+		print("DEBUG: Join failed immediately with error: ", error)
 		return
-	var player = player_scene.instantiate()
-	player.name = str(id)
-	player.position = get_spawn_point()
-	players_container.add_child(player, true)
-	
-	var nick = Network.players[id]["nick"]
-	player.rpc("change_nick", nick)
-	
-	var skin_name = player_info["skin"]
-	rpc("sync_player_skin", id, skin_name)
-	
-	rpc("sync_player_position", id, player.position)
+
+func _on_connected_ok(_peer_id, _player_info):
+	if not join_in_progress:
+		return
+	var player_spawned = await _wait_for_local_player_spawn()
+	join_in_progress = false
+	if not player_spawned:
+		print("DEBUG: Connected to server but local player did not spawn in time.")
+		menu.show()
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		return
+	menu.hide()
+	await get_tree().process_frame
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _on_connection_failed():
+	join_in_progress = false
+	menu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _on_server_disconnected():
+	join_in_progress = false
+	menu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _wait_for_local_player_spawn(max_frames: int = 120) -> bool:
+	var local_peer_id = multiplayer.get_unique_id()
+	if local_peer_id <= 0:
+		return false
+	for _frame in max_frames:
+		await get_tree().process_frame
+		if players_container.has_node(str(local_peer_id)):
+			return true
+	return false
 	
 func get_spawn_point() -> Vector3:
 	var spawn_pos = Vector2.from_angle(randf() * 2 * PI) * 10 # spawn radius

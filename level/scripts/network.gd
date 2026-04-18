@@ -11,6 +11,8 @@ var player_info = {
 }
 
 signal player_connected(peer_id, player_info)
+signal connected_ok(peer_id, player_info)
+signal connection_failed
 signal server_disconnected
 
 func _process(_delta):
@@ -18,8 +20,8 @@ func _process(_delta):
 		get_tree().quit(0)
 		
 func _ready() -> void:
-	multiplayer.server_disconnected.connect(_on_connection_failed)
-	multiplayer.connection_failed.connect(_on_server_disconnected)
+	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.connected_to_server.connect(_on_connected_ok)
@@ -31,8 +33,10 @@ func start_host(port: int = DEFAULT_PORT):
 		return error
 	multiplayer.multiplayer_peer = peer
 	
-	players[1] = player_info
-	player_connected.emit(1, player_info)
+	var host_info = player_info.duplicate(true)
+	players[1] = host_info
+	player_connected.emit(1, host_info)
+	return OK
 	
 func join_game(nickname: String, skin_color: String, port: int = DEFAULT_PORT, ip_address: String = SERVER_ADDRESS):
 	var peer = ENetMultiplayerPeer.new()
@@ -47,15 +51,18 @@ func join_game(nickname: String, skin_color: String, port: int = DEFAULT_PORT, i
 		skin_color = "blue"
 	player_info["nick"] = nickname
 	player_info["skin"] = skin_color
+	return OK
 	
 func _on_connected_ok():
 	print("DEBUG: _on_connected_ok - Local Peer ID: ", multiplayer.get_unique_id())
 	var peer_id = multiplayer.get_unique_id()
-	players[peer_id] = player_info
-	player_connected.emit(peer_id, player_info)
+	var local_info = player_info.duplicate(true)
+	players[peer_id] = local_info
+	player_connected.emit(peer_id, local_info)
+	connected_ok.emit(peer_id, local_info)
 	
 func _on_player_connected(id):
-	_register_player.rpc_id(id, player_info)
+	_register_player.rpc_id(id, player_info.duplicate(true))
 	
 @rpc("any_peer", "reliable")
 func _register_player(new_player_info):
@@ -69,6 +76,8 @@ func _on_player_disconnected(id):
 	
 func _on_connection_failed():
 	multiplayer.multiplayer_peer = null
+	players.clear()
+	connection_failed.emit()
 
 func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
