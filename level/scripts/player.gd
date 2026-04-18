@@ -33,7 +33,10 @@ func _ready():
 	await get_tree().process_frame
 	if is_multiplayer_authority():
 		$SpringArmOffset/SpringArm3D/Camera3D.current = true
+		print("DEBUG: Camera activated for local player: ", name)
 	elif multiplayer.is_server():
+		$SpringArmOffset/SpringArm3D/Camera3D.current = false
+	else:
 		$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	
 func _physics_process(delta):

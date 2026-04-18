@@ -49,6 +49,7 @@ func join_game(nickname: String, skin_color: String, port: int = DEFAULT_PORT, i
 	player_info["skin"] = skin_color
 	
 func _on_connected_ok():
+	print("DEBUG: _on_connected_ok - Local Peer ID: ", multiplayer.get_unique_id())
 	var peer_id = multiplayer.get_unique_id()
 	players[peer_id] = player_info
 	player_connected.emit(peer_id, player_info)
