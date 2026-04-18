@@ -17,6 +17,22 @@ extends Node3D
 var chat_visible = false
 var join_in_progress = false
 
+func _get_room_number() -> int:
+	var room_text = room_input.text.strip_edges()
+	if room_text == "":
+		return 1
+	return max(room_text.to_int(), 1)
+
+func _get_room_port() -> int:
+	var room_number = _get_room_number()
+	return 8080 + room_number
+
+func _get_server_ip() -> String:
+	var server_ip = ip_input.text.strip_edges()
+	if server_ip == "":
+		return ip_input.placeholder_text
+	return server_ip
+
 func _ready():
 	# multiplayer_chat.hide()
 
@@ -70,8 +86,8 @@ func _on_host_pressed():
 	menu.hide()
 	multiplayer_chat.hide()
 	join_in_progress = false
-	var room_number = room_input.text.to_int()
-	var room_port = 8080 + room_number  # Example: Room 1 -> Port 8081, Room 2 -> Port 8082
+	var room_port = _get_room_port()  # Room 1 -> Port 8081, Room 2 -> Port 8082
+	print("DEBUG: Host selected room ", _get_room_number(), " port=", room_port)
 	var error = Network.start_host(room_port)
 	if error != OK:
 		menu.show()
@@ -91,11 +107,9 @@ func _on_join_pressed():
 	chat.hide()
 	chat_title.hide()
 
-	var room_number = room_input.text.to_int()
-	var room_port = 8080 + room_number  # Example: Room 1 -> Port 8081, Room 2 -> Port 8082
-	var server_ip = ip_input.text.strip_edges()
-	if not server_ip:
-		server_ip = "127.0.0.1"
+	var room_port = _get_room_port()  # Room 1 -> Port 8081, Room 2 -> Port 8082
+	var server_ip = _get_server_ip()
+	print("DEBUG: Join selected room ", _get_room_number(), " port=", room_port, " ip=", server_ip)
 	var error = Network.join_game(nick_input.text.strip_edges(), skin_input.text.strip_edges().to_lower(), room_port, server_ip)
 	if error != OK:
 		join_in_progress = false
@@ -105,6 +119,7 @@ func _on_join_pressed():
 func _on_connected_ok(_peer_id, _player_info):
 	if not join_in_progress:
 		return
+	print("DEBUG: level _on_connected_ok waiting for local player spawn. local_peer=", multiplayer.get_unique_id())
 	var player_spawned = await _wait_for_local_player_spawn()
 	join_in_progress = false
 	if not player_spawned:
@@ -133,6 +148,7 @@ func _wait_for_local_player_spawn(max_frames: int = 120) -> bool:
 	for _frame in max_frames:
 		await get_tree().process_frame
 		if players_container.has_node(str(local_peer_id)):
+			print("DEBUG: Local player node appeared for peer ", local_peer_id)
 			return true
 	return false
 	
