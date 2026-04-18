@@ -30,17 +30,38 @@ func _ready():
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
 	multiplayer.peer_disconnected.connect(_remove_player)
 	
-	if not multiplayer.is_server():
-		return
-	
 func _on_player_connected(peer_id, player_info):
-	for id in Network.players.keys():
-		var player_data = Network.players[id]
-		if id != peer_id:
-			rpc_id(peer_id, "sync_player_skin", id, player_data["skin"])
-			
-	_add_player(peer_id, player_info)
+	print("DEBUG: _on_player_connected called for peer: ", peer_id)
+	if multiplayer.is_server():
+		for id in Network.players.keys():
+			var player_data = Network.players[id]
+			if id != peer_id:
+				rpc_id(peer_id, "sync_player_skin", id, player_data["skin"])
+				
+		_add_player(peer_id, player_info)
+
+func _add_player(id: int, player_info : Dictionary):
+	print("DEBUG: Attempting to _add_player: ", id)
+	if players_container.has_node(str(id)): 
+		print("DEBUG: Player already exists in container: ", id)
+		return
+	if not multiplayer.is_server(): 
+		print("DEBUG: Skipping spawn (not server): ", id)
+		return
+		
+	var player = player_scene.instantiate()
+	player.name = str(id)
+	player.position = get_spawn_point()
+	players_container.add_child(player, true)
 	
+	var nick = Network.players[id]["nick"]
+	player.rpc("change_nick", nick)
+	
+	var skin_name = player_info["skin"]
+	rpc("sync_player_skin", id, skin_name)
+	
+	rpc("sync_player_position", id, player.position)
+
 func _on_host_pressed():
 	menu.hide()
 	multiplayer_chat.hide()
