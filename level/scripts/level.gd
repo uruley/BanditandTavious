@@ -90,8 +90,8 @@ func _add_player(id: int, player_info : Dictionary):
 	rpc("sync_player_position", id, player.position)
 	
 func get_spawn_point() -> Vector3:
-	var spawn_point = Vector2.from_angle(randf() * 2 * PI) * 10 # spawn radius
-	return Vector3(spawn_point.x, 0, spawn_point.y)
+	var spawn_pos = Vector2.from_angle(randf() * 2 * PI) * 10 # spawn radius
+	return Vector3(spawn_pos.x, 5.0, spawn_pos.y)
 	
 func _remove_player(id):
 	if not multiplayer.is_server() or not players_container.has_node(str(id)):
