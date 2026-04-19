@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dcnvmyxie0fl5"]
+[gd_scene load_steps=21 format=3 uid="uid://dcnvmyxie0fl5"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_pk5x3"]
 [ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_a2wgb"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="7_u3ur3"]
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="9_terrain"]
-[ext_resource type="Terrain3DAssets" path="res://terrain_data/assets.tres" id="10_assets"]
+[ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="10_assets"]
 
 [sub_resource type="Gradient" id="Gradient_u3ur3"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -52,27 +52,6 @@ _shader_parameters = {
 &"projection_threshold": 0.8
 }
 show_checkered = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3nn1q"]
-transparency = 4
-cull_mode = 2
-vertex_color_use_as_albedo = true
-backlight_enabled = true
-backlight = Color(0.5, 0.5, 0.5, 1)
-distance_fade_mode = 1
-distance_fade_min_distance = 128.0
-distance_fade_max_distance = 96.0
-
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_afffq"]
-generated_type = 1
-height_offset = 0.5
-material_override = SubResource("StandardMaterial3D_3nn1q")
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
-
-[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_ei3no"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_afffq")])
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -125,6 +104,7 @@ player_scene = ExtResource("2_a2wgb")
 data_directory = "res://terrain_data"
 material = SubResource("Terrain3DMaterial_th4of")
 assets = ExtResource("10_assets")
+collision_mode = 3
 show_checkered = true
 top_level = true
 metadata/_edit_lock_ = true
@@ -415,7 +395,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="island_tree_02_2k" parent="." instance=ExtResource("4_a2wgb")]
+[node name="island_tree_02_2k" type="Node3D" parent="." instance=ExtResource("4_a2wgb")]
 transform = Transform3D(3.566, 0, 0, 0, 7.977, 0, 0, 0, 5, -0.769619, 0.36159286, -0.79700375)
 
 [node name="OrbitingSphere" type="CSGSphere3D" parent="island_tree_02_2k"]
@@ -447,13 +427,13 @@ transform = Transform3D(1.914979, 0, 0, 0, 2.2449841, 0, 0, 0, 1.6802603, 0.2482
 visible = false
 use_collision = true
 
-[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" parent="." instance=ExtResource("7_6o7ld")]
+[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" type="Node3D" parent="." instance=ExtResource("7_6o7ld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5735626, 0.25, 15.0141735)
 
-[node name="Chair" parent="." instance=ExtResource("7_4ecn5")]
+[node name="Chair" type="StaticBody3D" parent="." instance=ExtResource("7_4ecn5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581118)
 
-[node name="Hammer" parent="." instance=ExtResource("7_u3ur3")]
+[node name="Hammer" type="StaticBody3D" parent="." instance=ExtResource("7_u3ur3")]
 transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
