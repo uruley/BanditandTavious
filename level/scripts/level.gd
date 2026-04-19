@@ -18,6 +18,7 @@ extends Node3D
 var chat_visible = false
 var join_in_progress = false
 const SPAWN_OFFSET := Vector3(1.5, 0.05, 0.0)
+const FLIGHT_PAD_OFFSET := Vector3(4.0, 0.35, 0.0)
 
 func _get_room_number() -> int:
 	var room_text = room_input.text.strip_edges()
@@ -45,6 +46,7 @@ func _ready():
 
 	menu.show()
 	multiplayer_chat.set_process_input(true)
+	_ensure_flight_pad()
 	
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
 	Network.connect("connected_ok", Callable(self, "_on_connected_ok"))
@@ -61,6 +63,48 @@ func _on_player_connected(peer_id, player_info):
 				rpc_id(peer_id, "sync_player_skin", id, player_data["skin"])
 				
 		_add_player(peer_id, player_info)
+
+func _ensure_flight_pad() -> void:
+	if has_node("FlightPad"):
+		return
+
+	var flight_pad := StaticBody3D.new()
+	flight_pad.name = "FlightPad"
+	flight_pad.position = chair.position + FLIGHT_PAD_OFFSET if is_instance_valid(chair) else Vector3(6.5, 0.35, 12.58)
+	add_child(flight_pad)
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.name = "PadMesh"
+	var pad_mesh := BoxMesh.new()
+	pad_mesh.size = Vector3(2.4, 0.4, 2.4)
+	mesh_instance.mesh = pad_mesh
+	var pad_material := StandardMaterial3D.new()
+	pad_material.albedo_color = Color(0.18, 0.52, 0.92, 1.0)
+	pad_material.emission_enabled = true
+	pad_material.emission = Color(0.08, 0.22, 0.45, 1.0)
+	mesh_instance.material_override = pad_material
+	flight_pad.add_child(mesh_instance)
+
+	var collision := CollisionShape3D.new()
+	collision.name = "CollisionShape3D"
+	var box_shape := BoxShape3D.new()
+	box_shape.size = Vector3(2.4, 0.4, 2.4)
+	collision.shape = box_shape
+	flight_pad.add_child(collision)
+
+	var mount_point := Node3D.new()
+	mount_point.name = "MountPoint"
+	mount_point.position = Vector3(0.0, 1.05, 0.0)
+	flight_pad.add_child(mount_point)
+
+	var label := Label3D.new()
+	label.name = "Hint"
+	label.position = Vector3(0.0, 1.4, 0.0)
+	label.text = "Press E to Fly"
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.no_depth_test = true
+	label.modulate = Color(1, 1, 1, 1)
+	flight_pad.add_child(label)
 
 func _add_player(id: int, player_info : Dictionary):
 	print("DEBUG: Attempting to _add_player: ", id)

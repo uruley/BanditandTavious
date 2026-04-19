@@ -1,9 +1,12 @@
 extends CharacterBody3D
-class_name Character
 
 const NORMAL_SPEED = 6.0
 const SPRINT_SPEED = 10.0
 const JUMP_VELOCITY = 10
+const FLIGHT_SPEED = 18.0
+const FLIGHT_VERTICAL_SPEED = 12.0
+const FLIGHT_INTERACT_DISTANCE = 4.0
+const FLIGHT_PLATFORM_OFFSET = Vector3(0.0, -0.95, 0.2)
 
 @onready var nickname: Label3D = $PlayerNick/Nickname
 @onready var chat_label: Label3D = $PlayerChat/Text
@@ -24,11 +27,14 @@ var bullet_scene = preload("res://level/scenes/bullet.tscn")
 var _current_speed: float
 var _respawn_point = Vector3(0, 5, 0)
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+var _is_flying := false
+var _flight_platform: MeshInstance3D = null
 
 func _enter_tree():
 	$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	
 func _ready():
+	_create_flight_platform()
 	if not await _configure_multiplayer_state():
 		push_warning("Player spawned without a replicated peer id: %s" % name)
 
@@ -57,6 +63,15 @@ func _physics_process(delta):
 	if current_scene and current_scene.has_method("is_chat_visible") and current_scene.is_chat_visible() and is_on_floor():
 		freeze()
 		return
+
+	if Input.is_action_just_pressed("interact"):
+		_toggle_flight_mount()
+
+	if _is_flying:
+		_fly_move()
+		move_and_slide()
+		_body.animate(velocity)
+		return
 	
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump"):
@@ -77,6 +92,7 @@ func _physics_process(delta):
 func freeze():
 	velocity.x = 0
 	velocity.z = 0
+	velocity.y = 0
 	_current_speed = 0
 	_body.animate(Vector3.ZERO)
 	
@@ -101,6 +117,35 @@ func _move() -> void:
 	
 	velocity.x = move_toward(velocity.x, 0, _current_speed)
 	velocity.z = move_toward(velocity.z, 0, _current_speed)
+
+func _fly_move() -> void:
+	var input_direction := Input.get_vector(
+		"move_left", "move_right",
+		"move_forward", "move_backward"
+	)
+	var basis := _spring_arm_offset.global_transform.basis
+	var forward := -basis.z
+	forward.y = 0.0
+	forward = forward.normalized()
+	var right := basis.x
+	right.y = 0.0
+	right = right.normalized()
+	var move_direction := (right * input_direction.x) + (forward * input_direction.y)
+	if move_direction.length_squared() > 0.0:
+		move_direction = move_direction.normalized()
+		velocity.x = move_direction.x * FLIGHT_SPEED
+		velocity.z = move_direction.z * FLIGHT_SPEED
+		_body.apply_rotation(Vector3(velocity.x, 0.0, velocity.z))
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, FLIGHT_SPEED)
+		velocity.z = move_toward(velocity.z, 0.0, FLIGHT_SPEED)
+
+	var vertical := 0.0
+	if Input.is_action_pressed("jump"):
+		vertical += 1.0
+	if Input.is_action_pressed("shift"):
+		vertical -= 1.0
+	velocity.y = vertical * FLIGHT_VERTICAL_SPEED
 	
 func is_running() -> bool:
 	if Input.is_action_pressed("shift"):
@@ -117,6 +162,50 @@ func _check_fall_and_respawn():
 func _respawn():
 	global_transform.origin = _respawn_point
 	velocity = Vector3.ZERO
+
+func _toggle_flight_mount() -> void:
+	if _is_flying:
+		_set_flight_mode(false)
+		return
+
+	var current_scene := get_tree().get_current_scene()
+	if current_scene == null:
+		return
+	var flight_pad := current_scene.get_node_or_null("FlightPad")
+	if flight_pad == null or global_position.distance_to(flight_pad.global_position) > FLIGHT_INTERACT_DISTANCE:
+		return
+	var mount_point := flight_pad.get_node_or_null("MountPoint")
+	var mount_position: Vector3 = flight_pad.global_position + Vector3(0.0, 1.05, 0.0)
+	if mount_point:
+		mount_position = mount_point.global_position
+	global_position = mount_position
+	_respawn_point = mount_position
+	_set_flight_mode(true)
+
+func _set_flight_mode(enabled: bool) -> void:
+	_is_flying = enabled
+	velocity = Vector3.ZERO
+	if _flight_platform:
+		_flight_platform.visible = enabled
+
+func _create_flight_platform() -> void:
+	if _flight_platform != null:
+		return
+	_flight_platform = MeshInstance3D.new()
+	_flight_platform.name = "FlightPlatform"
+	var platform_mesh := BoxMesh.new()
+	platform_mesh.size = Vector3(2.6, 0.18, 4.2)
+	_flight_platform.mesh = platform_mesh
+	var platform_material := StandardMaterial3D.new()
+	platform_material.albedo_color = Color(0.85, 0.86, 0.92, 1.0)
+	platform_material.metallic = 0.35
+	platform_material.roughness = 0.25
+	platform_material.emission_enabled = true
+	platform_material.emission = Color(0.12, 0.16, 0.24, 1.0)
+	_flight_platform.material_override = platform_material
+	_flight_platform.position = FLIGHT_PLATFORM_OFFSET
+	_flight_platform.visible = false
+	add_child(_flight_platform)
 	
 @rpc("any_peer", "reliable")
 func change_nick(new_nick: String):
