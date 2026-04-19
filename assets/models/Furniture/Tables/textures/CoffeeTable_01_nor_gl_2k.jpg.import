@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pniwet0e5068"
-path.s3tc="res://.godot/imported/jacaranda_tree_branches_nor_gl_2k.jpg-ea0c05986c48dc79a44ba98b8820c297.s3tc.ctex"
-path.etc2="res://.godot/imported/jacaranda_tree_branches_nor_gl_2k.jpg-ea0c05986c48dc79a44ba98b8820c297.etc2.ctex"
+uid="uid://bxgmjsru8l0oe"
+path.s3tc="res://.godot/imported/CoffeeTable_01_nor_gl_2k.jpg-d682bd26e1ad41b8058d1e9a08e50dc7.s3tc.ctex"
+path.etc2="res://.godot/imported/CoffeeTable_01_nor_gl_2k.jpg-d682bd26e1ad41b8058d1e9a08e50dc7.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Environment/Nature/Trees/textures/jacaranda_tree_branches_nor_gl_2k.jpg"
-dest_files=["res://.godot/imported/jacaranda_tree_branches_nor_gl_2k.jpg-ea0c05986c48dc79a44ba98b8820c297.s3tc.ctex", "res://.godot/imported/jacaranda_tree_branches_nor_gl_2k.jpg-ea0c05986c48dc79a44ba98b8820c297.etc2.ctex"]
+source_file="res://assets/models/Furniture/Tables/textures/CoffeeTable_01_nor_gl_2k.jpg"
+dest_files=["res://.godot/imported/CoffeeTable_01_nor_gl_2k.jpg-d682bd26e1ad41b8058d1e9a08e50dc7.s3tc.ctex", "res://.godot/imported/CoffeeTable_01_nor_gl_2k.jpg-d682bd26e1ad41b8058d1e9a08e50dc7.etc2.ctex"]
 
 [params]
 
@@ -28,7 +28,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://assets/Environment/Nature/Trees/textures/jacaranda_tree_branches_nor_gl_2k.jpg"
+roughness/src_normal="res://assets/models/Furniture/Tables/textures/CoffeeTable_01_nor_gl_2k.jpg"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

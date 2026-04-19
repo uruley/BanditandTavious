@@ -1,10 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://dcnvmyxie0fl5"]
+[gd_scene load_steps=13 format=3 uid="uid://dcnvmyxie0fl5"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_pk5x3"]
 [ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_a2wgb"]
 [ext_resource type="FontFile" uid="uid://diapabmalpcrj" path="res://assets/fonts/Kurland.ttf" id="3_ugggl"]
 [ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="4_a2wgb"]
-[ext_resource type="PackedScene" uid="uid://bv84hmxva4h2r" path="res://assets/Environment/Nature/Trees/jacaranda_tree_2k.gltf" id="5_ugggl"]
+[ext_resource type="PackedScene" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
+[ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="7_6o7ld"]
+[ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="7_u3ur3"]
+[ext_resource type="Script" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 
@@ -28,6 +31,15 @@ volumetric_fog_density = 0.01
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_npnbc"]
 color = Color(0, 0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_spark"]
+material = SubResource("StandardMaterial3D_spark")
+size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_pk5x3")
@@ -319,21 +331,60 @@ offset_bottom = 40.0
 [node name="island_tree_02_2k" parent="." instance=ExtResource("4_a2wgb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.769619, 0.2670122, 5.0559583)
 
-[node name="jacaranda_tree_2k2" parent="." instance=ExtResource("5_ugggl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4642587, 0.3966161, 14.775897)
+[node name="OrbitingSphere" type="CSGSphere3D" parent="island_tree_02_2k"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+radius = 0.2
+script = ExtResource("8_6o7ld")
+orbit_radius = 4.0
+orbit_height = 3.0
 
-[node name="jacaranda_tree_LOD0" parent="jacaranda_tree_2k2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.024377108, 0, 0)
+[node name="Sparks" type="CPUParticles3D" parent="island_tree_02_2k/OrbitingSphere"]
+amount = 30
+lifetime = 0.8
+explosiveness = 0.1
+randomness = 1.0
+local_coords = false
+mesh = SubResource("BoxMesh_spark")
+emission_shape = 1
+emission_sphere_radius = 0.1
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, -1, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 3.0
+scale_amount_min = 0.05
+scale_amount_max = 0.2
+color = Color(1, 0.8, 0.2, 1)
+
+[node name="jacaranda_tree_2k2" parent="."]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4642587, 0.3966161, 14.775897)
+script = null
 
 [node name="CSGBox3D" type="CSGBox3D" parent="jacaranda_tree_2k2"]
 transform = Transform3D(1.914979, 0, 0, 0, 2.2449841, 0, 0, 0, 1.6802603, 0.2482872, 0, -0.2976818)
 visible = false
 use_collision = true
 
+[node name="CoffeeTable_01_2k" parent="jacaranda_tree_2k2" instance=ExtResource("7_6o7ld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5735626, 0.25, 15.0141735)
+
+[node name="Chair" parent="." instance=ExtResource("7_4ecn5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581118)
+
+[node name="Hammer" parent="." instance=ExtResource("7_u3ur3")]
+transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
+
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Option4/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="MultiplayerChat/Send" to="." method="_on_send_pressed"]
-
-[editable path="jacaranda_tree_2k2"]

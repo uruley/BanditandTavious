@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bv84hmxva4h2r"
-path="res://.godot/imported/jacaranda_tree_2k.gltf-4480e2fffc32b9a46d9515a755e95e8d.scn"
+uid="uid://dn04le3gdjbi6"
+path="res://.godot/imported/wooden_hammer_01_2k.gltf-638584124d034cdb41a9a66cbc23c76e.scn"
 
 [deps]
 
-source_file="res://assets/Environment/Nature/Trees/jacaranda_tree_2k.gltf"
-dest_files=["res://.godot/imported/jacaranda_tree_2k.gltf-4480e2fffc32b9a46d9515a755e95e8d.scn"]
+source_file="res://assets/Props/Tools/wooden_hammer_01_2k.gltf"
+dest_files=["res://.godot/imported/wooden_hammer_01_2k.gltf-638584124d034cdb41a9a66cbc23c76e.scn"]
 
 [params]
 

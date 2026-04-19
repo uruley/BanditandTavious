@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba2n5frj5y6f"
-path.s3tc="res://.godot/imported/jacaranda_tree_leaves_diff_2k.jpg-a4b31947b04bf28357bdd8ef668de77d.s3tc.ctex"
-path.etc2="res://.godot/imported/jacaranda_tree_leaves_diff_2k.jpg-a4b31947b04bf28357bdd8ef668de77d.etc2.ctex"
+uid="uid://bf5ay5nj3sglw"
+path.s3tc="res://.godot/imported/CoffeeTable_01_arm_2k.jpg-02a9f14545265028086c72e4122d80de.s3tc.ctex"
+path.etc2="res://.godot/imported/CoffeeTable_01_arm_2k.jpg-02a9f14545265028086c72e4122d80de.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Environment/Nature/Trees/textures/jacaranda_tree_leaves_diff_2k.jpg"
-dest_files=["res://.godot/imported/jacaranda_tree_leaves_diff_2k.jpg-a4b31947b04bf28357bdd8ef668de77d.s3tc.ctex", "res://.godot/imported/jacaranda_tree_leaves_diff_2k.jpg-a4b31947b04bf28357bdd8ef668de77d.etc2.ctex"]
+source_file="res://assets/models/Furniture/Tables/textures/CoffeeTable_01_arm_2k.jpg"
+dest_files=["res://.godot/imported/CoffeeTable_01_arm_2k.jpg-02a9f14545265028086c72e4122d80de.s3tc.ctex", "res://.godot/imported/CoffeeTable_01_arm_2k.jpg-02a9f14545265028086c72e4122d80de.etc2.ctex"]
 
 [params]
 

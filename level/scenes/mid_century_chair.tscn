@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://du4y6b6m5u2r"]
+
+[ext_resource type="PackedScene" uid="uid://cf67u3r2x4k2r" path="res://assets/models/props/Furniture/Chair/mid_century_lounge_chair_4k.gltf" id="1_chair"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_seat"]
+size = Vector3(0.8, 0.2, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_back"]
+size = Vector3(0.8, 0.6, 0.2)
+
+[node name="Chair" type="StaticBody3D"]
+
+[node name="mid_century_lounge_chair_4k" parent="." instance=ExtResource("1_chair")]
+
+[node name="Collision_Seat" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("BoxShape3D_seat")
+
+[node name="Collision_Back" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.3)
+shape = SubResource("BoxShape3D_back")
