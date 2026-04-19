@@ -38,6 +38,8 @@ var _voice_capture: AudioEffectCapture = null
 var _voice_microphone_player: AudioStreamPlayer = null
 var _voice_playback_player: AudioStreamPlayer3D = null
 var _voice_playback: AudioStreamGeneratorPlayback = null
+var _voice_monitor_player: AudioStreamPlayer = null
+var _voice_monitor_playback: AudioStreamGeneratorPlayback = null
 var _voice_debug_captured_frames := 0
 var _voice_debug_received_frames := 0
 var _voice_debug_last_report_ms := 0
@@ -270,12 +272,23 @@ func _setup_voice_playback() -> void:
 	_voice_playback_player.position = Vector3(0.0, 1.6, 0.0)
 	add_child(_voice_playback_player)
 	_voice_playback_player.play()
+
+	_voice_monitor_player = AudioStreamPlayer.new()
+	_voice_monitor_player.name = "VoiceMonitor"
+	var monitor_stream := AudioStreamGenerator.new()
+	monitor_stream.buffer_length = VOICE_BUFFER_LENGTH
+	monitor_stream.mix_rate = AudioServer.get_mix_rate()
+	_voice_monitor_player.stream = monitor_stream
+	add_child(_voice_monitor_player)
+	_voice_monitor_player.play()
 	_refresh_voice_playback()
 
 func _refresh_voice_playback() -> void:
 	if _voice_playback_player == null:
 		return
 	_voice_playback = _voice_playback_player.get_stream_playback() as AudioStreamGeneratorPlayback
+	if _voice_monitor_player != null:
+		_voice_monitor_playback = _voice_monitor_player.get_stream_playback() as AudioStreamGeneratorPlayback
 
 func _report_voice_debug() -> void:
 	var now := Time.get_ticks_msec()
@@ -314,12 +327,17 @@ func _receive_voice_chunk(voice_frames: PackedVector2Array) -> void:
 		return
 	if _voice_playback == null:
 		_refresh_voice_playback()
-	if _voice_playback == null:
+	if _voice_playback == null and _voice_monitor_playback == null:
 		return
 	_voice_debug_received_frames += voice_frames.size()
-	if not _voice_playback.can_push_buffer(voice_frames.size()):
-		_voice_playback.clear_buffer()
-	_voice_playback.push_buffer(voice_frames)
+	if _voice_playback != null:
+		if not _voice_playback.can_push_buffer(voice_frames.size()):
+			_voice_playback.clear_buffer()
+		_voice_playback.push_buffer(voice_frames)
+	if _voice_monitor_playback != null:
+		if not _voice_monitor_playback.can_push_buffer(voice_frames.size()):
+			_voice_monitor_playback.clear_buffer()
+		_voice_monitor_playback.push_buffer(voice_frames)
 	
 @rpc("any_peer", "reliable")
 func change_nick(new_nick: String):
