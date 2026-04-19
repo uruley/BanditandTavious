@@ -38,6 +38,9 @@ var _voice_capture: AudioEffectCapture = null
 var _voice_microphone_player: AudioStreamPlayer = null
 var _voice_playback_player: AudioStreamPlayer3D = null
 var _voice_playback: AudioStreamGeneratorPlayback = null
+var _voice_debug_captured_frames := 0
+var _voice_debug_received_frames := 0
+var _voice_debug_last_report_ms := 0
 
 func _enter_tree():
 	$SpringArmOffset/SpringArm3D/Camera3D.current = false
@@ -103,6 +106,7 @@ func _physics_process(delta):
 	_check_fall_and_respawn()
 
 func _process(_delta: float) -> void:
+	_report_voice_debug()
 	if not is_multiplayer_authority():
 		return
 	if not Input.is_action_pressed("voice_chat"):
@@ -113,6 +117,7 @@ func _process(_delta: float) -> void:
 		var voice_frames: PackedVector2Array = _voice_capture.get_buffer(VOICE_CHUNK_FRAMES)
 		if voice_frames.is_empty():
 			break
+		_voice_debug_captured_frames += voice_frames.size()
 		_receive_voice_chunk.rpc(voice_frames)
 	
 func freeze():
@@ -272,6 +277,22 @@ func _refresh_voice_playback() -> void:
 		return
 	_voice_playback = _voice_playback_player.get_stream_playback() as AudioStreamGeneratorPlayback
 
+func _report_voice_debug() -> void:
+	var now := Time.get_ticks_msec()
+	if now - _voice_debug_last_report_ms < 1000:
+		return
+	_voice_debug_last_report_ms = now
+	if is_multiplayer_authority():
+		if _voice_capture != null:
+			print("VOICE DEBUG capture peer=", name, " captured=", _voice_debug_captured_frames, " available=", _voice_capture.get_frames_available(), " pushed=", _voice_capture.get_pushed_frames())
+		else:
+			print("VOICE DEBUG capture peer=", name, " capture bus unavailable")
+	else:
+		if _voice_debug_received_frames > 0:
+			print("VOICE DEBUG receive peer=", name, " received=", _voice_debug_received_frames)
+	_voice_debug_captured_frames = 0
+	_voice_debug_received_frames = 0
+
 func _ensure_voice_capture_bus() -> void:
 	var bus_index := AudioServer.get_bus_index(VOICE_CAPTURE_BUS)
 	if bus_index == -1:
@@ -295,6 +316,7 @@ func _receive_voice_chunk(voice_frames: PackedVector2Array) -> void:
 		_refresh_voice_playback()
 	if _voice_playback == null:
 		return
+	_voice_debug_received_frames += voice_frames.size()
 	if not _voice_playback.can_push_buffer(voice_frames.size()):
 		_voice_playback.clear_buffer()
 	_voice_playback.push_buffer(voice_frames)

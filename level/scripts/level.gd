@@ -19,6 +19,9 @@ var chat_visible = false
 var join_in_progress = false
 const SPAWN_OFFSET := Vector3(1.5, 0.05, 0.0)
 const FLIGHT_PAD_OFFSET := Vector3(4.0, 0.35, 0.0)
+const AUDIO_TEST_DURATION := 0.35
+const AUDIO_TEST_FREQUENCY := 660.0
+var _audio_test_player: AudioStreamPlayer = null
 
 func _get_room_number() -> int:
 	var room_text = room_input.text.strip_edges()
@@ -47,6 +50,7 @@ func _ready():
 	menu.show()
 	multiplayer_chat.set_process_input(true)
 	_ensure_flight_pad()
+	_ensure_audio_test_player()
 	
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
 	Network.connect("connected_ok", Callable(self, "_on_connected_ok"))
@@ -105,6 +109,33 @@ func _ensure_flight_pad() -> void:
 	label.no_depth_test = true
 	label.modulate = Color(1, 1, 1, 1)
 	flight_pad.add_child(label)
+
+func _ensure_audio_test_player() -> void:
+	if _audio_test_player != null:
+		return
+	_audio_test_player = AudioStreamPlayer.new()
+	_audio_test_player.name = "AudioTestPlayer"
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = AudioServer.get_mix_rate()
+	stream.buffer_length = 0.5
+	_audio_test_player.stream = stream
+	add_child(_audio_test_player)
+
+func _play_audio_test_tone() -> void:
+	_ensure_audio_test_player()
+	if not _audio_test_player.playing:
+		_audio_test_player.play()
+	var playback := _audio_test_player.get_stream_playback() as AudioStreamGeneratorPlayback
+	if playback == null:
+		return
+	playback.clear_buffer()
+	var frame_count := int(AudioServer.get_mix_rate() * AUDIO_TEST_DURATION)
+	var frames := PackedVector2Array()
+	frames.resize(frame_count)
+	for i in frame_count:
+		var sample := sin(TAU * AUDIO_TEST_FREQUENCY * float(i) / AudioServer.get_mix_rate()) * 0.25
+		frames[i] = Vector2(sample, sample)
+	playback.push_buffer(frames)
 
 func _add_player(id: int, player_info : Dictionary):
 	print("DEBUG: Attempting to _add_player: ", id)
@@ -247,6 +278,9 @@ func is_chat_visible() -> bool:
 	return chat_visible
 
 func _input(event):
+	if event.is_action_pressed("audio_test"):
+		_play_audio_test_tone()
+		return
 	if event.is_action_pressed("toggle_chat"):
 		toggle_chat()
 	elif event is InputEventKey and event.keycode == KEY_ENTER:
