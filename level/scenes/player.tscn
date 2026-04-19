@@ -1,17 +1,15 @@
 [gd_scene load_steps=46 format=4 uid="uid://cffjduipbb3s5"]
 
-[ext_resource type="Script" path="res://level/scripts/player.gd" id="1_tdh26"]
+[ext_resource type="Script" uid="uid://db1a4aa84ud3w" path="res://level/scripts/player.gd" id="1_tdh26"]
 [ext_resource type="Texture2D" uid="uid://bdg48m6l86q8i" path="res://assets/characters/player/3DGodotRobot_GodotPalette.png" id="1_w11jc"]
-[ext_resource type="Script" path="res://level/scripts/3d_godot_robot.gd" id="2_mexc5"]
+[ext_resource type="Script" uid="uid://cue0fohk5xdr0" path="res://level/scripts/3d_godot_robot.gd" id="2_mexc5"]
 [ext_resource type="Texture2D" uid="uid://cw6pxwst2gh85" path="res://assets/characters/player/GodotRobotPaletteSwap/GodotYellowPalette.png" id="3_l3dv8"]
 [ext_resource type="Texture2D" uid="uid://bbid6mowxhd5b" path="res://assets/characters/player/GodotRobotPaletteSwap/GodotGreenPalette.png" id="4_74ree"]
 [ext_resource type="Texture2D" uid="uid://fpmmv2oxjcdv" path="res://assets/characters/player/GodotRobotPaletteSwap/GodotPalette.png" id="4_max2b"]
-[ext_resource type="Script" path="res://level/scripts/spring_arm_offset.gd" id="4_ygggd"]
+[ext_resource type="Script" uid="uid://dlaa1nwmfmsor" path="res://level/scripts/spring_arm_offset.gd" id="4_ygggd"]
 [ext_resource type="Texture2D" uid="uid://brp1gy30s4rks" path="res://assets/characters/player/GodotRobotPaletteSwap/GodotRedPalette.png" id="5_qlefn"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mx45w"]
-radius = 0.35796
-height = 1.73092
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5wcad"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dk1he"]
 resource_name = "Material"
@@ -4744,26 +4742,26 @@ tracks/29/keys = PackedFloat32Array(0, 1, -0.0175777, 0.091351, -0.0271132, 0.99
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f1v7x"]
 _data = {
-"Attack1": SubResource("Animation_jou0i"),
-"Crouch": SubResource("Animation_xmmkv"),
-"Dive": SubResource("Animation_s1f5j"),
-"Emote1": SubResource("Animation_o6i2f"),
-"Emote2": SubResource("Animation_yps66"),
-"Fall": SubResource("Animation_j7y60"),
-"Fall2": SubResource("Animation_in2t7"),
-"GroundSlide": SubResource("Animation_iophl"),
-"Hurt": SubResource("Animation_s8cpd"),
-"Idle": SubResource("Animation_w6fp0"),
-"Jump": SubResource("Animation_q3r6r"),
-"Jump2": SubResource("Animation_ig5bh"),
-"Jump3": SubResource("Animation_uw5ew"),
-"Kick": SubResource("Animation_huvcy"),
-"LongJump": SubResource("Animation_utfbj"),
-"Run": SubResource("Animation_822pa"),
-"Sprint": SubResource("Animation_n4rw8"),
-"T-pose": SubResource("Animation_f42pc"),
-"WallJump": SubResource("Animation_2frkh"),
-"WallSlide": SubResource("Animation_ef22y")
+&"Attack1": SubResource("Animation_jou0i"),
+&"Crouch": SubResource("Animation_xmmkv"),
+&"Dive": SubResource("Animation_s1f5j"),
+&"Emote1": SubResource("Animation_o6i2f"),
+&"Emote2": SubResource("Animation_yps66"),
+&"Fall": SubResource("Animation_j7y60"),
+&"Fall2": SubResource("Animation_in2t7"),
+&"GroundSlide": SubResource("Animation_iophl"),
+&"Hurt": SubResource("Animation_s8cpd"),
+&"Idle": SubResource("Animation_w6fp0"),
+&"Jump": SubResource("Animation_q3r6r"),
+&"Jump2": SubResource("Animation_ig5bh"),
+&"Jump3": SubResource("Animation_uw5ew"),
+&"Kick": SubResource("Animation_huvcy"),
+&"LongJump": SubResource("Animation_utfbj"),
+&"Run": SubResource("Animation_822pa"),
+&"Sprint": SubResource("Animation_n4rw8"),
+&"T-pose": SubResource("Animation_f42pc"),
+&"WallJump": SubResource("Animation_2frkh"),
+&"WallSlide": SubResource("Animation_ef22y")
 }
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wb3a5"]
@@ -4793,7 +4791,7 @@ red_texture = ExtResource("5_qlefn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.066, 0.828, 0.01)
-shape = SubResource("CapsuleShape3D_mx45w")
+shape = SubResource("CapsuleShape3D_5wcad")
 
 [node name="3DGodotRobot" type="Node3D" parent="." node_paths=PackedStringArray("_character", "animation_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0644093, -1.19209e-07, -0.035357)
@@ -5003,7 +5001,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1ln88")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="3DGodotRobot"]
 libraries = {
-"": SubResource("AnimationLibrary_f1v7x")
+&"": SubResource("AnimationLibrary_f1v7x")
 }
 autoplay = "Idle"
 
@@ -5017,7 +5015,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 spring_length = 5.0
 
 [node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
-current = false
 
 [node name="PlayerChat" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1.10314, 0, 0, 0, 1, 0, 0, 0)

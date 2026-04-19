@@ -35,7 +35,7 @@ player_scene = ExtResource("2_csbm6")
 
 [node name="Floor" type="CSGBox3D" parent="Environment"]
 use_collision = true
-size = Vector3(50, 0.5, 50)
+size = Vector3(100, 1, 100)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
 environment = SubResource("Environment_qb4jd")

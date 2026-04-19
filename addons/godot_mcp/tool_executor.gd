@@ -65,12 +65,6 @@ func _init_tools() -> void:
 		&"detach_script": [_scene_tools, &"detach_script"],
 		&"set_collision_shape": [_scene_tools, &"set_collision_shape"],
 		&"set_sprite_texture": [_scene_tools, &"set_sprite_texture"],
-		&"instance_scene": [_scene_tools, &"instance_scene"],
-		&"set_mesh": [_scene_tools, &"set_mesh"],
-		&"set_material": [_scene_tools, &"set_material"],
-		&"get_node_spatial_info": [_scene_tools, &"get_node_spatial_info"],
-		&"measure_node_distance": [_scene_tools, &"measure_node_distance"],
-		&"snap_node_to_grid": [_scene_tools, &"snap_node_to_grid"],
 		&"get_scene_hierarchy": [_scene_tools, &"get_scene_hierarchy"],
 		&"get_scene_node_properties": [_scene_tools, &"get_scene_node_properties"],
 		&"set_scene_node_property": [_scene_tools, &"set_scene_node_property"],
@@ -95,11 +89,6 @@ func _init_tools() -> void:
 		&"clear_console_log": [_project_tools, &"clear_console_log"],
 		&"open_in_godot": [_project_tools, &"open_in_godot"],
 		&"scene_tree_dump": [_project_tools, &"scene_tree_dump"],
-		&"classdb_query": [_project_tools, &"classdb_query"],
-		&"rescan_filesystem": [_project_tools, &"rescan_filesystem"],
-		&"run_scene": [_project_tools, &"run_scene"],
-		&"stop_scene": [_project_tools, &"stop_scene"],
-		&"is_playing": [_project_tools, &"is_playing"],
 
 		&"generate_2d_asset": [_asset_tools, &"generate_2d_asset"],
 
@@ -148,26 +137,7 @@ func execute_tool(tool_name: String, args: Dictionary) -> Dictionary:
 	if not node.has_method(method):
 		return {&"ok": false, &"error": "Tool handler not found: %s.%s" % [node.name, method]}
 
-	_parse_stringified_args(args)
-	var result = node.call(method, args)
-
-	if result == null or not (result is Dictionary):
-		push_error("[MCP] Tool '%s' returned invalid result: %s" % [tool_name, str(result)])
-		return {&"ok": false, &"error": "Tool '%s' returned null or non-Dictionary (possible crash — check Godot console)" % tool_name}
-	if not result.has(&"ok"):
-		result[&"ok"] = false
-		result[&"error"] = result.get(&"error", "Tool returned no status")
-	return result
-
-func _parse_stringified_args(args: Dictionary) -> void:
-	for key in args:
-		var val = args[key]
-		if val is String:
-			var s: String = val.strip_edges()
-			if (s.begins_with("{") and s.ends_with("}")) or (s.begins_with("[") and s.ends_with("]")):
-				var parsed = JSON.parse_string(s)
-				if parsed != null:
-					args[key] = parsed
+	return node.call(method, args)
 
 func get_available_tools() -> Array:
 	"""Return list of available tool names."""

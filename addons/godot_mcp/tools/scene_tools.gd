@@ -2,15 +2,12 @@
 extends Node
 class_name SceneTools
 ## Scene operation tools for MCP.
-## Handles: create_scene, read_scene, add_node, instance_scene, remove_node,
-##          modify_node_property, rename_node, move_node, attach_script, detach_script,
-##          set_collision_shape, set_sprite_texture, set_mesh, set_material,
-##          get_node_spatial_info, measure_node_distance, snap_node_to_grid
-
-const VariantCodec = preload("res://addons/godot_mcp/utils/variant_codec.gd")
+## Handles: create_scene, read_scene, add_node, remove_node, modify_node_property,
+##          rename_node, move_node, attach_script, detach_script, set_collision_shape,
+##          set_sprite_texture
 
 const _SKIP_PROPS: Dictionary[String, bool] = {
-	"script": true, "owner": true,
+	"script": true, "owner": true, "scene_file_path": true,
 	"unique_name_in_owner": true, "editor_description": true,
 }
 
@@ -52,27 +49,11 @@ func _load_scene(scene_path: String) -> Array:
 	if not packed:
 		return [null, {&"ok": false, &"error": "Failed to load scene: " + scene_path}]
 
-	var root = _instantiate_packed_scene_for_edit(packed)
+	var root = packed.instantiate()
 	if not root:
 		return [null, {&"ok": false, &"error": "Failed to instantiate scene"}]
 
 	return [root, {}]
-
-func _instantiate_packed_scene_for_edit(packed: PackedScene, as_instance: bool = false) -> Node:
-	if not packed:
-		return null
-
-	if not Engine.is_editor_hint():
-		return packed.instantiate()
-
-	if as_instance:
-		return packed.instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
-
-	var state = packed.get_state()
-	if state and state.get_base_scene_state() != null:
-		return packed.instantiate(PackedScene.GEN_EDIT_STATE_MAIN_INHERITED)
-
-	return packed.instantiate(PackedScene.GEN_EDIT_STATE_MAIN)
 
 func _save_scene(scene_root: Node, scene_path: String) -> Dictionary:
 	"""Pack and save a scene. Returns error dict or empty on success."""
@@ -97,7 +78,17 @@ func _find_node(scene_root: Node, node_path: String) -> Node:
 	return scene_root.get_node_or_null(node_path)
 
 func _parse_value(value: Variant) -> Variant:
-	return VariantCodec.parse_value(value)
+	"""Convert dictionary-encoded types to Godot types."""
+	if value is Dictionary:
+		var t: String = value.get(&"type", "")
+		match t:
+			"Vector2": return Vector2(value.get(&"x", 0), value.get(&"y", 0))
+			"Vector3": return Vector3(value.get(&"x", 0), value.get(&"y", 0), value.get(&"z", 0))
+			"Color": return Color(value.get(&"r", 1), value.get(&"g", 1), value.get(&"b", 1), value.get(&"a", 1))
+			"Vector2i": return Vector2i(value.get(&"x", 0), value.get(&"y", 0))
+			"Vector3i": return Vector3i(value.get(&"x", 0), value.get(&"y", 0), value.get(&"z", 0))
+			"Rect2": return Rect2(value.get(&"x", 0), value.get(&"y", 0), value.get(&"width", 0), value.get(&"height", 0))
+	return value
 
 func _set_node_properties(node: Node, properties: Dictionary) -> void:
 	for prop_name: String in properties:
@@ -105,7 +96,18 @@ func _set_node_properties(node: Node, properties: Dictionary) -> void:
 		node.set(prop_name, prop_value)
 
 func _serialize_value(value: Variant) -> Variant:
-	return VariantCodec.serialize_value(value)
+	match typeof(value):
+		TYPE_VECTOR2: return {&"type": &"Vector2", &"x": value.x, &"y": value.y}
+		TYPE_VECTOR3: return {&"type": &"Vector3", &"x": value.x, &"y": value.y, &"z": value.z}
+		TYPE_COLOR: return {&"type": &"Color", &"r": value.r, &"g": value.g, &"b": value.b, &"a": value.a}
+		TYPE_VECTOR2I: return {&"type": &"Vector2i", &"x": value.x, &"y": value.y}
+		TYPE_VECTOR3I: return {&"type": &"Vector3i", &"x": value.x, &"y": value.y, &"z": value.z}
+		TYPE_RECT2: return {&"type": &"Rect2", &"x": value.position.x, &"y": value.position.y, &"width": value.size.x, &"height": value.size.y}
+		TYPE_OBJECT:
+			if value and value is Resource and value.resource_path:
+				return {&"type": &"Resource", &"path": value.resource_path}
+			return null
+		_: return value
 
 # =============================================================================
 # create_scene
@@ -216,8 +218,6 @@ func _build_node_structure(node: Node, include_props: bool, path: String = ".") 
 	const PROPERTIES: PackedStringArray = ["position", "rotation", "scale", "size", "offset", "visible",
 			"modulate", "z_index", "text", "collision_layer", "collision_mask", "mass"]
 	var data := {&"name": str(node.name), &"type": node.get_class(), &"path": path, &"children": []}
-	if not node.scene_file_path.is_empty() and path != ".":
-		data[&"instance"] = node.scene_file_path
 	var script = node.get_script()
 	if script:
 		data[&"script"] = script.resource_path
@@ -270,15 +270,15 @@ func add_node(args: Dictionary) -> Dictionary:
 
 	new_node.name = node_name
 	_set_node_properties(new_node, properties)
-	parent.add_child(new_node, true)
+	parent.add_child(new_node)
 	new_node.owner = root
 
 	var err := _save_scene(root, scene_path)
 	if not err.is_empty():
 		return err
 
-	return {&"ok": true, &"scene_path": scene_path, &"node_name": new_node.name, &"node_type": node_type,
-		&"message": "Added %s (%s) to scene" % [new_node.name, node_type]}
+	return {&"ok": true, &"scene_path": scene_path, &"node_name": node_name, &"node_type": node_type,
+		&"message": "Added %s (%s) to scene" % [node_name, node_type]}
 
 # =============================================================================
 # remove_node
@@ -357,7 +357,7 @@ func modify_node_property(args: Dictionary) -> Dictionary:
 	# Validate resource type compatibility
 	if old_value is Resource and not (parsed is Resource):
 		root.queue_free()
-		return {&"ok": false, &"error": "Property '%s' expects a Resource. Use specialized tools (set_collision_shape, set_sprite_texture, set_mesh, set_material) instead." % property_name}
+		return {&"ok": false, &"error": "Property '%s' expects a Resource. Use specialized tools (set_collision_shape, set_sprite_texture) instead." % property_name}
 
 	target.set(property_name, parsed)
 
@@ -652,7 +652,12 @@ func set_collision_shape(args: Dictionary) -> Dictionary:
 	if shape_params.has(&"height"):
 		shape.set("height", float(shape_params[&"height"]))
 	if shape_params.has(&"size"):
-		shape.set("size", _parse_value(shape_params[&"size"]))
+		var size_data = shape_params[&"size"]
+		if typeof(size_data) == TYPE_DICTIONARY:
+			if size_data.has(&"z"):
+				shape.set("size", Vector3(size_data.get(&"x", 1), size_data.get(&"y", 1), size_data.get(&"z", 1)))
+			else:
+				shape.set("size", Vector2(size_data.get(&"x", 1), size_data.get(&"y", 1)))
 
 	target.set("shape", shape)
 
@@ -726,528 +731,6 @@ func set_sprite_texture(args: Dictionary) -> Dictionary:
 		return err
 
 	return {&"ok": true, &"message": "Set %s texture on node '%s'" % [texture_type, node_path]}
-
-# =============================================================================
-# instance_scene
-# =============================================================================
-func instance_scene(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var instance_path: String = _ensure_res_path(str(args.get(&"instance_path", "")))
-	var node_name: String = str(args.get(&"node_name", ""))
-	var parent_path: String = str(args.get(&"parent_path", "."))
-	var properties: Dictionary = args.get(&"properties", {})
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-	if instance_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'instance_path'"}
-
-	if scene_path == instance_path:
-		return {&"ok": false, &"error": "Cannot instance a scene inside itself (circular reference): " + instance_path}
-
-	var instance_packed = load(instance_path) as PackedScene
-	if not instance_packed:
-		return {&"ok": false, &"error": "Failed to load scene: " + instance_path}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var parent = _find_node(root, parent_path)
-	if not parent:
-		root.queue_free()
-		return {&"ok": false, &"error": "Parent node not found: " + parent_path}
-
-	var instance = _instantiate_packed_scene_for_edit(instance_packed, true)
-	if not instance:
-		root.queue_free()
-		return {&"ok": false, &"error": "Failed to instantiate scene: " + instance_path}
-
-	if not node_name.strip_edges().is_empty():
-		instance.name = node_name
-
-	_set_node_properties(instance, properties)
-
-	parent.add_child(instance, true)
-	instance.owner = root
-
-	var actual_name: String = instance.name
-
-	var err := _save_scene(root, scene_path)
-	if not err.is_empty():
-		return err
-
-	return {&"ok": true, &"scene_path": scene_path, &"instance_path": instance_path,
-		&"node_name": actual_name, &"node_type": instance.get_class(),
-		&"message": "Instanced '%s' as '%s' in scene" % [instance_path, actual_name]}
-
-# =============================================================================
-# set_mesh
-# =============================================================================
-func set_mesh(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var node_path: String = str(args.get(&"node_path", "."))
-	var mesh_type: String = str(args.get(&"mesh_type", ""))
-	var mesh_params: Dictionary = args.get(&"mesh_params", {})
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-	if mesh_type.strip_edges().is_empty():
-		return {&"ok": false, &"error": "Missing 'mesh_type'"}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var target = _find_node(root, node_path)
-	if not target:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + node_path}
-
-	if not (target is MeshInstance3D):
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' is %s, expected MeshInstance3D" % [node_path, target.get_class()]}
-
-	var mesh: Mesh = null
-
-	if mesh_type == "file":
-		var file_path: String = str(mesh_params.get(&"path", ""))
-		if file_path.is_empty():
-			root.queue_free()
-			return {&"ok": false, &"error": "Missing 'path' in mesh_params for file type"}
-		var loaded = load(file_path)
-		if not loaded or not (loaded is Mesh):
-			root.queue_free()
-			return {&"ok": false, &"error": "Failed to load mesh resource (or not a Mesh): " + file_path}
-		mesh = loaded
-	else:
-		if not ClassDB.class_exists(mesh_type):
-			root.queue_free()
-			return {&"ok": false, &"error": "Unknown mesh type: " + mesh_type}
-		if not ClassDB.can_instantiate(mesh_type):
-			root.queue_free()
-			return {&"ok": false, &"error": "Cannot instantiate mesh type: " + mesh_type}
-
-		var instance = ClassDB.instantiate(mesh_type)
-		if not (instance is PrimitiveMesh):
-			if instance is Node:
-				instance.queue_free()
-			root.queue_free()
-			return {&"ok": false, &"error": "'%s' is not a PrimitiveMesh type" % mesh_type}
-		mesh = instance
-
-		if mesh_params.has(&"radius"):
-			mesh.set("radius", float(mesh_params[&"radius"]))
-		if mesh_params.has(&"height"):
-			mesh.set("height", float(mesh_params[&"height"]))
-		if mesh_params.has(&"top_radius"):
-			mesh.set("top_radius", float(mesh_params[&"top_radius"]))
-		if mesh_params.has(&"bottom_radius"):
-			mesh.set("bottom_radius", float(mesh_params[&"bottom_radius"]))
-		if mesh_params.has(&"inner_radius"):
-			mesh.set("inner_radius", float(mesh_params[&"inner_radius"]))
-		if mesh_params.has(&"outer_radius"):
-			mesh.set("outer_radius", float(mesh_params[&"outer_radius"]))
-		if mesh_params.has(&"radial_segments"):
-			mesh.set("radial_segments", int(mesh_params[&"radial_segments"]))
-		if mesh_params.has(&"rings"):
-			mesh.set("rings", int(mesh_params[&"rings"]))
-		if mesh_params.has(&"left_to_right"):
-			mesh.set("left_to_right", float(mesh_params[&"left_to_right"]))
-		if mesh_params.has(&"subdivide_width"):
-			mesh.set("subdivide_width", int(mesh_params[&"subdivide_width"]))
-		if mesh_params.has(&"subdivide_height"):
-			mesh.set("subdivide_height", int(mesh_params[&"subdivide_height"]))
-		if mesh_params.has(&"subdivide_depth"):
-			mesh.set("subdivide_depth", int(mesh_params[&"subdivide_depth"]))
-		if mesh_params.has(&"text"):
-			mesh.set("text", str(mesh_params[&"text"]))
-		if mesh_params.has(&"font_size"):
-			mesh.set("font_size", int(mesh_params[&"font_size"]))
-		if mesh_params.has(&"depth"):
-			mesh.set("depth", float(mesh_params[&"depth"]))
-		if mesh_params.has(&"size"):
-			mesh.set("size", _parse_value(mesh_params[&"size"]))
-
-	target.set("mesh", mesh)
-
-	var err := _save_scene(root, scene_path)
-	if not err.is_empty():
-		return err
-
-	return {&"ok": true, &"message": "Set %s on node '%s'" % [mesh_type, node_path]}
-
-# =============================================================================
-# set_material
-# =============================================================================
-func set_material(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var node_path: String = str(args.get(&"node_path", "."))
-	var material_type: String = str(args.get(&"material_type", ""))
-	var material_params: Dictionary = args.get(&"material_params", {})
-	var surface_index: int = int(args.get(&"surface_index", -1))
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-	if material_type.strip_edges().is_empty():
-		return {&"ok": false, &"error": "Missing 'material_type'"}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var target = _find_node(root, node_path)
-	if not target:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + node_path}
-
-	var material: Material = null
-
-	if material_type == "file":
-		var file_path: String = str(material_params.get(&"path", ""))
-		if file_path.is_empty():
-			root.queue_free()
-			return {&"ok": false, &"error": "Missing 'path' in material_params for file type"}
-		var loaded = load(file_path)
-		if not loaded or not (loaded is Material):
-			root.queue_free()
-			return {&"ok": false, &"error": "Failed to load material (or not a Material): " + file_path}
-		material = loaded
-
-	elif material_type == "StandardMaterial3D":
-		material = StandardMaterial3D.new()
-
-		if material_params.has(&"albedo_color"):
-			material.albedo_color = _parse_value(material_params[&"albedo_color"])
-		if material_params.has(&"metallic"):
-			material.metallic = float(material_params[&"metallic"])
-		if material_params.has(&"roughness"):
-			material.roughness = float(material_params[&"roughness"])
-		if material_params.has(&"emission"):
-			var parsed_emission = _parse_value(material_params[&"emission"])
-			if parsed_emission is Color:
-				material.emission = parsed_emission
-				material.emission_enabled = true
-		if material_params.has(&"emission_energy"):
-			material.emission_energy_multiplier = float(material_params[&"emission_energy"])
-		if material_params.has(&"transparency"):
-			material.transparency = int(material_params[&"transparency"])
-
-	else:
-		root.queue_free()
-		return {&"ok": false, &"error": "Unknown material type: '%s'. Use 'StandardMaterial3D' or 'file'." % material_type}
-
-	var apply_mode: String
-	if target is MeshInstance3D:
-		if surface_index >= 0:
-			target.set_surface_override_material(surface_index, material)
-			apply_mode = "surface_override_material[%d]" % surface_index
-		else:
-			target.material_override = material
-			apply_mode = "material_override"
-	elif target is CSGPrimitive3D:
-		target.set("material", material)
-		apply_mode = "material"
-	elif target is GeometryInstance3D:
-		target.material_override = material
-		apply_mode = "material_override"
-	else:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' (%s) does not support material assignment" % [node_path, target.get_class()]}
-
-	var err := _save_scene(root, scene_path)
-	if not err.is_empty():
-		return err
-
-	return {&"ok": true, &"message": "Set %s on node '%s' via %s" % [material_type, node_path, apply_mode]}
-
-# =============================================================================
-# get_node_spatial_info
-# =============================================================================
-func get_node_spatial_info(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var node_path: String = str(args.get(&"node_path", "."))
-	var include_bounds: bool = bool(args.get(&"include_bounds", true))
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var target = _find_node(root, node_path)
-	if not target:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + node_path}
-	if not (target is Node3D):
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' (%s) is not a Node3D" % [node_path, target.get_class()]}
-
-	var target_3d: Node3D = target
-	var local_transform: Transform3D = target_3d.transform
-	var global_transform: Transform3D = _get_node3d_global_transform(target_3d)
-
-	var info := {
-		&"ok": true,
-		&"scene_path": scene_path,
-		&"node_path": node_path,
-		&"node_name": target_3d.name,
-		&"node_type": target_3d.get_class(),
-		&"local_position": _serialize_value(local_transform.origin),
-		&"global_position": _serialize_value(global_transform.origin),
-		&"local_scale": _serialize_value(local_transform.basis.get_scale()),
-		&"global_scale": _serialize_value(global_transform.basis.get_scale()),
-		&"local_rotation_quaternion": _serialize_value(local_transform.basis.orthonormalized().get_rotation_quaternion()),
-		&"global_rotation_quaternion": _serialize_value(global_transform.basis.orthonormalized().get_rotation_quaternion()),
-	}
-
-	if include_bounds:
-		var subtree_bounds = _get_node_global_aabb(target_3d)
-		if subtree_bounds is AABB:
-			info[&"global_aabb"] = _serialize_value(subtree_bounds)
-			info[&"global_aabb_center"] = _serialize_value(subtree_bounds.position + (subtree_bounds.size * 0.5))
-			info[&"global_aabb_size"] = _serialize_value(subtree_bounds.size)
-			info[&"has_bounds"] = true
-		else:
-			info[&"has_bounds"] = false
-
-		if target_3d is VisualInstance3D:
-			var visual_target: VisualInstance3D = target_3d
-			var local_aabb: AABB = visual_target.get_aabb()
-			info[&"local_aabb"] = _serialize_value(local_aabb)
-
-	root.queue_free()
-	return info
-
-func _get_node3d_global_transform(node: Node3D) -> Transform3D:
-	var current: Transform3D = node.transform
-	if node.top_level:
-		return current
-	var parent := node.get_parent_node_3d()
-	while parent:
-		current = parent.transform * current
-		parent = parent.get_parent_node_3d()
-	return current
-
-func _get_node_global_aabb(node: Node) -> Variant:
-	var has_bounds := false
-	var merged_bounds := AABB()
-
-	if node is VisualInstance3D:
-		var visual: VisualInstance3D = node
-		var visual_transform := _get_node3d_global_transform(visual)
-		merged_bounds = _transform_aabb(visual.get_aabb(), visual_transform)
-		has_bounds = true
-
-	for child: Node in node.get_children():
-		var child_bounds = _get_node_global_aabb(child)
-		if child_bounds is AABB:
-			if has_bounds:
-				merged_bounds = merged_bounds.merge(child_bounds)
-			else:
-				merged_bounds = child_bounds
-				has_bounds = true
-
-	return merged_bounds if has_bounds else null
-
-func _transform_aabb(aabb: AABB, transform: Transform3D) -> AABB:
-	var corners: Array[Vector3] = [
-		aabb.position,
-		aabb.position + Vector3(aabb.size.x, 0, 0),
-		aabb.position + Vector3(0, aabb.size.y, 0),
-		aabb.position + Vector3(0, 0, aabb.size.z),
-		aabb.position + Vector3(aabb.size.x, aabb.size.y, 0),
-		aabb.position + Vector3(aabb.size.x, 0, aabb.size.z),
-		aabb.position + Vector3(0, aabb.size.y, aabb.size.z),
-		aabb.position + aabb.size,
-	]
-
-	var first: Vector3 = transform * corners[0]
-	var min_corner := first
-	var max_corner := first
-
-	for i: int in range(1, corners.size()):
-		var point: Vector3 = transform * corners[i]
-		min_corner = Vector3(
-			minf(min_corner.x, point.x),
-			minf(min_corner.y, point.y),
-			minf(min_corner.z, point.z)
-		)
-		max_corner = Vector3(
-			maxf(max_corner.x, point.x),
-			maxf(max_corner.y, point.y),
-			maxf(max_corner.z, point.z)
-		)
-
-	return AABB(min_corner, max_corner - min_corner)
-
-# =============================================================================
-# measure_node_distance
-# =============================================================================
-func measure_node_distance(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var from_node_path: String = str(args.get(&"from_node_path", ""))
-	var to_node_path: String = str(args.get(&"to_node_path", ""))
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-	if from_node_path.strip_edges().is_empty():
-		return {&"ok": false, &"error": "Missing 'from_node_path'"}
-	if to_node_path.strip_edges().is_empty():
-		return {&"ok": false, &"error": "Missing 'to_node_path'"}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var from_node = _find_node(root, from_node_path)
-	var to_node = _find_node(root, to_node_path)
-
-	if not from_node:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + from_node_path}
-	if not to_node:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + to_node_path}
-	if not (from_node is Node3D):
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' (%s) is not a Node3D" % [from_node_path, from_node.get_class()]}
-	if not (to_node is Node3D):
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' (%s) is not a Node3D" % [to_node_path, to_node.get_class()]}
-
-	var from_position: Vector3 = _get_node3d_global_transform(from_node).origin
-	var to_position: Vector3 = _get_node3d_global_transform(to_node).origin
-	var delta: Vector3 = to_position - from_position
-
-	root.queue_free()
-
-	return {
-		&"ok": true,
-		&"scene_path": scene_path,
-		&"from_node_path": from_node_path,
-		&"to_node_path": to_node_path,
-		&"from_global_position": _serialize_value(from_position),
-		&"to_global_position": _serialize_value(to_position),
-		&"delta": _serialize_value(delta),
-		&"distance": delta.length(),
-		&"horizontal_distance": Vector2(delta.x, delta.z).length(),
-	}
-
-# =============================================================================
-# snap_node_to_grid
-# =============================================================================
-func snap_node_to_grid(args: Dictionary) -> Dictionary:
-	var scene_path: String = _ensure_res_path(str(args.get(&"scene_path", "")))
-	var node_path: String = str(args.get(&"node_path", "."))
-	var space: String = str(args.get(&"space", "global")).to_lower()
-	var axes: PackedStringArray = _normalized_axes(args.get(&"axes", ["x", "y", "z"]))
-	var grid_value = _grid_size_to_vector3(args.get(&"grid_size", 1.0))
-
-	if scene_path.strip_edges() == "res://":
-		return {&"ok": false, &"error": "Missing 'scene_path'"}
-	if grid_value == null:
-		return {&"ok": false, &"error": "Invalid 'grid_size'. Use a positive number or {x,y,z} object."}
-	if axes.is_empty():
-		return {&"ok": false, &"error": "Missing or invalid 'axes'. Use any of: x, y, z."}
-	if space not in ["local", "global"]:
-		return {&"ok": false, &"error": "Invalid 'space'. Use 'local' or 'global'."}
-
-	var result := _load_scene(scene_path)
-	if not result[1].is_empty():
-		return result[1]
-
-	var root: Node = result[0]
-	var target = _find_node(root, node_path)
-	if not target:
-		root.queue_free()
-		return {&"ok": false, &"error": "Node not found: " + node_path}
-	if not (target is Node3D):
-		root.queue_free()
-		return {&"ok": false, &"error": "Node '%s' (%s) is not a Node3D" % [node_path, target.get_class()]}
-
-	var target_3d: Node3D = target
-	var grid: Vector3 = grid_value
-	var old_local_transform: Transform3D = target_3d.transform
-	var old_global_transform: Transform3D = _get_node3d_global_transform(target_3d)
-
-	if space == "local":
-		var new_local_transform := old_local_transform
-		new_local_transform.origin = _snap_position_to_grid(old_local_transform.origin, grid, axes)
-		target_3d.transform = new_local_transform
-	else:
-		var new_global_transform := old_global_transform
-		new_global_transform.origin = _snap_position_to_grid(old_global_transform.origin, grid, axes)
-		_set_node3d_global_transform(target_3d, new_global_transform)
-
-	var new_local_position: Vector3 = target_3d.transform.origin
-	var new_global_position: Vector3 = _get_node3d_global_transform(target_3d).origin
-
-	var err := _save_scene(root, scene_path)
-	if not err.is_empty():
-		return err
-
-	return {
-		&"ok": true,
-		&"scene_path": scene_path,
-		&"node_path": node_path,
-		&"space": space,
-		&"axes": Array(axes),
-		&"grid_size": _serialize_value(grid),
-		&"old_local_position": _serialize_value(old_local_transform.origin),
-		&"new_local_position": _serialize_value(new_local_position),
-		&"old_global_position": _serialize_value(old_global_transform.origin),
-		&"new_global_position": _serialize_value(new_global_position),
-		&"message": "Snapped '%s' to %s grid" % [node_path, space]
-	}
-
-func _set_node3d_global_transform(node: Node3D, global_transform: Transform3D) -> void:
-	if node.top_level:
-		node.transform = global_transform
-		return
-	var parent := node.get_parent_node_3d()
-	if parent:
-		node.transform = _get_node3d_global_transform(parent).affine_inverse() * global_transform
-	else:
-		node.transform = global_transform
-
-func _grid_size_to_vector3(grid_size: Variant) -> Variant:
-	var parsed = _parse_value(grid_size)
-	if parsed is Vector3:
-		if parsed.x <= 0.0 or parsed.y <= 0.0 or parsed.z <= 0.0:
-			return null
-		return parsed
-	if typeof(parsed) == TYPE_FLOAT or typeof(parsed) == TYPE_INT:
-		var scalar: float = float(parsed)
-		if scalar <= 0.0:
-			return null
-		return Vector3(scalar, scalar, scalar)
-	return null
-
-func _normalized_axes(axes_value: Variant) -> PackedStringArray:
-	var normalized := PackedStringArray()
-	if axes_value is Array:
-		for axis_value in axes_value:
-			var axis: String = str(axis_value).to_lower()
-			if axis in ["x", "y", "z"] and axis not in normalized:
-				normalized.append(axis)
-	return normalized
-
-func _snap_position_to_grid(position: Vector3, grid: Vector3, axes: PackedStringArray) -> Vector3:
-	var snapped := position
-	if "x" in axes:
-		snapped.x = round(position.x / grid.x) * grid.x
-	if "y" in axes:
-		snapped.y = round(position.y / grid.y) * grid.y
-	if "z" in axes:
-		snapped.z = round(position.z / grid.z) * grid.z
-	return snapped
 
 # =============================================================================
 # get_scene_hierarchy (for visualizer)
@@ -1471,4 +954,26 @@ func set_scene_node_property(args: Dictionary) -> Dictionary:
 	}
 
 func _parse_typed_value(value, type_hint: int):
-	return VariantCodec.parse_typed_value(value, type_hint)
+	"""Parse a value based on its type hint."""
+	if type_hint == -1:
+		return _parse_value(value)
+
+	if typeof(value) == TYPE_DICTIONARY:
+		if value.has(&"type"):
+			return _parse_value(value)
+
+		match type_hint:
+			TYPE_VECTOR2:
+				return Vector2(value.get(&"x", 0), value.get(&"y", 0))
+			TYPE_VECTOR2I:
+				return Vector2i(value.get(&"x", 0), value.get(&"y", 0))
+			TYPE_VECTOR3:
+				return Vector3(value.get(&"x", 0), value.get(&"y", 0), value.get(&"z", 0))
+			TYPE_VECTOR3I:
+				return Vector3i(value.get(&"x", 0), value.get(&"y", 0), value.get(&"z", 0))
+			TYPE_COLOR:
+				return Color(value.get(&"r", 1), value.get(&"g", 1), value.get(&"b", 1), value.get(&"a", 1))
+			TYPE_RECT2:
+				return Rect2(value.get(&"x", 0), value.get(&"y", 0), value.get(&"width", 0), value.get(&"height", 0))
+
+	return value
