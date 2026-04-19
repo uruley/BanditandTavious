@@ -12,6 +12,7 @@ const VOICE_CHUNK_FRAMES := 512
 const VOICE_BUFFER_LENGTH := 0.4
 const VOICE_MAX_DISTANCE := 35.0
 const VOICE_UNIT_SIZE := 8.0
+const VOICE_GAIN := 6.0
 
 @onready var nickname: Label3D = $PlayerNick/Nickname
 @onready var chat_label: Label3D = $PlayerChat/Text
@@ -43,6 +44,8 @@ var _voice_monitor_playback: AudioStreamGeneratorPlayback = null
 var _voice_debug_captured_frames := 0
 var _voice_debug_received_frames := 0
 var _voice_debug_last_report_ms := 0
+var _voice_debug_received_peak := 0.0
+var _voice_debug_playback_frames := 0
 
 func _enter_tree():
 	$SpringArmOffset/SpringArm3D/Camera3D.current = false
@@ -302,9 +305,14 @@ func _report_voice_debug() -> void:
 			print("VOICE DEBUG capture peer=", name, " capture bus unavailable")
 	else:
 		if _voice_debug_received_frames > 0:
-			print("VOICE DEBUG receive peer=", name, " received=", _voice_debug_received_frames)
+			var playback_free := -1
+			if _voice_monitor_playback != null:
+				playback_free = _voice_monitor_playback.get_frames_available()
+			print("VOICE DEBUG receive peer=", name, " received=", _voice_debug_received_frames, " peak=", _voice_debug_received_peak, " playback_free=", playback_free, " played=", _voice_debug_playback_frames)
 	_voice_debug_captured_frames = 0
 	_voice_debug_received_frames = 0
+	_voice_debug_received_peak = 0.0
+	_voice_debug_playback_frames = 0
 
 func _ensure_voice_capture_bus() -> void:
 	var bus_index := AudioServer.get_bus_index(VOICE_CAPTURE_BUS)
@@ -329,15 +337,26 @@ func _receive_voice_chunk(voice_frames: PackedVector2Array) -> void:
 		_refresh_voice_playback()
 	if _voice_playback == null and _voice_monitor_playback == null:
 		return
+	var amplified_frames := PackedVector2Array()
+	amplified_frames.resize(voice_frames.size())
+	var peak := 0.0
+	for i in voice_frames.size():
+		var frame := voice_frames[i] * VOICE_GAIN
+		frame.x = clamp(frame.x, -1.0, 1.0)
+		frame.y = clamp(frame.y, -1.0, 1.0)
+		peak = maxf(peak, maxf(absf(frame.x), absf(frame.y)))
+		amplified_frames[i] = frame
 	_voice_debug_received_frames += voice_frames.size()
+	_voice_debug_received_peak = maxf(_voice_debug_received_peak, peak)
 	if _voice_playback != null:
-		if not _voice_playback.can_push_buffer(voice_frames.size()):
+		if not _voice_playback.can_push_buffer(amplified_frames.size()):
 			_voice_playback.clear_buffer()
-		_voice_playback.push_buffer(voice_frames)
+		_voice_playback.push_buffer(amplified_frames)
 	if _voice_monitor_playback != null:
-		if not _voice_monitor_playback.can_push_buffer(voice_frames.size()):
+		if not _voice_monitor_playback.can_push_buffer(amplified_frames.size()):
 			_voice_monitor_playback.clear_buffer()
-		_voice_monitor_playback.push_buffer(voice_frames)
+		_voice_monitor_playback.push_buffer(amplified_frames)
+		_voice_debug_playback_frames += amplified_frames.size()
 	
 @rpc("any_peer", "reliable")
 func change_nick(new_nick: String):
