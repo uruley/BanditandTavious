@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c6r8q2m4k3u1p"]
+
+[ext_resource type="PackedScene" uid="uid://bv84hmxva4h2r" path="res://assets/Environment/Nature/Trees/jacaranda_tree_2k.gltf" id="1_tree"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_trunk"]
+height = 4.0
+radius = 0.3
+
+[node name="JacarandaTree" type="StaticBody3D"]
+
+[node name="jacaranda_tree_2k" parent="." instance=ExtResource("1_tree")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("CylinderShape3D_trunk")

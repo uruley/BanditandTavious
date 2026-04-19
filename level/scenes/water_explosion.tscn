@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmj6k4n2j8k8b"]
+
+[ext_resource type="Script" path="res://level/scripts/water_explosion.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_water"]
+transparency = 1
+albedo_color = Color(0, 0.5, 1, 0.8)
+metallic = 0.5
+roughness = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_particle"]
+material = SubResource("StandardMaterial3D_water")
+radius = 0.05
+height = 0.1
+
+[sub_resource type="Curve" id="Curve_size"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="WaterExplosion" type="CPUParticles3D"]
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("SphereMesh_particle")
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, -9.8, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+scale_amount_curve = SubResource("Curve_size")
+script = ExtResource("1_script")

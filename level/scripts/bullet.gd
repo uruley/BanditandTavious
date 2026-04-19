@@ -4,6 +4,8 @@ extends CharacterBody3D
 @export var damage: int = 1
 var shooter_id: int = 0
 
+var water_explosion_scene = preload("res://level/scenes/water_explosion.tscn")
+
 func _ready():
 	# Auto-destroy after 2 seconds if it doesn't hit anything
 	await get_tree().create_timer(2.0).timeout
@@ -13,11 +15,16 @@ func _physics_process(delta):
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		var collider = collision.get_collider()
-		
+
 		# Ignore the person who shot this bullet
 		if collider.name.is_valid_int():
 			if collider.name.to_int() == shooter_id:
 				return
+
+		# Instantiate water explosion
+		var explosion = water_explosion_scene.instantiate()
+		get_parent().add_child(explosion)
+		explosion.global_position = collision.get_position()
 
 		if collider.has_method("take_damage"):
 			collider.take_damage(damage, shooter_id)
