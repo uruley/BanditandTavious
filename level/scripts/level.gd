@@ -6,6 +6,7 @@ extends Node3D
 @onready var ip_input: LineEdit = $Menu/MainContainer/MainMenu/Option6/IPInput
 @onready var players_container: Node3D = $PlayersContainer
 @onready var menu: Control = $Menu
+@onready var chair: Node3D = $Chair
 @export var player_scene: PackedScene
 
 # multiplayer chat
@@ -16,6 +17,7 @@ extends Node3D
 @onready var multiplayer_chat: Control = $MultiplayerChat
 var chat_visible = false
 var join_in_progress = false
+const SPAWN_OFFSET := Vector3(1.5, 0.05, 0.0)
 
 func _get_room_number() -> int:
 	var room_text = room_input.text.strip_edges()
@@ -72,6 +74,7 @@ func _add_player(id: int, player_info : Dictionary):
 	var player = player_scene.instantiate()
 	player.name = str(id)
 	player.position = get_spawn_point()
+	player.set("_respawn_point", player.position)
 	players_container.add_child(player, true)
 	
 	var nick = Network.players[id]["nick"]
@@ -153,8 +156,9 @@ func _wait_for_local_player_spawn(max_frames: int = 120) -> bool:
 	return false
 	
 func get_spawn_point() -> Vector3:
-	var spawn_pos = Vector2.from_angle(randf() * 2 * PI) * 10 # spawn radius
-	return Vector3(spawn_pos.x, 100.0, spawn_pos.y)
+	if is_instance_valid(chair):
+		return chair.position + SPAWN_OFFSET
+	return Vector3(1.5, 0.05, 12.58)
 	
 func _remove_player(id):
 	if not multiplayer.is_server() or not players_container.has_node(str(id)):

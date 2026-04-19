@@ -1,21 +1,22 @@
-[gd_scene load_steps=21 format=3 uid="uid://dcnvmyxie0fl5"]
+[gd_scene load_steps=19 format=3 uid="uid://dcnvmyxie0fl5"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_pk5x3"]
 [ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_a2wgb"]
 [ext_resource type="FontFile" uid="uid://diapabmalpcrj" path="res://assets/fonts/Kurland.ttf" id="3_ugggl"]
 [ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="4_a2wgb"]
-[ext_resource type="PackedScene" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
+[ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_l6keq"]
+[ext_resource type="PackedScene" uid="uid://du4y6b6m5u2r" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
 [ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="7_6o7ld"]
 [ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="7_u3ur3"]
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="9_terrain"]
 [ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="10_assets"]
 
-[sub_resource type="Gradient" id="Gradient_u3ur3"]
+[sub_resource type="Gradient" id="Gradient_l6keq"]
 offsets = PackedFloat32Array(0.2, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_rpdil"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_th4of"]
 noise_type = 2
 frequency = 0.03
 cellular_jitter = 3.0
@@ -27,12 +28,12 @@ domain_warp_fractal_type = 2
 domain_warp_fractal_lacunarity = 1.5
 domain_warp_fractal_gain = 1.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_l6keq"]
-noise = SubResource("FastNoiseLite_rpdil")
-color_ramp = SubResource("Gradient_u3ur3")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3nn1q"]
+noise = SubResource("FastNoiseLite_th4of")
+color_ramp = SubResource("Gradient_l6keq")
 seamless = true
 
-[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_th4of"]
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_afffq"]
 _shader_parameters = {
 &"bias_distance": 512.0,
 &"blend_sharpness": 0.5,
@@ -48,39 +49,9 @@ _shader_parameters = {
 &"noise1_offset": Vector2(0.5, 0.5),
 &"noise1_scale": 0.04,
 &"noise2_scale": 0.076,
-&"noise_texture": SubResource("NoiseTexture2D_l6keq"),
+&"noise_texture": SubResource("NoiseTexture2D_3nn1q"),
 &"projection_threshold": 0.8
 }
-show_checkered = true
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
-sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
-sky_horizon_color = Color(0.646275, 0.655686, 0.670588, 1)
-ground_bottom_color = Color(0.2, 0.168627, 0.133333, 1)
-ground_horizon_color = Color(0.646275, 0.655686, 0.670588, 1)
-
-[sub_resource type="Sky" id="Sky_sky"]
-sky_material = SubResource("ProceduralSkyMaterial_sky")
-
-[sub_resource type="Environment" id="Environment_qb4jd"]
-background_mode = 2
-sky = SubResource("Sky_sky")
-tonemap_mode = 2
-tonemap_white = 1.1
-ssr_enabled = true
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_enabled = true
-glow_enabled = true
-glow_intensity = 0.5
-glow_strength = 0.8
-glow_bloom = 0.2
-fog_enabled = true
-fog_light_color = Color(0.6, 0.5, 0.4, 1)
-fog_density = 0.002
-volumetric_fog_enabled = true
-volumetric_fog_density = 0.02
-volumetric_fog_albedo = Color(0.8, 0.7, 0.6, 1)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_npnbc"]
 color = Color(0, 0, 0, 0)
@@ -102,15 +73,16 @@ player_scene = ExtResource("2_a2wgb")
 
 [node name="Terrain3D" type="Terrain3D" parent="Environment"]
 data_directory = "res://terrain_data"
-material = SubResource("Terrain3DMaterial_th4of")
+material = SubResource("Terrain3DMaterial_afffq")
 assets = ExtResource("10_assets")
 collision_mode = 3
-show_checkered = true
 top_level = true
 metadata/_edit_lock_ = true
 
+[node name="Terrain3DParticles" parent="Environment/Terrain3D" node_paths=PackedStringArray("terrain") instance=ExtResource("4_l6keq")]
+terrain = NodePath("..")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
-environment = SubResource("Environment_qb4jd")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
 transform = Transform3D(0.995887, 0.0865624, 0.0267612, 0.0115789, -0.414532, 0.909961, 0.0898618, -0.905909, -0.413829, -1.06351, 37.5623, -1.08587)
@@ -395,7 +367,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="island_tree_02_2k" type="Node3D" parent="." instance=ExtResource("4_a2wgb")]
+[node name="island_tree_02_2k" parent="." instance=ExtResource("4_a2wgb")]
 transform = Transform3D(3.566, 0, 0, 0, 7.977, 0, 0, 0, 5, -0.769619, 0.36159286, -0.79700375)
 
 [node name="OrbitingSphere" type="CSGSphere3D" parent="island_tree_02_2k"]
@@ -427,13 +399,13 @@ transform = Transform3D(1.914979, 0, 0, 0, 2.2449841, 0, 0, 0, 1.6802603, 0.2482
 visible = false
 use_collision = true
 
-[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" type="Node3D" parent="." instance=ExtResource("7_6o7ld")]
+[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" parent="." instance=ExtResource("7_6o7ld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5735626, 0.25, 15.0141735)
 
-[node name="Chair" type="StaticBody3D" parent="." instance=ExtResource("7_4ecn5")]
+[node name="Chair" parent="." instance=ExtResource("7_4ecn5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581118)
 
-[node name="Hammer" type="StaticBody3D" parent="." instance=ExtResource("7_u3ur3")]
+[node name="Hammer" parent="." instance=ExtResource("7_u3ur3")]
 transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
