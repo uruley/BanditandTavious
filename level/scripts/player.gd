@@ -265,6 +265,11 @@ func _setup_voice_playback() -> void:
 	_voice_playback_player.position = Vector3(0.0, 1.6, 0.0)
 	add_child(_voice_playback_player)
 	_voice_playback_player.play()
+	_refresh_voice_playback()
+
+func _refresh_voice_playback() -> void:
+	if _voice_playback_player == null:
+		return
 	_voice_playback = _voice_playback_player.get_stream_playback() as AudioStreamGeneratorPlayback
 
 func _ensure_voice_capture_bus() -> void:
@@ -286,6 +291,8 @@ func _ensure_voice_capture_bus() -> void:
 func _receive_voice_chunk(voice_frames: PackedVector2Array) -> void:
 	if is_multiplayer_authority():
 		return
+	if _voice_playback == null:
+		_refresh_voice_playback()
 	if _voice_playback == null:
 		return
 	if not _voice_playback.can_push_buffer(voice_frames.size()):
