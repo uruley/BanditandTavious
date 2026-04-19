@@ -7,6 +7,11 @@ const FLIGHT_SPEED = 18.0
 const FLIGHT_VERTICAL_SPEED = 12.0
 const FLIGHT_INTERACT_DISTANCE = 4.0
 const FLIGHT_PLATFORM_OFFSET = Vector3(0.0, -0.95, 0.2)
+const VOICE_CAPTURE_BUS := "VoiceCapture"
+const VOICE_CHUNK_FRAMES := 512
+const VOICE_BUFFER_LENGTH := 0.4
+const VOICE_MAX_DISTANCE := 35.0
+const VOICE_UNIT_SIZE := 8.0
 
 @onready var nickname: Label3D = $PlayerNick/Nickname
 @onready var chat_label: Label3D = $PlayerChat/Text
@@ -29,14 +34,22 @@ var _respawn_point = Vector3(0, 5, 0)
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _is_flying := false
 var _flight_platform: MeshInstance3D = null
+var _voice_capture: AudioEffectCapture = null
+var _voice_microphone_player: AudioStreamPlayer = null
+var _voice_playback_player: AudioStreamPlayer3D = null
+var _voice_playback: AudioStreamGeneratorPlayback = null
 
 func _enter_tree():
 	$SpringArmOffset/SpringArm3D/Camera3D.current = false
 	
 func _ready():
 	_create_flight_platform()
+	_setup_voice_playback()
 	if not await _configure_multiplayer_state():
 		push_warning("Player spawned without a replicated peer id: %s" % name)
+		return
+	if is_multiplayer_authority():
+		_setup_voice_capture()
 
 func _configure_multiplayer_state() -> bool:
 	var cam = $SpringArmOffset/SpringArm3D/Camera3D
@@ -88,6 +101,19 @@ func _physics_process(delta):
 	move_and_slide()
 	_body.animate(velocity)
 	_check_fall_and_respawn()
+
+func _process(_delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+	if not Input.is_action_pressed("voice_chat"):
+		return
+	if _voice_capture == null:
+		return
+	while _voice_capture.can_get_buffer(VOICE_CHUNK_FRAMES):
+		var voice_frames: PackedVector2Array = _voice_capture.get_buffer(VOICE_CHUNK_FRAMES)
+		if voice_frames.is_empty():
+			break
+		_receive_voice_chunk.rpc(voice_frames)
 	
 func freeze():
 	velocity.x = 0
@@ -206,6 +232,65 @@ func _create_flight_platform() -> void:
 	_flight_platform.position = FLIGHT_PLATFORM_OFFSET
 	_flight_platform.visible = false
 	add_child(_flight_platform)
+
+func _setup_voice_capture() -> void:
+	_ensure_voice_capture_bus()
+	var bus_index := AudioServer.get_bus_index(VOICE_CAPTURE_BUS)
+	if bus_index == -1:
+		return
+	var effect := AudioServer.get_bus_effect(bus_index, 0)
+	if effect is AudioEffectCapture:
+		_voice_capture = effect
+		_voice_capture.clear_buffer()
+	if _voice_microphone_player == null:
+		_voice_microphone_player = AudioStreamPlayer.new()
+		_voice_microphone_player.name = "VoiceMicrophone"
+		_voice_microphone_player.bus = VOICE_CAPTURE_BUS
+		_voice_microphone_player.stream = AudioStreamMicrophone.new()
+		add_child(_voice_microphone_player)
+	if not _voice_microphone_player.playing:
+		_voice_microphone_player.play()
+
+func _setup_voice_playback() -> void:
+	if _voice_playback_player != null:
+		return
+	_voice_playback_player = AudioStreamPlayer3D.new()
+	_voice_playback_player.name = "VoicePlayback"
+	var voice_stream := AudioStreamGenerator.new()
+	voice_stream.buffer_length = VOICE_BUFFER_LENGTH
+	voice_stream.mix_rate = AudioServer.get_mix_rate()
+	_voice_playback_player.stream = voice_stream
+	_voice_playback_player.max_distance = VOICE_MAX_DISTANCE
+	_voice_playback_player.unit_size = VOICE_UNIT_SIZE
+	_voice_playback_player.position = Vector3(0.0, 1.6, 0.0)
+	add_child(_voice_playback_player)
+	_voice_playback_player.play()
+	_voice_playback = _voice_playback_player.get_stream_playback() as AudioStreamGeneratorPlayback
+
+func _ensure_voice_capture_bus() -> void:
+	var bus_index := AudioServer.get_bus_index(VOICE_CAPTURE_BUS)
+	if bus_index == -1:
+		AudioServer.add_bus()
+		bus_index = AudioServer.bus_count - 1
+		AudioServer.set_bus_name(bus_index, VOICE_CAPTURE_BUS)
+		AudioServer.set_bus_volume_db(bus_index, -80.0)
+		var capture_effect := AudioEffectCapture.new()
+		capture_effect.buffer_length = 0.3
+		AudioServer.add_bus_effect(bus_index, capture_effect)
+	elif AudioServer.get_bus_effect_count(bus_index) == 0:
+		var capture_effect := AudioEffectCapture.new()
+		capture_effect.buffer_length = 0.3
+		AudioServer.add_bus_effect(bus_index, capture_effect)
+
+@rpc("authority", "unreliable")
+func _receive_voice_chunk(voice_frames: PackedVector2Array) -> void:
+	if is_multiplayer_authority():
+		return
+	if _voice_playback == null:
+		return
+	if not _voice_playback.can_push_buffer(voice_frames.size()):
+		_voice_playback.clear_buffer()
+	_voice_playback.push_buffer(voice_frames)
 	
 @rpc("any_peer", "reliable")
 func change_nick(new_nick: String):
