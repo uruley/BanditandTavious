@@ -154,7 +154,7 @@ func _wait_for_local_player_spawn(max_frames: int = 120) -> bool:
 	
 func get_spawn_point() -> Vector3:
 	var spawn_pos = Vector2.from_angle(randf() * 2 * PI) * 10 # spawn radius
-	return Vector3(spawn_pos.x, 20.0, spawn_pos.y)
+	return Vector3(spawn_pos.x, 100.0, spawn_pos.y)
 	
 func _remove_player(id):
 	if not multiplayer.is_server() or not players_container.has_node(str(id)):
