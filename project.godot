@@ -31,7 +31,7 @@ version_control/force_right_to_left_layout_direction=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/zylann.hterrain/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [filesystem]
 
