@@ -14,5 +14,9 @@ export_presets.cfg
 data_*/
 mono_crash.*.json
 
-# ignore addons
-# addons/
+# Local agent/tooling files
+.codebase/
+.cursorrules
+.windsurfrules
+PROJECT_CONTEXT.md
+codex.md
