@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://brr0xvtih7b8o"]
+
+[ext_resource type="Script" uid="uid://dhp62150wby24" path="res://level/scripts/quaternius_test_player.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="2_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.2
+
+[node name="GodotManny" type="CharacterBody3D"]
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="SpringArmOffset" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmOffset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.044003725)
+spring_length = 4.5
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
+transform = Transform3D(-0.9900728, 0, 0.14055564, 0, 1, 0, -0.14055564, 0, -0.9900728, -0.989244, 0.5697744, -1.2267882)
+current = true
