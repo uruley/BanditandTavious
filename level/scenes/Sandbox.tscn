@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dcnvmyxie0fl5"]
+[gd_scene load_steps=21 format=3 uid="uid://dcnvmyxie0fl5"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_pk5x3"]
 [ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_a2wgb"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="9_terrain"]
 [ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="10_assets"]
+[ext_resource type="PackedScene" uid="uid://71dm7uuluv8t" path="res://assets/models/House/scene.gltf" id="12_th4of"]
+[ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="13_3nn1q"]
 
 [sub_resource type="Gradient" id="Gradient_l6keq"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -407,6 +409,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581
 
 [node name="Hammer" parent="." instance=ExtResource("7_u3ur3")]
 transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("12_th4of")]
+transform = Transform3D(-0.044679366, 0, 3.9997504, 0, 4, 0, -3.9997504, 0, -0.044679366, -4.214855, 21.648602, -51.96839)
+
+[node name="UAL1_Standard" parent="." instance=ExtResource("13_3nn1q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4603634, 1.3250542, 9.701809)
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]

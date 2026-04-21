@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcnwek83gxlm5"]
+
+[ext_resource type="Script" uid="uid://bubgj2r47m6rp" path="res://level/scripts/godot_manny_player.gd" id="1_e80x2"]
+[ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="2_qm7nd"]
+[ext_resource type="Script" uid="uid://dlaa1nwmfmsor" path="res://level/scripts/spring_arm_offset.gd" id="3_camgd"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.2
+
+[node name="GodotMannyPlayer" type="CharacterBody3D" node_paths=PackedStringArray("_body", "_spring_arm_offset", "_spring_arm")]
+script = ExtResource("1_e80x2")
+_body = NodePath("Model")
+_spring_arm_offset = NodePath("SpringArmOffset")
+_spring_arm = NodePath("SpringArmOffset/SpringArm3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="CharacterModel" parent="Model" instance=ExtResource("2_qm7nd")]
+
+[node name="SpringArmOffset" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+script = ExtResource("3_camgd")
+_spring_arm = NodePath("SpringArm3D")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmOffset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.60891e-08, 1.5, -0.1840378)
+spring_length = 3.0
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
+transform = Transform3D(0.9968388, 0.07628182, -0.022215344, -0.075304106, 0.9962779, 0.041946203, 0.025332391, -0.04014071, 0.9988729, -1.01402115e-07, 0.40826464, 1.1599047)
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -0.7475894, 0.66416126, 0, -0.66416126, -0.7475894, 0, 3.9619722, -5.3214326)
+light_energy = 4.578
+light_indirect_energy = 7.385
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 0, -0.5261617, 0)
+use_collision = true

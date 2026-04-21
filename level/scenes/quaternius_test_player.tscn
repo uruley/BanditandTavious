@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://bk2wwxafu0l03"]
+
+[ext_resource type="Script" uid="uid://dhp62150wby24" path="res://level/scripts/quaternius_test_player.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="2_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.2
+
+[sub_resource type="Environment" id="Environment_gtqm8"]
+
+[node name="QuaterniusTestPlayer" type="CharacterBody3D"]
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="SpringArmOffset" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmOffset"]
+spring_length = 4.5
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gtqm8")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -0.71121675, 0.7029729, 0, -0.7029729, -0.71121675, 0, 3.8882933, -4.2093086)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="WorldEnvironment"]
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 0, -0.48182607, 0)
+use_collision = true

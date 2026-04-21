@@ -40,8 +40,7 @@ func _get_server_ip() -> String:
 	return server_ip
 
 func _ready():
-	# multiplayer_chat.hide()
-
+	multiplayer_chat.hide()
 	message.hide()	
 	send.hide()
 	chat.hide()
@@ -180,6 +179,7 @@ func _on_join_pressed():
 		return
 	print("DEBUG: Join pressed, attempting connection...")
 	join_in_progress = true
+	multiplayer_chat.hide()
 	message.hide()	
 	send.hide()
 	chat.hide()
@@ -211,11 +211,13 @@ func _on_connected_ok(_peer_id, _player_info):
 
 func _on_connection_failed():
 	join_in_progress = false
+	multiplayer_chat.hide()
 	menu.show()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _on_server_disconnected():
 	join_in_progress = false
+	multiplayer_chat.hide()
 	menu.show()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
@@ -264,14 +266,21 @@ func toggle_chat():
 
 	chat_visible = !chat_visible
 	if chat_visible:
-		# multiplayer_chat.show()
+		multiplayer_chat.show()
 		chat_title.show()
 		chat.show()
+		message.show()
+		send.show()
 		message.grab_focus()
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	else:
-		# multiplayer_chat.hide() # instead of hiding the entire chat, just hide the chat_title and chat
 		chat_title.hide()
 		chat.hide()
+		message.hide()
+		send.hide()
+		multiplayer_chat.hide()
+		message.release_focus()
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		get_viewport().set_input_as_handled()
 
 func is_chat_visible() -> bool:
