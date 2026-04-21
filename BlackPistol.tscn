@@ -1,0 +1,93 @@
+[gd_scene load_steps=3 format=3 uid="uid://3ocplmkcoskj"]
+
+[ext_resource type="PackedScene" uid="uid://c364t353qr4wr" path="res://assets/weapons/Pistol.gltf" id="1_jf0bn"]
+[ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="2_5idwb"]
+
+[node name="FAB converted" instance=ExtResource("1_jf0bn")]
+
+[node name="Object_2" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="0"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_3" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="1"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_5" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="3"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_6" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="4"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_7" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="5"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_8" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="6"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_9" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="7"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_10" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="8"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_11" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="9"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_12" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="10"]
+material_override = ExtResource("2_5idwb")
+material_overlay = ExtResource("2_5idwb")
+
+[node name="Object_13" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="11"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_14" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="12"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_15" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="13"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_16" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="14"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_17" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="15"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_18" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="16"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_19" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="17"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_20" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="18"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_21" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="19"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_22" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="20"]
+material_override = ExtResource("2_5idwb")
+material_overlay = ExtResource("2_5idwb")
+
+[node name="Object_23" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="21"]
+material_override = ExtResource("2_5idwb")
+material_overlay = ExtResource("2_5idwb")
+
+[node name="Object_24" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="22"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_25" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="23"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_26" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="24"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_27" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="25"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_28" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="26"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_30" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="28"]
+material_override = ExtResource("2_5idwb")
+
+[node name="Object_31" parent="FAB converted model/Pistol_001_obj_cleaner_materialmerger_gles" index="29"]
+material_override = ExtResource("2_5idwb")

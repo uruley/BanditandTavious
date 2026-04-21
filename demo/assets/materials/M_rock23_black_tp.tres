@@ -1,16 +1,25 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://d0hyi5n6ng25w"]
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://d0hyi5n6ng25w"]
 
 [ext_resource type="Texture2D" uid="uid://c88j3oj0lf6om" path="res://demo/assets/textures/rock023_alb_ht.png" id="1_1js8i"]
+[ext_resource type="Texture2D" uid="uid://0edye6vdujft" path="res://assets/fonts/textures/Case_BaseColor.jpeg" id="2_h3aah"]
 [ext_resource type="Texture2D" uid="uid://c307hdmos4gtm" path="res://demo/assets/textures/rock023_nrm_rgh.png" id="2_snl3x"]
 
 [resource]
-albedo_color = Color(0.501406, 0.501407, 0.501406, 1)
+albedo_color = Color(0.047557652, 0.047557652, 0.04755763, 1)
 albedo_texture = ExtResource("1_1js8i")
+metallic = 1.0
+metallic_specular = 0.43
+metallic_texture = ExtResource("2_h3aah")
+metallic_texture_channel = 4
 roughness = 0.95
 roughness_texture = ExtResource("2_snl3x")
 roughness_texture_channel = 3
+emission_enabled = true
+emission_energy_multiplier = 2.38
 normal_enabled = true
 normal_texture = ExtResource("2_snl3x")
+clearcoat_enabled = true
+clearcoat_roughness = 0.55
 uv1_scale = Vector3(0.4, 0.4, 0.4)
 uv1_triplanar = true
 uv1_world_triplanar = true
