@@ -1,7 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://coxvaadvc7tbi"]
+[gd_scene load_steps=28 format=3 uid="uid://coxvaadvc7tbi"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_h2cdk"]
-[ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_gegpj"]
+[ext_resource type="PackedScene" path="res://level/scenes/lyra_player_clean.tscn" id="2_gegpj"]
 [ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="3_5kwaj"]
 [ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_a2gra"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="5_x2w4u"]
@@ -9,10 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="7_htb76"]
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_jh8f6"]
 [ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="9_78b4l"]
-[ext_resource type="PackedScene" path="res://level/scenes/mid_century_chair.tscn" id="10_4hv8g"]
+[ext_resource type="PackedScene" uid="uid://du4y6b6m5u2r" path="res://level/scenes/mid_century_chair.tscn" id="10_4hv8g"]
 [ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="11_4sm78"]
 [ext_resource type="PackedScene" uid="uid://71dm7uuluv8t" path="res://assets/models/House/House.gltf" id="12_24mlk"]
 [ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="13_xajh0"]
+[ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="14_5kwaj"]
+[ext_resource type="PackedScene" uid="uid://xav86mjdu683" path="res://portal.tscn" id="14_gegpj"]
 
 [sub_resource type="Gradient" id="Gradient_l6keq"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -55,6 +57,11 @@ _shader_parameters = {
 &"projection_threshold": 0.8
 }
 
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_fwrtk"]
+shape = 0
+section_length = 0.18
+section_segments = 1
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_npnbc"]
 color = Color(0, 0, 0, 0)
 
@@ -66,6 +73,16 @@ albedo_color = Color(1, 1, 0, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_spark"]
 material = SubResource("StandardMaterial3D_spark")
 size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5kwaj"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_a2gra"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gegpj"]
+points = PackedVector3Array(1.0158731, 0.015873017, 1.0158731, -1.0158731, -0.015873017, -1.0158731, -1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, -1.0158731, -1.0158731, -0.015873017, 1.0158731, -1.0158731, 0.015873017, 1.0158731, 1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, 1.0158731)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_x2w4u"]
+points = PackedVector3Array(1.0158731, 0.015873017, 1.0158731, -1.0158731, -0.015873017, -1.0158731, -1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, -1.0158731, -1.0158731, -0.015873017, 1.0158731, -1.0158731, 0.015873017, 1.0158731, 1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, 1.0158731)
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_h2cdk")
@@ -83,6 +100,7 @@ metadata/_edit_lock_ = true
 
 [node name="Terrain3DParticles" parent="Environment/Terrain3D" node_paths=PackedStringArray("terrain") instance=ExtResource("4_a2gra")]
 terrain = NodePath("..")
+mesh = SubResource("RibbonTrailMesh_fwrtk")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
 
@@ -358,7 +376,7 @@ theme_override_fonts/font = ExtResource("6_tcem1")
 text = "Send"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://cffjduipbb3s5")
+_spawnable_scenes = PackedStringArray("res://level/scenes/lyra_player_clean.tscn")
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="PlayersContainer" type="Node3D" parent="."]
@@ -415,6 +433,29 @@ transform = Transform3D(-0.044679366, 0, 3.9997504, 0, 4, 0, -3.9997504, 0, -0.0
 
 [node name="UAL1_Standard" parent="." instance=ExtResource("13_xajh0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4603634, 1.3250542, 9.701809)
+visible = false
+
+[node name="HouseFloor" type="MeshInstance3D" parent="."]
+transform = Transform3D(17.02, 0, 0, 0, 17.02, 0, 0, 0, 17.02, -2.930811, 22.289, -57.786)
+material_override = SubResource("StandardMaterial3D_5kwaj")
+material_overlay = ExtResource("14_5kwaj")
+mesh = SubResource("PlaneMesh_a2gra")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="HouseFloor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HouseFloor/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_gegpj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_x2w4u")
+
+[node name="Portal" parent="." instance=ExtResource("14_gegpj")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.354273, 1.5285249, 4.6538887)
+linked_portal_path = NodePath("../Portal2")
+
+[node name="Portal2" parent="." instance=ExtResource("14_gegpj")]
+transform = Transform3D(0.9999999, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 5.3232155, 23.425024, -50.078205)
+linked_portal_path = NodePath("../Portal")
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]

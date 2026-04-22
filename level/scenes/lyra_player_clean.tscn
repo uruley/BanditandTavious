@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://level/scripts/bachtavious_multiplayer_player.gd" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://bapa4ovkfou2g" path="res://Bachtavious.tscn" id="2_bachtavious"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_player"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Bachtavious/AnimationPlayer:current_animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("PlayerNick/Nickname:text")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("body_root", "spring_arm_offset", "spring_arm", "camera_node", "weapon_root", "muzzle_marker")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+collision_mask = 3
+script = ExtResource("1_player")
+body_root = NodePath("Bachtavious")
+spring_arm_offset = NodePath("SpringArmOffset")
+spring_arm = NodePath("SpringArmOffset/SpringArm3D")
+camera_node = NodePath("SpringArmOffset/SpringArm3D/Camera3D")
+weapon_root = NodePath("Bachtavious/Armature/Skeleton3D/RightHand/FAB converted")
+muzzle_marker = NodePath("Bachtavious/Armature/Skeleton3D/RightHand/FAB converted/Muzzle")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.876329, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="SpringArmOffset" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmOffset"]
+spring_length = 2.5
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.2, 0)
+
+[node name="PlayerChat" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.10314, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Text" type="Label3D" parent="PlayerChat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.31525, 0)
+billboard = 1
+outline_modulate = Color(0, 0, 0, 0.301961)
+text = "text"
+
+[node name="PlayerNick" type="Node3D" parent="."]
+
+[node name="Nickname" type="Label3D" parent="PlayerNick"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97037, 0)
+billboard = 1
+outline_modulate = Color(0, 0, 0, 0.301961)
+text = "player name test"
+
+[node name="Muzzle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.5)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("SceneReplicationConfig_player")
+
+[node name="Bachtavious" parent="." instance=ExtResource("2_bachtavious")]

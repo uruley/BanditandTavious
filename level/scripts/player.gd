@@ -91,7 +91,7 @@ func _physics_process(delta):
 	if _is_flying:
 		_fly_move()
 		move_and_slide()
-		_body.animate(velocity)
+		_animate_body(velocity)
 		return
 	
 	if is_on_floor():
@@ -99,7 +99,7 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 	else:
 		velocity.y -= gravity * delta
-		_body.animate(velocity)
+		_animate_body(velocity)
 	
 	_move()
 	
@@ -107,7 +107,7 @@ func _physics_process(delta):
 		shoot()
 		
 	move_and_slide()
-	_body.animate(velocity)
+	_animate_body(velocity)
 	_check_fall_and_respawn()
 
 func _process(_delta: float) -> void:
@@ -130,7 +130,7 @@ func freeze():
 	velocity.z = 0
 	velocity.y = 0
 	_current_speed = 0
-	_body.animate(Vector3.ZERO)
+	_animate_body(Vector3.ZERO)
 	
 func _move() -> void:
 	var _input_direction: Vector2 = Vector2.ZERO
@@ -148,7 +148,7 @@ func _move() -> void:
 	if _direction:
 		velocity.x = _direction.x * _current_speed
 		velocity.z = _direction.z * _current_speed
-		_body.apply_rotation(velocity)
+		_rotate_body(velocity)
 		return
 	
 	velocity.x = move_toward(velocity.x, 0, _current_speed)
@@ -171,7 +171,7 @@ func _fly_move() -> void:
 		move_direction = move_direction.normalized()
 		velocity.x = move_direction.x * FLIGHT_SPEED
 		velocity.z = move_direction.z * FLIGHT_SPEED
-		_body.apply_rotation(Vector3(velocity.x, 0.0, velocity.z))
+		_rotate_body(Vector3(velocity.x, 0.0, velocity.z))
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, FLIGHT_SPEED)
 		velocity.z = move_toward(velocity.z, 0.0, FLIGHT_SPEED)
@@ -374,10 +374,13 @@ func get_texture_from_name(skin_name: String) -> CompressedTexture2D:
 @rpc("any_peer", "reliable")
 func set_player_skin(skin_name: String) -> void:
 	var texture = get_texture_from_name(skin_name)
-	var bottom: MeshInstance3D = get_node("3DGodotRobot/RobotArmature/Skeleton3D/Bottom")
-	var chest: MeshInstance3D = get_node("3DGodotRobot/RobotArmature/Skeleton3D/Chest")
-	var face: MeshInstance3D = get_node("3DGodotRobot/RobotArmature/Skeleton3D/Face")
-	var limbs_head: MeshInstance3D = get_node("3DGodotRobot/RobotArmature/Skeleton3D/Llimbs and head")
+	var bottom := get_node_or_null("3DGodotRobot/RobotArmature/Skeleton3D/Bottom") as MeshInstance3D
+	var chest := get_node_or_null("3DGodotRobot/RobotArmature/Skeleton3D/Chest") as MeshInstance3D
+	var face := get_node_or_null("3DGodotRobot/RobotArmature/Skeleton3D/Face") as MeshInstance3D
+	var limbs_head := get_node_or_null("3DGodotRobot/RobotArmature/Skeleton3D/Llimbs and head") as MeshInstance3D
+
+	if bottom == null or chest == null or face == null or limbs_head == null:
+		return
 	
 	set_mesh_texture(bottom, texture)
 	set_mesh_texture(chest, texture)
@@ -400,7 +403,8 @@ func display_chat_message(message: String):
 	chat_label.hide()  # Hide the message after 5 seconds
 
 func shoot():
-	var bullet_pos = muzzle.global_position
+	var active_muzzle := _get_active_muzzle()
+	var bullet_pos = active_muzzle.global_position
 	var bullet_dir = -global_transform.basis.z # Shoot forward
 	# If we want to shoot where camera is looking:
 	if _spring_arm_offset:
@@ -420,3 +424,18 @@ func take_damage(_amount: int, _from_id: int):
 	# Simple respawn on hit
 	global_position = _respawn_point
 	velocity = Vector3.ZERO
+
+func _animate_body(target_velocity: Vector3) -> void:
+	if _body != null and _body.has_method("animate"):
+		_body.animate(target_velocity)
+
+func _rotate_body(target_velocity: Vector3) -> void:
+	if _body != null and _body.has_method("apply_rotation"):
+		_body.apply_rotation(target_velocity)
+
+func _get_active_muzzle() -> Node3D:
+	if _body != null:
+		var body_muzzle := _body.find_child("Muzzle", true, false) as Node3D
+		if body_muzzle != null:
+			return body_muzzle
+	return muzzle
