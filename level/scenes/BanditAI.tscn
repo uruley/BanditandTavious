@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmoute1152x5v"]
+
+[ext_resource type="Script" uid="uid://bc12nxag1anc6" path="res://level/scripts/bandit_ai_level.gd" id="1_wcd3l"]
+[ext_resource type="Script" uid="uid://qagbwcpmxw3u" path="res://level/scripts/bandit_ai_enemy.gd" id="2_pnqnu"]
+[ext_resource type="Script" uid="uid://1ninkw272tt7" path="res://level/scripts/bandit_ai_activity_logger.gd" id="3_ai_log"]
+[ext_resource type="Script" uid="uid://b2vl85pdga33r" path="res://level/scripts/bandit_ai_companion.gd" id="3_ikvkb"]
+[ext_resource type="Script" uid="uid://8viiqdak1dop" path="res://level/scripts/bandit_ai_citizen.gd" id="4_ikvkb"]
+
+[node name="BanditAI" type="Node3D"]
+script = ExtResource("1_wcd3l")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.86602527, 0.4095762, -0.2867884, 0, 0.5735765, 0.819152, 0.50000024, -0.7094063, 0.49673176, 0, 6, 0)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.81067926, -0.5854906, 0, 0.5854906, 0.81067926, 0, 9, 12.5)
+current = true
+
+[node name="EnemyNPC" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, 0)
+script = ExtResource("2_pnqnu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyNPC"]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="EnemyNPC"]
+
+[node name="FriendlyNPC" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_ikvkb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FriendlyNPC"]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="FriendlyNPC"]
+
+[node name="VillagerNPC" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 0)
+script = ExtResource("4_ikvkb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VillagerNPC"]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="VillagerNPC"]
+
+[node name="AIActivityLogger" type="Node" parent="."]
+script = ExtResource("3_ai_log")

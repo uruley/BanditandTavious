@@ -5,7 +5,7 @@
 [ext_resource type="FontFile" uid="uid://diapabmalpcrj" path="res://assets/fonts/Kurland.ttf" id="3_ugggl"]
 [ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="4_a2wgb"]
 [ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_l6keq"]
-[ext_resource type="PackedScene" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
+[ext_resource type="PackedScene" uid="uid://du4y6b6m5u2r" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
 [ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="7_6o7ld"]
 [ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="7_u3ur3"]
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]

@@ -1,0 +1,423 @@
+[gd_scene load_steps=21 format=3 uid="uid://coxvaadvc7tbi"]
+
+[ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_h2cdk"]
+[ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_gegpj"]
+[ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="3_5kwaj"]
+[ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_a2gra"]
+[ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="5_x2w4u"]
+[ext_resource type="FontFile" uid="uid://diapabmalpcrj" path="res://assets/fonts/Kurland.ttf" id="6_tcem1"]
+[ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="7_htb76"]
+[ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_jh8f6"]
+[ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="9_78b4l"]
+[ext_resource type="PackedScene" path="res://level/scenes/mid_century_chair.tscn" id="10_4hv8g"]
+[ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="11_4sm78"]
+[ext_resource type="PackedScene" uid="uid://71dm7uuluv8t" path="res://assets/models/House/House.gltf" id="12_24mlk"]
+[ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="13_xajh0"]
+
+[sub_resource type="Gradient" id="Gradient_l6keq"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_th4of"]
+noise_type = 2
+frequency = 0.03
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3nn1q"]
+noise = SubResource("FastNoiseLite_th4of")
+color_ramp = SubResource("Gradient_l6keq")
+seamless = true
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_afffq"]
+_shader_parameters = {
+&"bias_distance": 512.0,
+&"blend_sharpness": 0.5,
+&"depth_blur": 0.0,
+&"enable_macro_variation": true,
+&"enable_projection": true,
+&"flat_terrain_normals": false,
+&"macro_variation1": Color(1, 1, 1, 1),
+&"macro_variation2": Color(1, 1, 1, 1),
+&"macro_variation_slope": 0.333,
+&"mipmap_bias": 1.0,
+&"noise1_angle": 0.0,
+&"noise1_offset": Vector2(0.5, 0.5),
+&"noise1_scale": 0.04,
+&"noise2_scale": 0.076,
+&"noise_texture": SubResource("NoiseTexture2D_3nn1q"),
+&"projection_threshold": 0.8
+}
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_npnbc"]
+color = Color(0, 0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_spark"]
+material = SubResource("StandardMaterial3D_spark")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_h2cdk")
+player_scene = ExtResource("2_gegpj")
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="Terrain3D" type="Terrain3D" parent="Environment"]
+data_directory = "res://terrain_data"
+material = SubResource("Terrain3DMaterial_afffq")
+assets = ExtResource("3_5kwaj")
+collision_mode = 3
+top_level = true
+metadata/_edit_lock_ = true
+
+[node name="Terrain3DParticles" parent="Environment/Terrain3D" node_paths=PackedStringArray("terrain") instance=ExtResource("4_a2gra")]
+terrain = NodePath("..")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.995887, 0.0865624, 0.0267612, 0.0115789, -0.414532, 0.909961, 0.0898618, -0.905909, -0.413829, -1.06351, 37.5623, -1.08587)
+light_color = Color(1, 0.95, 0.8, 1)
+light_energy = 1.5
+shadow_enabled = true
+shadow_opacity = 0.8
+directional_shadow_mode = 1
+directional_shadow_max_distance = 150.0
+
+[node name="TerrainDigger" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4189911, 0)
+script = ExtResource("5_x2w4u")
+terrain = NodePath("../Environment/Terrain3D")
+
+[node name="Menu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+
+[node name="MainContainer" type="VBoxContainer" parent="Menu"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -257.0
+offset_bottom = 257.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 70
+text = "Multiplayer Template"
+
+[node name="MainMenu" type="VBoxContainer" parent="Menu/MainContainer"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+theme_override_constants/separation = 10
+theme_override_styles/separator = SubResource("StyleBoxLine_npnbc")
+
+[node name="Option1" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/MainContainer/MainMenu/Option1"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "Nickname : "
+
+[node name="NickInput" type="LineEdit" parent="Menu/MainContainer/MainMenu/Option1"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+placeholder_text = "YourNick"
+max_length = 20
+expand_to_text_length = true
+
+[node name="Option2" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/MainContainer/MainMenu/Option2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "Player Skin : "
+
+[node name="SkinInput" type="LineEdit" parent="Menu/MainContainer/MainMenu/Option2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+placeholder_text = "blue"
+alignment = 1
+expand_to_text_length = true
+
+[node name="Option5" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/MainContainer/MainMenu/Option5"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "Room : "
+
+[node name="RoomInput" type="LineEdit" parent="Menu/MainContainer/MainMenu/Option5"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+placeholder_text = "1"
+alignment = 1
+expand_to_text_length = true
+
+[node name="Option6" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Label" type="Label" parent="Menu/MainContainer/MainMenu/Option6"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "Server IP : "
+
+[node name="IPInput" type="LineEdit" parent="Menu/MainContainer/MainMenu/Option6"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+placeholder_text = "127.0.0.1"
+alignment = 1
+expand_to_text_length = true
+
+[node name="HSeparator2" type="HSeparator" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+theme_override_constants/separation = 30
+theme_override_styles/separator = SubResource("StyleBoxLine_npnbc")
+
+[node name="Buttons" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Host" type="Button" parent="Menu/MainContainer/MainMenu/Buttons"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0, 0.52549, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.52549, 0, 1)
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "HOST"
+flat = true
+
+[node name="SinglePlayer" type="Button" parent="Menu/MainContainer/MainMenu/Buttons"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0, 0.52549, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.52549, 0, 1)
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "SINGLE PLAYER"
+flat = true
+
+[node name="Join" type="Button" parent="Menu/MainContainer/MainMenu/Buttons"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0, 0.52549, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.525257, 0, 1)
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "JOIN"
+flat = true
+
+[node name="Option4" type="HBoxContainer" parent="Menu/MainContainer/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Quit" type="Button" parent="Menu/MainContainer/MainMenu/Option4"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0.858824, 0, 0, 0.862745)
+theme_override_colors/font_hover_color = Color(0.858807, 4.71681e-06, 1.15514e-06, 0.862745)
+theme_override_fonts/font = ExtResource("6_tcem1")
+theme_override_font_sizes/font_size = 35
+text = "QUIT"
+flat = true
+
+[node name="MultiplayerChat" type="Control" parent="."]
+layout_mode = 3
+anchor_right = 0.446
+anchor_bottom = 0.551
+offset_right = 0.208008
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ChatTitle" type="Label" parent="MultiplayerChat"]
+top_level = true
+layout_mode = 0
+anchor_left = 0.013
+anchor_top = 0.043
+anchor_right = 0.013
+anchor_bottom = 0.043
+offset_left = 0.0240002
+offset_top = -15.864
+offset_right = 484.024
+offset_bottom = 2.136
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("6_tcem1")
+text = "Welcome to Global Chat!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Chat" type="TextEdit" parent="MultiplayerChat"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 35.0
+offset_right = 498.0
+offset_bottom = 340.0
+theme_override_fonts/font = ExtResource("6_tcem1")
+
+[node name="Message" type="LineEdit" parent="MultiplayerChat"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.582
+anchor_top = 1.443
+anchor_right = 0.582
+anchor_bottom = 1.443
+offset_left = 7.85199
+offset_top = 90.849
+offset_right = 491.852
+offset_bottom = 121.849
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_tcem1")
+
+[node name="Send" type="Button" parent="MultiplayerChat"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.529
+anchor_top = 1.443
+anchor_right = 1.529
+anchor_bottom = 1.443
+offset_left = 8.09399
+offset_top = 90.849
+offset_right = 55.094
+offset_bottom = 121.849
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_tcem1")
+text = "Send"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cffjduipbb3s5")
+spawn_path = NodePath("../PlayersContainer")
+
+[node name="PlayersContainer" type="Node3D" parent="."]
+
+[node name="GameControls" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="island_tree_02_2k" parent="." instance=ExtResource("7_htb76")]
+transform = Transform3D(3.566, 0, 0, 0, 7.977, 0, 0, 0, 5, -0.769619, 0.36159286, -0.79700375)
+
+[node name="OrbitingSphere" type="CSGSphere3D" parent="island_tree_02_2k"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1.2109536)
+radius = 0.2
+script = ExtResource("8_jh8f6")
+orbit_radius = 4.0
+orbit_height = 3.0
+
+[node name="Sparks" type="CPUParticles3D" parent="island_tree_02_2k/OrbitingSphere"]
+amount = 30
+lifetime = 0.8
+explosiveness = 0.1
+randomness = 1.0
+mesh = SubResource("BoxMesh_spark")
+emission_shape = 1
+emission_sphere_radius = 0.1
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, -1, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 3.0
+scale_amount_min = 0.05
+scale_amount_max = 0.2
+color = Color(1, 0.8, 0.2, 1)
+
+[node name="jacaranda_tree_2k2#CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1.914979, 0, 0, 0, 2.2449841, 0, 0, 0, 1.6802603, 0.2482872, 0, -0.2976818)
+visible = false
+use_collision = true
+
+[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" parent="." instance=ExtResource("9_78b4l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5735626, 0.25, 15.0141735)
+
+[node name="Chair" parent="." instance=ExtResource("10_4hv8g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581118)
+
+[node name="Hammer" parent="." instance=ExtResource("11_4sm78")]
+transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("12_24mlk")]
+transform = Transform3D(-0.044679366, 0, 3.9997504, 0, 4, 0, -3.9997504, 0, -0.044679366, -4.214855, 21.648602, -51.96839)
+
+[node name="UAL1_Standard" parent="." instance=ExtResource("13_xajh0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4603634, 1.3250542, 9.701809)
+
+[connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]
+[connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Menu/MainContainer/MainMenu/Option4/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="MultiplayerChat/Send" to="." method="_on_send_pressed"]

@@ -6,12 +6,26 @@ This section stores deeper reference material for important project domains.
 
 - [[terrain3d|Terrain3D]]
 - [[multiplayer|Multiplayer]]
+- [[destruction|Destruction]]
+- [[player_setup|Player Setup]]
+- [[portals|Portals]]
+- [[animations|Animations]]
+- [[ai_systems|AI Systems]]
+- [[ai_training|AI Training Pipeline]]
+- [[parkour|Parkour]]
 - [[log|Wiki Log]]
 
 ## Page Catalog
 
 - [[terrain3d|Terrain3D]]: Terrain3D setup, storage model, debugging workflow, and current project usage in `Sandbox.tscn`.
 - [[multiplayer|Multiplayer]]: Spawn flow, authority, camera behavior, respawn logic, and multiplayer debugging guidance.
+- [[destruction|Destruction]]: Technical patterns for mesh fracturing, physics (Jolt), and the replacer pattern for destructible objects.
+- [[player_setup|Player Setup]]: Reference for 3rd person node hierarchy, coordinate systems (-Z forward), and camera pivot math.
+- [[portals|Portals]]: Implementation standards for 2-way teleportation, loop prevention, and momentum preservation.
+- [[animations|Animations]]: Standard workflow for decoupling models from animations, retargeting (BoneMap), and global libraries.
+- [[ai_systems|AI Systems]]: Research-backed Godot 4 NPC architecture guidance for enemies, companions, villagers, navigation, perception, and phased implementation.
+- [[ai_training|AI Training Pipeline]]: Runtime NPC activity logging plus JSONL to SQLite export and first trainable villager flee task.
+- [[parkour|Parkour]]: Technical standards for dynamic vaulting, mantling, and geometric scanning patterns.
 - [[log|Wiki Log]]: Append-only record of wiki maintenance and significant knowledge updates.
 
 ## Guidance

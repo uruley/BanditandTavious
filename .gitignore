@@ -20,3 +20,8 @@ mono_crash.*.json
 .windsurfrules
 PROJECT_CONTEXT.md
 codex.md
+
+# Local backups and runtime logs
+*_backup.tscn
+*.bak
+logs/*.log

@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://hhg7yxqwd7fv"]
+
+[ext_resource type="Script" uid="uid://cu5yi4ul20pm8" path="res://level/scripts/training_episode_manager.gd" id="1_nc8l3"]
+[ext_resource type="Script" uid="uid://mpbboemm6mos" path="res://level/scripts/training_evolution_engine.gd" id="2_5i4b2"]
+
+[node name="TrainingGround" type="Node3D"]
+script = ExtResource("1_nc8l3")
+
+[node name="EvolutionEngine" type="Node" parent="."]
+script = ExtResource("2_5i4b2")
+
+[node name="Pickups" type="Node3D" parent="."]
+
+[node name="Targets" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="WallNorth" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="WallSouth" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="WallEast" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="WallWest" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarA" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarB" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarC" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarD" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarE" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)
+
+[node name="PillarF" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(0, 0, 0)

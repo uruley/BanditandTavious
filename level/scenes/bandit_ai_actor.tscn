@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c2bwwfcpgf337"]
+
+[node name="BanditAIActor" type="CharacterBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]

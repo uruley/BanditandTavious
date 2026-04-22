@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ck8jhebqousfj"]
+
+[ext_resource type="Script" uid="uid://c6afmbxrtpft0" path="res://level/scripts/bandit_ai_placeholder_scene.gd" id="1_ay8h6"]
+
+[node name="BanditAI" type="Node3D"]
+script = ExtResource("1_ay8h6")
