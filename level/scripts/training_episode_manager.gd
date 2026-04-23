@@ -31,6 +31,7 @@ const ROLE_SCRIPTS := {
 
 
 func _ready() -> void:
+	_apply_cli_overrides()
 	_spawn_all_agents()
 	_spawn_pickups()
 	_start_episode()
@@ -138,3 +139,32 @@ func _reset_pickups() -> void:
 	for pickup in pickup_container.get_children():
 		if pickup.has_method("reset"):
 			pickup.reset()
+
+
+func _apply_cli_overrides() -> void:
+	var args := _parse_cli_args()
+	if args.has("episodes"):
+		max_episodes = max(1, int(args["episodes"]))
+	if args.has("duration"):
+		episode_duration = max(1.0, float(args["duration"]))
+	if args.has("seed"):
+		seed(int(args["seed"]))
+	print("[Training] Config episodes=%d duration=%.2f population=%d headless=%s" % [
+		max_episodes, episode_duration, population_size, str(DisplayServer.get_name() == "headless")
+	])
+
+
+func _parse_cli_args() -> Dictionary:
+	var parsed := {}
+	for raw_arg in OS.get_cmdline_user_args():
+		var arg := String(raw_arg).strip_edges()
+		if not arg.begins_with("--"):
+			continue
+		var body := arg.substr(2)
+		var sep := body.find("=")
+		if sep <= 0:
+			continue
+		var key := body.substr(0, sep).to_lower()
+		var value := body.substr(sep + 1)
+		parsed[key] = value
+	return parsed

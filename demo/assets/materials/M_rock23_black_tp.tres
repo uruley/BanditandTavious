@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://c307hdmos4gtm" path="res://demo/assets/textures/rock023_nrm_rgh.png" id="2_snl3x"]
 
 [resource]
-albedo_color = Color(0.047557652, 0.047557652, 0.04755763, 1)
+albedo_color = Color(0.9678237, 0.9525228, 0.9934214, 1)
 albedo_texture = ExtResource("1_1js8i")
 metallic = 1.0
 metallic_specular = 0.43

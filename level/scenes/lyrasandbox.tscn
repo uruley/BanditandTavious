@@ -1,7 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://coxvaadvc7tbi"]
+[gd_scene load_steps=31 format=3 uid="uid://coxvaadvc7tbi"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_h2cdk"]
-[ext_resource type="PackedScene" path="res://level/scenes/lyra_player_clean.tscn" id="2_gegpj"]
+[ext_resource type="PackedScene" uid="uid://ct0qaboi5x4o6" path="res://level/scenes/lyra_player_clean.tscn" id="2_gegpj"]
 [ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="3_5kwaj"]
 [ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_a2gra"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="5_x2w4u"]
@@ -15,6 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="13_xajh0"]
 [ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="14_5kwaj"]
 [ext_resource type="PackedScene" uid="uid://xav86mjdu683" path="res://portal.tscn" id="14_gegpj"]
+[ext_resource type="PackedScene" path="res://level/scenes/DestructibleCube.tscn" id="16_a2gra"]
+[ext_resource type="PackedScene" path="res://level/scenes/DestructiblePillar.tscn" id="17_x2w4u"]
 
 [sub_resource type="Gradient" id="Gradient_l6keq"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -83,6 +85,8 @@ points = PackedVector3Array(1.0158731, 0.015873017, 1.0158731, -1.0158731, -0.01
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_x2w4u"]
 points = PackedVector3Array(1.0158731, 0.015873017, 1.0158731, -1.0158731, -0.015873017, -1.0158731, -1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, -1.0158731, -1.0158731, -0.015873017, 1.0158731, -1.0158731, 0.015873017, 1.0158731, 1.0158731, 0.015873017, -1.0158731, 1.0158731, -0.015873017, 1.0158731)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5kwaj"]
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_h2cdk")
@@ -376,7 +380,7 @@ theme_override_fonts/font = ExtResource("6_tcem1")
 text = "Send"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://level/scenes/lyra_player_clean.tscn")
+_spawnable_scenes = PackedStringArray("uid://ct0qaboi5x4o6")
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="PlayersContainer" type="Node3D" parent="."]
@@ -456,6 +460,44 @@ linked_portal_path = NodePath("../Portal2")
 [node name="Portal2" parent="." instance=ExtResource("14_gegpj")]
 transform = Transform3D(0.9999999, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 5.3232155, 23.425024, -50.078205)
 linked_portal_path = NodePath("../Portal")
+
+[node name="MenuCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 10, 10, 10)
+current = true
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="."]
+transform = Transform3D(-0.18961023, 0, -2.1815727, 0, 2, 0, 5.354694, 0, -0.0772497, 21.922203, -0.0068130493, 11.629223)
+use_collision = true
+mesh = SubResource("BoxMesh_5kwaj")
+
+[node name="CSGMesh3D4" type="CSGMesh3D" parent="."]
+transform = Transform3D(-0.19270755, 0, -2.2767992, 0, 2, 0, 5.442164, 0, -0.080621675, 14.82342, 0.44979548, 11.629223)
+use_collision = true
+mesh = SubResource("BoxMesh_5kwaj")
+
+[node name="DestructibleCube" parent="." instance=ExtResource("16_a2gra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.92952, 1.9314876, 10.34683)
+collision_mask = 1
+fractured_scene = null
+
+[node name="DestructibleCube2" parent="." instance=ExtResource("16_a2gra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.92952, 1.9314876, 13.660061)
+collision_mask = 1
+fractured_scene = null
+
+[node name="DestructibleCube3" parent="." instance=ExtResource("16_a2gra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.55587, 1.4424329, 13.660061)
+collision_mask = 1
+fractured_scene = null
+
+[node name="DestructiblePillar2" parent="." instance=ExtResource("17_x2w4u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.046167, 0.9723443, 18.022345)
+
+[node name="DestructiblePillar3" parent="." instance=ExtResource("17_x2w4u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.65055, 6.0188537, 21.835068)
+
+[node name="DestructiblePillar4" parent="." instance=ExtResource("17_x2w4u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.046167, 1.787702, 26.86054)
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]

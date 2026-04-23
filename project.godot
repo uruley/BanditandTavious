@@ -139,7 +139,9 @@ audio_test={
 
 [physics]
 
+common/physics_ticks_per_second=120.0
 3d/physics_engine="Jolt Physics"
+jolt_physics_3d/simulation/speculative_contact_distance=0.3
 
 [rendering]
 

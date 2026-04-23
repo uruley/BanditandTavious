@@ -1,18 +1,25 @@
-[gd_scene load_steps=21 format=3 uid="uid://dcnvmyxie0fl5"]
+[gd_scene load_steps=29 format=3 uid="uid://dcnvmyxie0fl5"]
 
 [ext_resource type="Script" uid="uid://bnusqco30pr14" path="res://level/scripts/level.gd" id="1_pk5x3"]
 [ext_resource type="PackedScene" uid="uid://cffjduipbb3s5" path="res://level/scenes/player.tscn" id="2_a2wgb"]
 [ext_resource type="FontFile" uid="uid://diapabmalpcrj" path="res://assets/fonts/Kurland.ttf" id="3_ugggl"]
 [ext_resource type="PackedScene" uid="uid://dqwntao8i226d" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="4_a2wgb"]
 [ext_resource type="PackedScene" uid="uid://d3sr0a7dxfkr8" path="res://addons/terrain_3d/extras/particle_example/Terrain3DParticles.tscn" id="4_l6keq"]
+[ext_resource type="Script" uid="uid://bp7r4ppgq1m0g" path="res://addons/terrain_3d/extras/particle_example/terrain_3D_particles.gd" id="5_v3rak"]
+[ext_resource type="Material" uid="uid://el5y10hnh13g" path="res://addons/terrain_3d/extras/particle_example/process_material.tres" id="6_4h4xs"]
 [ext_resource type="PackedScene" uid="uid://du4y6b6m5u2r" path="res://level/scenes/mid_century_chair.tscn" id="7_4ecn5"]
 [ext_resource type="PackedScene" uid="uid://bnv8v4ryr4xat" path="res://assets/models/Furniture/Tables/CoffeeTable_01_2k.gltf" id="7_6o7ld"]
+[ext_resource type="Material" uid="uid://ljo1wt61kbkq" path="res://addons/terrain_3d/extras/particle_example/grass_material.tres" id="7_sgw8f"]
 [ext_resource type="PackedScene" uid="uid://b6clh4ib88ayi" path="res://level/scenes/wooden_hammer_01_2k.tscn" id="7_u3ur3"]
 [ext_resource type="Script" uid="uid://hf3lbgg0xbbc" path="res://level/scripts/orbiting_sphere.gd" id="8_6o7ld"]
 [ext_resource type="Script" uid="uid://dd1evn2mfv4t4" path="res://level/scripts/terrain_dig.gd" id="9_terrain"]
 [ext_resource type="Terrain3DAssets" uid="uid://bk8wwx0rgn232" path="res://terrain_data/assets.tres" id="10_assets"]
 [ext_resource type="PackedScene" uid="uid://71dm7uuluv8t" path="res://assets/models/House/House.gltf" id="12_th4of"]
 [ext_resource type="PackedScene" uid="uid://cdjf1ebn02vs1" path="res://assets/animations/quaternius/Unreal-Godot/UAL1_Standard.glb" id="13_3nn1q"]
+[ext_resource type="PackedScene" path="res://level/scenes/DestructibleCube.tscn" id="17_4h4xs"]
+[ext_resource type="Script" uid="uid://bk4nlj27iis2h" path="res://level/scripts/destructible.gd" id="18_6krm1"]
+[ext_resource type="PackedScene" path="res://level/scenes/DestructiblePillar.tscn" id="19_q7reh"]
+[ext_resource type="PackedScene" uid="uid://ct5g5msm5bvun" path="res://assets/fractured_pillar.glb" id="20_q7reh"]
 
 [sub_resource type="Gradient" id="Gradient_l6keq"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -55,6 +62,11 @@ _shader_parameters = {
 &"projection_threshold": 0.8
 }
 
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_fwrtk"]
+shape = 0
+section_length = 0.18
+section_segments = 1
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_npnbc"]
 color = Color(0, 0, 0, 0)
 
@@ -78,11 +90,25 @@ data_directory = "res://terrain_data"
 material = SubResource("Terrain3DMaterial_afffq")
 assets = ExtResource("10_assets")
 collision_mode = 3
+collision_radius = 128
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="Terrain3DParticles" parent="Environment/Terrain3D" node_paths=PackedStringArray("terrain") instance=ExtResource("4_l6keq")]
+[node name="Terrain3DParticles" type="Node3D" parent="Environment/Terrain3D" node_paths=PackedStringArray("terrain") instance=ExtResource("4_l6keq")]
+script = ExtResource("5_v3rak")
 terrain = NodePath("..")
+instance_spacing = 0.25
+cell_width = 24.0
+grid_width = 5
+rows = 96
+amount = 9216
+process_material = ExtResource("6_4h4xs")
+mesh = SubResource("RibbonTrailMesh_fwrtk")
+shadow_mode = 0
+mesh_material_override = ExtResource("7_sgw8f")
+min_draw_distance = 60.0
+particle_count = 230400
+metadata/_edit_lock_ = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
 
@@ -369,7 +395,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="island_tree_02_2k" parent="." instance=ExtResource("4_a2wgb")]
+[node name="island_tree_02_2k" type="Node3D" parent="." instance=ExtResource("4_a2wgb")]
 transform = Transform3D(3.566, 0, 0, 0, 7.977, 0, 0, 0, 5, -0.769619, 0.36159286, -0.79700375)
 
 [node name="OrbitingSphere" type="CSGSphere3D" parent="island_tree_02_2k"]
@@ -401,20 +427,51 @@ transform = Transform3D(1.914979, 0, 0, 0, 2.2449841, 0, 0, 0, 1.6802603, 0.2482
 visible = false
 use_collision = true
 
-[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" parent="." instance=ExtResource("7_6o7ld")]
+[node name="jacaranda_tree_2k2#CoffeeTable_01_2k" type="Node3D" parent="." instance=ExtResource("7_6o7ld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5735626, 0.25, 15.0141735)
 
-[node name="Chair" parent="." instance=ExtResource("7_4ecn5")]
+[node name="Chair" type="StaticBody3D" parent="." instance=ExtResource("7_4ecn5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5711155, 0.24999994, 12.581118)
 
-[node name="Hammer" parent="." instance=ExtResource("7_u3ur3")]
+[node name="Hammer" type="StaticBody3D" parent="." instance=ExtResource("7_u3ur3")]
 transform = Transform3D(1, 0, 0, 0, -0.048222236, 0.99883664, 0, -0.99883664, -0.048222236, 2.3719578, 0.7985389, 15.398552)
 
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("12_th4of")]
+[node name="Sketchfab_Scene" type="Node3D" parent="." instance=ExtResource("12_th4of")]
 transform = Transform3D(-0.044679366, 0, 3.9997504, 0, 4, 0, -3.9997504, 0, -0.044679366, -4.214855, 21.648602, -51.96839)
 
-[node name="UAL1_Standard" parent="." instance=ExtResource("13_3nn1q")]
+[node name="UAL1_Standard" type="Node3D" parent="." instance=ExtResource("13_3nn1q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4603634, 1.3250542, 9.701809)
+
+[node name="TestDestructibleCube" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+script = "res://level/scripts/destructible.gd"
+
+[node name="TestDestructibleCubeInstance" type="RigidBody3D" parent="." instance=ExtResource("17_4h4xs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -5)
+collision_mask = 3
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("18_6krm1")
+fractured_scene = "res://assets/fractured_cube.glb"
+
+[node name="TestDestructiblePillarInstance" type="RigidBody3D" parent="." instance=ExtResource("19_q7reh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -5)
+collision_mask = 3
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("18_6krm1")
+fractured_scene = ExtResource("20_q7reh")
+
+[node name="DebugFloor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+use_collision = true
+size = Vector3(10, 0.2, 10)
+
+[node name="WorldFloorStatic" type="StaticBody3D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldFloorStatic"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/MainContainer/MainMenu/Buttons/SinglePlayer" to="." method="_on_single_player_pressed"]

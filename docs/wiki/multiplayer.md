@@ -16,15 +16,23 @@ This file is the deep-storage reference for multiplayer behavior in this repo. U
 - Player logic: `level/scripts/player.gd`
 - Player scene: `level/scenes/player.tscn`
 - Network support: `level/scripts/network.gd`
-- Main scene: `level/scenes/Mainland.tscn`
-- Sandbox test scene: `level/scenes/Sandbox.tscn`
+- Main scene: `level/scenes/Sandbox.tscn`
+- Alternate Lyra sandbox: `level/scenes/lyrasandbox.tscn`
+- Clean Lyra runtime player candidate: `level/scenes/lyra_player_clean.tscn`
 
 ## Spawn Flow
 
 - `level.gd` owns `player_scene`, `players_container`, menu state, and multiplayer chat UI.
+- In the current serialized `Sandbox.tscn`, `player_scene` still points to `level/scenes/player.tscn`.
 - `_add_player()` instantiates `player_scene`, names the node with the peer id, sets `player.position = get_spawn_point()`, and adds it to `players_container`.
 - Current spawn generation in `get_spawn_point()` is a fixed scene-aware anchor near `chair.position + SPAWN_OFFSET`, with fallback `Vector3(1.5, 0.05, 12.58)`.
 - After spawn, nick, skin, and position sync RPCs are used to initialize the player.
+
+## Current Runtime Split
+
+- The stock multiplayer path is still the active default: `project.godot` runs `Sandbox.tscn`, and `Sandbox.tscn` exports `player.tscn` through both `player_scene` and `MultiplayerSpawner`.
+- A newer Bachtavious/Lyra multiplayer path exists in `lyra_player_clean.tscn` plus `bachtavious_multiplayer_player.gd`, but it is not yet the project's primary runtime.
+- `lyrasandbox.tscn` currently points at `lyra_player_clean_backup.tscn`, so Lyra work should be treated as an alternate sandbox branch until the scene wiring is intentionally consolidated.
 
 ## Authority and Camera Flow
 

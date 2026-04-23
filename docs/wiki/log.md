@@ -17,3 +17,6 @@ This is an append-only log of significant wiki and memory maintenance events.
 - 2026-04-21: Adopted NotebookLM -> Obsidian wiki -> implementation as the preferred workflow for nontrivial system design and future reusable patterns.
 - 2026-04-21: Added `[[ai_systems|AI Systems]]` wiki page based on NotebookLM research into Godot 4 NPC, enemy, companion, and villager architecture.
 - 2026-04-21: Added `[[ai_training|AI Training Pipeline]]` page documenting `BanditAI` JSONL activity logs, SQLite export workflow, and first ML training target.
+- 2026-04-22: Added `[[architecture|Architecture]]`, corrected multiplayer docs to match serialized scene wiring, and updated AI memory/current state after confirming that `Sandbox.tscn` still uses `player.tscn` while `lyrasandbox.tscn` points to `lyra_player_clean_backup.tscn`.
+- 2026-04-22: Added `[[research_workflow|Research Workflow]]` and updated repo rules/memory so NotebookLM research is compiled into linked Obsidian knowledge instead of isolated report pages.
+- 2026-04-23: Added `[[research_loop|Research Loop]]` plus automation scripts (`tools/run_research_cycle.ps1`, `tools/summarize_experiment.py`) to run multi-cycle headless experiments, generate gap analysis, and feed coach suggestions into the next cycle.

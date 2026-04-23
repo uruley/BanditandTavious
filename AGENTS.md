@@ -56,6 +56,19 @@ Use the `docs/ai/*.md` files for fast operating context and the `docs/wiki/*.md`
 
 ## Wiki Operations
 
+### Research Distillation
+
+When the user asks for NotebookLM research, external research, or a research-backed design pass:
+
+1. Gather or query the source material.
+2. Distill the result into durable project knowledge in `docs/wiki/`, not just a standalone report.
+3. Update the existing domain page if one already covers the topic.
+4. If a new page is needed, link it from `docs/wiki/index.md` and from at least one related wiki page.
+5. Record the durable takeaway in `docs/ai/memory.md` or `docs/ai/current-state.md` when it changes workflow, architecture, or current direction.
+6. Append a concise entry to `docs/wiki/log.md`.
+
+Do not stop at “research notes” if the result should change how the project is understood or built. The target is a linked Obsidian knowledge base that compounds over time.
+
 ### Ingest
 
 When the user asks to ingest a raw source:
@@ -102,6 +115,12 @@ When durable project knowledge changes, update the relevant memory files before 
 - Update `docs/ai/current-state.md` for active blockers, recent fixes, and what is true right now.
 - Update `docs/ai/lessons.md` after a user correction or after discovering a mistake pattern worth preventing.
 - Update `docs/ai/session-notes.md` with a concise handoff when ending a thread with unfinished work or meaningful state.
+
+When research changes project understanding, also make sure the result is woven into the wiki graph:
+
+- update the most relevant domain page instead of creating isolated summaries when possible
+- add or strengthen wikilinks between the new knowledge and existing project pages
+- make the wiki readable as a second-brain knowledge base, not just a folder of reports
 
 If nothing durable changed, leave the files untouched.
 

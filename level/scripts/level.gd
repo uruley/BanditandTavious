@@ -51,6 +51,16 @@ func _ready():
 	_ensure_flight_pad()
 	_ensure_audio_test_player()
 	
+	# TERRAIN3D COLLISION FIX
+	var terrain = get_node_or_null("Environment/Terrain3D")
+	if terrain and terrain.has_method("set_camera"):
+		# In a typical setup, the camera might be on the player. 
+		# For now, let's find any active camera or wait for player spawn.
+		var cam = get_viewport().get_camera_3d()
+		if cam:
+			terrain.set_camera(cam)
+			print("Terrain3D: Camera assigned for collision.")
+	
 	Network.connect("player_connected", Callable(self, "_on_player_connected"))
 	Network.connect("connected_ok", Callable(self, "_on_connected_ok"))
 	Network.connect("connection_failed", Callable(self, "_on_connection_failed"))

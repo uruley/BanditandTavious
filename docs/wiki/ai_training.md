@@ -37,6 +37,8 @@ Snapshot fields include:
 Exporter script:
 
 - `tools/ai_activity_to_sqlite.py`
+- `tools/summarize_experiment.py` (loop analysis and gap detection for evolution runs)
+- `tools/run_research_cycle.ps1` (headless multi-cycle orchestration)
 
 Example command:
 
@@ -73,3 +75,4 @@ Objective:
 
 - This project currently uses offline SQLite export instead of direct in-engine SQL writes.
 - If in-engine SQLite is needed later, add a dedicated Godot SQLite plugin and keep schema parity with the offline exporter.
+- For repeatable overnight improvement loops, use [[research_loop|Research Loop]].

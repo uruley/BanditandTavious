@@ -1,0 +1,25 @@
+{
+  "coach_suggestions": {},
+  "generated_at_utc": "2026-04-23T17:38:39.287584+00:00",
+  "generations_total": 0,
+  "latest_generation": 0,
+  "research_gaps": [
+    "enemy: missing scores in evolution log",
+    "citizen: missing scores in evolution log",
+    "companion: missing scores in evolution log",
+    "No generations found; run headless training first.",
+    "No coach suggestions generated; consider broadening mutation rate or scenario diversity."
+  ],
+  "role_metrics": {
+    "citizen": {
+      "has_data": false
+    },
+    "companion": {
+      "has_data": false
+    },
+    "enemy": {
+      "has_data": false
+    }
+  },
+  "window": 10
+}

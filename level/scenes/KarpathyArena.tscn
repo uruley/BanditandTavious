@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs17v7dnisff7"]
+
+[ext_resource type="Script" uid="uid://dtaesfpdx6pny" path="res://level/scripts/karpathy_arena.gd" id="1_0jqmy"]
+
+[node name="KarpathyArena" type="Node3D"]
+script = ExtResource("1_0jqmy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 5)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.4895347, 0.8719839, 0, -0.8719839, 0.4895347, 0, 11.347583, 10.020889)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+use_collision = true
+size = Vector3(20, 0.5, 20)
+
+[node name="WallN" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -10.25)
+use_collision = true
+size = Vector3(20, 2, 0.5)
+
+[node name="WallS" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10.25)
+use_collision = true
+size = Vector3(20, 2, 0.5)
+
+[node name="WallE" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.25, 1, 0)
+use_collision = true
+size = Vector3(0.5, 2, 20)
+
+[node name="WallW" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 1, 0)
+use_collision = true
+size = Vector3(0.5, 2, 20)
