@@ -25,3 +25,4 @@ codex.md
 *_backup.tscn
 *.bak
 logs/*.log
+logs/*.jsonl
