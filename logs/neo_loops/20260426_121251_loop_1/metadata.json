@@ -1,0 +1,9 @@
+﻿{
+    "schema_version":  1,
+    "created_utc":  "2026-04-26T17:12:51Z",
+    "loop_index":  1,
+    "goal":  "Audit existing health/death/recovery code and propose the smallest shared life-system spine for Lyra AI and players",
+    "active_scene":  "res://level/scenes/lyrasandbox.tscn",
+    "recommended_next_loop":  "Implement shared health/damage/death logging for Lyra AI actors and prove it in lyrasandbox.",
+    "status":  "evaluated"
+}

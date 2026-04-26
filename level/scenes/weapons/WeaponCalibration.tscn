@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://pd72na1epqdr"]
+
+[ext_resource type="PackedScene" uid="uid://bapa4ovkfou2g" path="res://Bachtavious.tscn" id="1_char"]
+[ext_resource type="Script" uid="uid://2almyivl88io" path="res://level/scripts/weapons/weapon_alignment_calibration.gd" id="2_calibration"]
+[ext_resource type="Resource" uid="uid://br5g573pxowwo" path="res://level/data/weapons/future_shotgun.tres" id="2_wt384"]
+
+[node name="WeaponCalibration" type="Node3D"]
+script = ExtResource("2_calibration")
+weapon_resource = ExtResource("2_wt384")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.82464, 0.56565803, 0, -0.56565803, -0.82464, 0, 10, -9.582306)
+
+[node name="Character" parent="." instance=ExtResource("1_char")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0016608238, -0.01791215, -0.0037766695)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.83452606)
+current = true

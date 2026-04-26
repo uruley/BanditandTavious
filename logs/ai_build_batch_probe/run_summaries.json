@@ -1,0 +1,19 @@
+﻿{
+    "run":  1,
+    "seed":  4499,
+    "exit_code":  0,
+    "total_events":  8,
+    "simple_loop_score":  -186.666,
+    "build_completed_count":  0,
+    "build_event_count":  0,
+    "stuck_event_count":  0,
+    "route_visit_count":  0,
+    "unique_waypoint_count":  0,
+    "shot_count":  0,
+    "shot_hit_count":  0,
+    "weapon_success":  null,
+    "build_success":  null,
+    "summary_path":  "logs/ai_build_batch_probe/run_0001.summary.json",
+    "metrics_path":  "logs/ai_build_batch_probe/run_0001.jsonl",
+    "log_path":  "logs/ai_build_batch_probe/run_0001.godot.log"
+}

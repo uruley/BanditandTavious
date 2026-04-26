@@ -1,0 +1,400 @@
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2548)
+WARNING: res://level/scenes/DestructibleLargeCube.tscn:4 - ext_resource, invalid UID: uid://beo8luhfbe0it - using text path instead: res://assets/fractured_large_cube.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: res://level/scenes/vehicles/BoxCarPropeller.tscn:4 - ext_resource, invalid UID: uid://boxcar001 - using text path instead: res://assets/models/BoxCar.glb
+   at: load (scene/resources/resource_format_text.cpp:444)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering_server.compat.inc:58)

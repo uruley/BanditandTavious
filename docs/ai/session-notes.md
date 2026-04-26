@@ -8,6 +8,76 @@ Related:
 
 ## Last Significant Session
 
+- Ran one bounded Neo audit loop for health/death/recovery architecture:
+  - Found no shared life-system spine yet.
+  - Existing damage is fragmented across `player.gd` instant respawn-on-hit, `bachtavious_multiplayer_player.gd` projectile firing without `take_damage`, Lyra AI actors without health, dummy-only health in `lyra_ai_combat_target.gd`, and destructible-only health/destroy scripts.
+  - Added `docs/wiki/life_system.md` as the proposed smallest shared spine: a reusable `LifeComponent` with damage, health, downed/death, recovery, revive, respawn, metrics, and memory events.
+  - Updated the goal sheet and backlog so the next recommended implementation loop is a first shared life-system slice in `lyrasandbox`.
+- Ran one bounded Neo loop toward Lyra AI persistent memory:
+  - Added `level/scripts/lyra_ai_memory_store.gd`, created by `lyra_ai_phase1_manager.gd` as `AIMemoryStore`.
+  - The memory store writes persistent actor summaries to `user://lyra_ai_memory.json` and event history to `user://lyra_ai_memory_events.jsonl`.
+  - `lyra_ai_metrics.gd` now forwards AI metric events into the memory store before printing/writing JSONL metrics.
+  - `lyra_ai_actor.gd` registers each actor on startup and logs `ai_memory_restored` with remembered spawn count, last goal, successful interactions, and weapon pickups.
+  - Added CLI support for `--memory-path` and `--reset-ai-memory` on the Lyra AI manager.
+  - Verified with two sequential headless `lyrasandbox` runs: reset run loaded 0 actor memories, restarted run loaded 6 actor memories and restored all 6 gatherers. Evidence is stored in `logs/neo_loops/20260426_114246_loop_1/`.
+  - Current limitation: memory is durable and restored, but it does not yet influence future behavior. Next loop should make one remembered fact alter utility scoring or role behavior.
+- Added the first Neo kernel upgrade slice:
+  - Created canonical `docs/ai/neo_state.json` for active goal, active scene, main scene, blockers, evidence paths, trust levels, and recommended next loop.
+  - Created ranked `docs/ai/neo_backlog.md` so `neo_goal.md` can stay focused on one active objective.
+  - Updated `AGENTS.md`, `docs/ai/neo_loop.md`, `tools/neo_check.ps1`, and `tools/neo_loop.ps1` so base Neo tooling reads and reports canonical state.
+  - Added `tools/new_neo_loop_artifact.ps1` and wired `tools/neo_loop.ps1` to create replayable `logs/neo_loops/` artifacts containing proposal, before check, result, decision, and lesson files.
+  - Extended `tools/neo_check.ps1` so it reports the latest loop artifact status, decision, and recommendation.
+  - Extended `tools/neo_check.ps1` again so it reports milestone evidence from latest Lyra AI JSONL metrics, latest batch summary, latest Godot log, and live visual artifacts. Current verified output sees weapon, combat, route, and build milestone signals, no stuck events in the latest metrics, and no live visual evidence artifact yet.
+  - Added conservative milestone gates to `tools/neo_check.ps1`: `FAIL` for broken repo/state/evidence integrity, `WARN` for missing visual evidence/log errors/stuck events/missing metrics, and `PASS` only when repo health and milestone signals are clean. `tools/neo_loop.ps1` now folds the gate into keep/revert recommendations while still leaving the decision to the operator.
+  - Added `active_gate_profile` to `docs/ai/neo_state.json` and named gate profiles in `tools/neo_check.ps1`: `neo_kernel`, `lyra_ai_headless`, `lyra_visual`, `sandbox_terrain`, and `persistent_world`. The current active profile is `lyra_ai_headless`, so missing screenshot evidence no longer warns during pure headless metrics checks.
+  - Added `tools/register_neo_visual_evidence.ps1` so screenshots/videos can be registered into `logs/visual_evidence/` with `manifest.json`; `tools/neo_check.ps1 -GateProfileOverride lyra_visual` now fails until a registered manifest-backed capture exists.
+  - Added `tools/capture_lyra_ai_visual.gd` and used it in loop artifact `logs/neo_loops/20260426_113034_loop_1/` to capture labeled runtime Lyra AI actors. Registered the result at `logs/visual_evidence/20260426_113419_other/manifest.json`; `tools/neo_check.ps1 -GateProfileOverride lyra_visual` now passes for the generic AI-character visibility claim.
+  - Verified `tools/neo_check.ps1` reports `Neo State OK: True`, active scene load status true, no errors, and main-scene/state agreement.
+- Reviewed `docs/raw/masterplans/master_plan.pdf` and distilled it into `docs/wiki/persistent_sandbox_ai.md`.
+  - Main decision: build durable sandbox persistence before model training.
+  - Preferred first persistence slice: theft event -> shopkeeper memory -> relationship change -> close/reload -> changed shopkeeper behavior with log/screenshot proof.
+  - Updated `docs/ai/ai_masterplan.md` with `M6: Persistent World Memory` so the small-milestone AI path now has a persistence milestone alongside visible building and tactical combat.
+- Added the first visible building milestone:
+  - Added `lyra_ai_build_site.gd` with a visible foundation/progress marker and completed plank barricade.
+  - `lyra_ai_phase1_manager.gd` now spawns `AIBuildSites/BuildSite_Barricade_01` near the verified route/resource layer.
+  - Added a `build` utility goal so resource-carrying actors can deliver resources to build sites.
+  - Added `build_started`, `build_resource_delivered`, and `build_completed` metrics plus parser and batch-runner summaries.
+  - 50 fixed 18-second seeds produced 49/50 completed builds; the failing seed showed haulers stopping 3.5-4.1m short, so `build_distance` was increased to `4.5`.
+  - Post-fix 10-seed tail verification produced 10/10 completed builds, 0 stuck events, 40 weapon pickups, 97/97 shots hit, and 31 route visits.
+- Added the concrete waypoint-navigation milestone after the user correctly pointed out that expanded generated nav was not enough:
+  - Added `lyra_ai_waypoint.gd` and runtime `AINavWaypoints` with named markers including `WP_CentralMarket`, `WP_EastOuter`, `WP_NorthEast`, and `WP_SpawnLane`.
+  - Added an `explore` task-board goal and scout route logic in `lyra_ai_actor.gd`.
+  - Added `route_visit` metrics and parser route summaries for route visits, visited waypoint counts, and visits by actor.
+  - Split scout patrols into reachable lanes so one scout exercises the outer-east/north route and the other patrols the inner spawn/central route.
+  - Final 5 fixed 30-second sequential seeds: 30 route visits, 4 distinct waypoint names in every run, 20 weapon pickups, 96 shots, 95 hits, 0 stuck events.
+- Added the first bigger-navigation milestone:
+  - Expanded the generated sandbox nav from the older 3x3 block into a 6x6 connected grid.
+  - Added far food/water/resource markers and `AI_TargetDummy_02` in the expanded east corridor.
+  - Set AI capsules to collide with world geometry but not each other.
+  - Added `combat_seek_distance` so actors reject overlong combat routes that repeatedly hit blocked sandbox geometry.
+  - Baseline 5 fixed 18-second seeds before the nav expansion: 65 non-combat interactions, 20 weapon pickups, 118 shots, 98 hits, 0 stuck events.
+  - Expanded 10 fixed 18-second seeds after the reach filter: 131 non-combat interactions, 40 weapon pickups, 186 shots, 148 hits, 30 hits on `AI_TargetDummy_02`, and 0 stuck events.
+- Added the first Lyra AI shooting milestone:
+  - Created a runtime combat target dummy through `lyra_ai_combat_target.gd` and `AICombatTargets`.
+  - Added a `combat` task-board goal that does not reserve the shared target dummy.
+  - Armed AI can now select `combat`, fire via `WeaponMaster.fire()`, raycast to the target dummy, and log `shot_fired` metrics.
+  - Extended `parse_ai_metrics.py` with `shot_count`, `shot_hit_count`, `shot_accuracy`, and `shot_results`.
+  - Single 18-second headless run: 4 weapon pickups, 22 shots, 18 hits, 0 stuck events.
+  - 5-seed 18-second batch: 20 weapon pickups, 117 shots, 95 hits, 0 stuck events, accuracy `0.812`.
+- Added `docs/ai/ai_masterplan.md` as the small-milestone plan: weapon pickup, shooting, bigger navigation, first building, then tactical combat.
+- Ran an operator-requested 40-loop headless Lyra AI pass:
+  - 40 valid 12-second loops averaged score `95.5502`, 14.9 interactions, 3.5 weapon pickups, and 1.35 stuck events.
+  - Stuck analysis showed one clear cluster: `AI_PistolPickup_02` caused 20 of 54 stuck events, mostly from `Gatherer_03` stopping short near the nav-cell edge.
+  - Moved `AI_PistolPickup_02` inward from `Vector3(27.0, 0.9, 22.0)` to `Vector3(25.0, 0.9, 20.0)` in `level/scripts/lyra_ai_phase1_manager.gd`.
+  - Fresh 10-loop verification hit 40/40 weapon pickups, averaged score `109.8498`, and had zero stuck events on weapon targets.
+  - Same-seed comparison against the first 10 baseline loops improved average score `98.8507 -> 107.631`, interactions `151 -> 162`, weapon pickups `35 -> 40`, and stuck events `12 -> 10`.
+- Added a first code-driven vehicle prototype:
+  - Created `level/scenes/vehicles/BoxCarPropeller.tscn` as a boxy `CharacterBody3D` car with four visual wheels and a rear propeller.
+  - Created `level/scripts/vehicles/box_car_propeller.gd` to drive simple arcade movement plus speed-derived wheel spin, front wheel steering angle, and propeller rotation.
+  - Added visible yellow wheel spin markers, colored runtime materials, and `preview_visual_animation` so the animation is obvious even when the vehicle is not being actively driven.
+  - Created `level/scenes/vehicles/BoxCarPropellerTest.tscn` and `box_car_propeller_test.gd` for preview plus bounded headless motion verification.
+  - Verified headless motion with explicit `--log-file`: speed `4.0`, wheel spin `15.7619`, propeller spin `44.1333`, and `motion_passed=true`.
+  - Visual screenshot capture remains pending because the headless display server cannot read the viewport texture.
 - Ran an operator-requested 30-loop headless Lyra AI improvement pass:
   - Expanded runtime AI navigation to a larger connected corridor-style sandbox nav mesh.
   - Runtime-corrected persistent food/water/resource target positions and added fourth target variants for each resource type.
@@ -92,8 +162,9 @@ Related:
 
 ## Pending Verification From This Session
 
-- Live editor walk-up test for the new Lyra pickup scenes in `level/scenes/lyrasandbox.tscn`, with screenshot or recording evidence for `E` pickup and `G` drop.
-- Editor calibration pass for `level/data/weapons/pistol.tres` in `WeaponCalibration.tscn`, with a screenshot of alignment against `Pistol_Aim_Neutral`.
+- Live editor walk-up test for the new Lyra pickup scenes in `level/scenes/lyrasandbox.tscn`, with screenshot or recording evidence for `E` pickup and `G` drop registered through `tools/register_neo_visual_evidence.ps1`.
+- Editor calibration pass for `level/data/weapons/pistol.tres` in `WeaponCalibration.tscn`, with a screenshot of alignment against `Pistol_Aim_Neutral` registered through `tools/register_neo_visual_evidence.ps1`.
+- Generic AI-character visibility now has registered proof, but it does not prove pickup/drop or weapon alignment.
 - Run `lyrasandbox.tscn` and confirm:
   - wall-run animation chosen by `get_wall_run_animation()` matches desired parkour visual
   - low obstacle vault and high mantle transitions complete and recover into `Run/Idle`
@@ -102,6 +173,7 @@ Related:
 ## Recommended Next Steps
 
 - In Godot, run `level/scenes/lyrasandbox.tscn` as the current scene, walk Bachtavious near `RiflePickup_Ground` or `PistolPickup_Ground`, press `E`, then press `G` to drop. The expected log lines are `WEAPON_PICKUP: equipped Rifle` / `WEAPON_PICKUP: equipped Pistol` and `Dropping weapon...`.
+- Register the resulting screenshot or recording with `.\tools\register_neo_visual_evidence.ps1 -SourcePath "<capture path>" -EvidenceType lyra_pickup_drop -Scene "res://level/scenes/lyrasandbox.tscn" -Claim "Bachtavious can pick up and drop a weapon visually"`, then check it with `.\tools\neo_check.ps1 -GateProfileOverride lyra_visual`.
 - Open `level/scenes/weapons/WeaponCalibration.tscn`, assign `level/data/weapons/pistol.tres`, and tune the resource offsets until the pistol grip sits correctly in Bachtavious's right hand through `Pistol_Aim_Neutral`, `Pistol_Shoot`, and `Pistol_Reload`.
 - After Lyra live pickup is visually confirmed, decide whether the stock main `Sandbox.tscn` / `player.gd` runtime should be migrated to `lyra_player_clean.tscn` or given the same `WeaponInventoryComponent` bridge.
 - Replace hand-authored Lyra AI broad-nav rectangles with a real navigation bake or explicit waypoint/corridor graph from sandbox collision geometry.

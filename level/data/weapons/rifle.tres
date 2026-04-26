@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://bwdy7oq2tsbw"]
+
+[ext_resource type="Script" uid="uid://dw6d3iej8ojns" path="res://level/scripts/weapons/weapon_resource.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dvbybr4bo0lqs" path="res://SilverRifle.tscn" id="2_visuals"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_name = "Rifle"
+weapon_visuals = ExtResource("2_visuals")
+position_offset = Vector3(-0.06, 0.02, -0.03)
+rotation_offset = Vector3(0, -180, 0)
+scale_offset = Vector3(1.4, 1, 1)
+damage = 25.0
+fire_rate = 0.1
+mag_size = 30
+is_automatic = true

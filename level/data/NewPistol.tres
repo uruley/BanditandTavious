@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://cfsxp7sic0pns"]
+
+[ext_resource type="Script" uid="uid://dw6d3iej8ojns" path="res://level/scripts/weapons/weapon_resource.gd" id="1_xmkq8"]
+[ext_resource type="PackedScene" uid="uid://dvbybr4bo0lqs" path="res://SilverRifle.tscn" id="2_6spcu"]
+
+[resource]
+script = ExtResource("1_xmkq8")
+weapon_name = "silverpistol"
+weapon_visuals = ExtResource("2_6spcu")
+position_offset = Vector3(-0.06670844, 0.013296485, -0.026506007)
+rotation_offset = Vector3(0, 0, 0)
+scale_offset = Vector3(1, 1, 1)
+muzzle_position_offset = Vector3(0, 0, 0)
+muzzle_rotation_offset = Vector3(0, 0, 0)
+metadata/_custom_type_script = "uid://dw6d3iej8ojns"

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "evaluated",
+  "loop_index": 1,
+  "decision": "keep",
+  "evaluated_utc": "2026-04-26T16:34:36Z",
+  "goal": "Capture visual proof that the Lyra AI character is visible",
+  "visual_evidence_manifest": "logs/visual_evidence/20260426_113419_other/manifest.json",
+  "visual_evidence_path": "logs/visual_evidence/20260426_113419_other/evidence.png",
+  "source_capture_path": "logs/neo_loops/20260426_113034_loop_1/ai_character_camera_capture.png",
+  "capture_tool": "tools/capture_lyra_ai_visual.gd",
+  "evaluation": {
+    "recommendation": "RECOMMEND KEEP",
+    "reasons": [
+      "Registered manifest-backed live visual evidence exists.",
+      "Capture shows labeled runtime Lyra AI actors in lyrasandbox.",
+      "Repo health checks remained clean."
+    ]
+  }
+}

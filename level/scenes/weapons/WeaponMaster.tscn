@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://xjgwawethlr6"]
+
+[ext_resource type="Script" uid="uid://crp0bjijvsj0k" path="res://level/scripts/weapons/weapon_master.gd" id="1_csglp"]
+[ext_resource type="Resource" uid="uid://cfsxp7sic0pns" path="res://level/data/NewPistol.tres" id="2_x3868"]
+
+[node name="WeaponMaster" type="Node3D"]
+script = ExtResource("1_csglp")
+weapon_resource = ExtResource("2_x3868")
+
+[node name="Muzzle" type="Marker3D" parent="."]
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+
+[node name="CooldownTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="VisualContainer" type="Node3D" parent="."]
+
+[node name="CameraGuide" type="Camera3D" parent="."]

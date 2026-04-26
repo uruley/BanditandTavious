@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://br5g573pxowwo"]
+
+[ext_resource type="Script" uid="uid://dw6d3iej8ojns" path="res://level/scripts/weapons/weapon_resource.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cnaaxias0m1kj" path="res://assets/weapons/Shotguns/FutureShotgun.tscn" id="2_visuals"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_name = "Future Shotgun"
+weapon_visuals = ExtResource("2_visuals")
+position_offset = Vector3(-0.095, 0, 0.06)
+rotation_offset = Vector3(-90, -2.575, -0.925)
+muzzle_position_offset = Vector3(-0.07, 0.005, -0.425)
+muzzle_rotation_offset = Vector3(-25.955, -3.45, -1.75)
+damage = 35.0
+fire_rate = 1.0
+mag_size = 8
+metadata/_custom_type_script = "res://level/scripts/weapons/weapon_resource.gd"

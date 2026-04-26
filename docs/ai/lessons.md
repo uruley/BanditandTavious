@@ -19,10 +19,20 @@ Related:
 - The goal is not just to patch immediate bugs but to build persistent memory and reusable workflow in the repo.
 - When diagnosing “falling through the floor,” inspect the real active world setup, not only the player scene.
 - The goal of NotebookLM research is a compounding Obsidian second brain, not a pile of standalone reports. Research results should update linked domain knowledge and project memory.
+- When the user asks for bigger navigation, do not count larger generated nav rectangles as the whole answer. Add route behavior and metrics that prove actors actually traverse named locations.
+- For the Lyra AI loop, goal selection is not enough. Verify the complete lifecycle: goal picked, task started, task completed or failed with a reason, state/reservations cleaned up, and the actor moves on to the next useful goal.
+- Use headless Godot loops as the default AI verification path, but use screenshots or windowed/editor captures for visible claims such as building appearance, weapon alignment, animation state, terrain/nav visibility, or UI state.
 
 ## Process Corrections
 
+- Do not await `RenderingServer.frame_post_draw` or assume viewport screenshots are available in Godot headless runs. Check `DisplayServer.get_name()` and use a bounded watchdog so verification cannot hang indefinitely.
 - For repeated Godot headless metrics, avoid reusing a single JSONL path unless the file is explicitly removed before writing. Batch loops exposed stale null/trailing bytes in `logs/ai_metrics.jsonl`; use unique `--metrics-path` values for loop artifacts.
+- For runtime-spawned AI pickups, avoid placing the target directly on generated nav quad edges. A pickup can look reachable but repeatedly make `NavigationAgent3D` stop short; place the interactable inside the nav cell or verify with same-seed loop metrics.
+- Generated nav can overpromise routes through real sandbox collision. When a far target creates a repeat stuck point, use fixed-seed target breakdowns and add reach filters or route waypoints instead of assuming a larger nav mesh is enough.
+- Waypoint navigation is only real after `route_visit` metrics prove arrival. Decision logs that merely select a waypoint do not prove navigation; verify visits, distinct waypoint names, and stuck counts.
+- Lyra AI headless loop runs must launch `res://level/scenes/lyrasandbox.tscn` explicitly. Launching the project main scene (`Sandbox.tscn`) will not start `LyraAIPrototype` metrics and can look like a hung AI run.
+- Build interactions need a larger acceptance radius than pickup/resource interactions on the hand-authored sandbox nav grid. The first build site made haulers stop 3.5-4.1m short until `build_distance` was raised to `4.5`.
+- Scout patrol lanes should match reachable corridors. Forcing every scout through the same crossing produced late route stuck events; lane-specific routes plus a route-visit priority cap produced clean final metrics.
 - For standalone character test scenes, copy the proven third-person camera rig pattern from `level/scenes/player.tscn` before treating the setup as ready.
 - Do not change `project.godot` main scene as a convenience for testing without explicit user approval; prefer `F6` on the target scene or ask first.
 - When menu buttons stop responding, inspect overlapping sibling `Control` nodes first. Hidden children under a still-visible parent `Control` can leave a mouse-blocking overlay over the menu.

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyfp1tg6eay56"]
+
+[ext_resource type="Script" uid="uid://c5obja5h8yeor" path="res://weapon_test_scene.gd" id="1_ovjfx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xrb7e"]
+size = Vector3(20, 0.1, 20)
+
+[node name="WeaponTestScene" type="Node3D"]
+script = ExtResource("1_ovjfx")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("BoxShape3D_xrb7e")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="PlayerInstance" type="CharacterBody3D" parent="."]

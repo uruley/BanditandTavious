@@ -1,0 +1,17 @@
+﻿{
+    "runs_requested":  1,
+    "valid_runs":  1,
+    "duration_sec":  18,
+    "actor_count":  6,
+    "start_seed":  4550,
+    "build_completed_runs":  1,
+    "total_build_completed":  1,
+    "total_build_events":  4,
+    "total_stuck_events":  0,
+    "total_route_visits":  3,
+    "total_shots":  10,
+    "total_shot_hits":  10,
+    "total_weapon_success":  4,
+    "total_build_success":  2,
+    "average_score":  343.8836
+}

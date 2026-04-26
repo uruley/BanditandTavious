@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://level/scripts/destructible.gd" id="1_6323c"]
+[ext_resource type="PackedScene" path="res://assets/Environment/Nature/Trees/island_tree_02_2k.gltf" id="2_tree"]
+[ext_resource type="PackedScene" path="res://assets/models/island_tree_02_fractured.glb" id="3_shards"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6323c"]
+height = 10.0
+radius = 1.0
+
+[node name="Node" type="RigidBody3D"]
+freeze = true
+freeze_mode = 1
+script = ExtResource("1_6323c")
+fractured_scene = ExtResource("3_shards")
+
+[node name="IntactTree" type="Node3D" parent="."]
+
+[node name="island_tree_02_2k" parent="IntactTree" instance=ExtResource("2_tree")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+shape = SubResource("CylinderShape3D_6323c")

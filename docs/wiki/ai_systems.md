@@ -5,6 +5,7 @@ Related:
 - [[player_setup|Player Setup]]
 - [[animations|Animations]]
 - [[multiplayer|Multiplayer]]
+- [[life_system|Life System]]
 
 ## Scope
 
@@ -109,6 +110,8 @@ Use a shared blackboard-style data container for runtime facts:
 - current schedule slot
 - alert state
 - health / stamina / fear flags
+
+Health should come from a shared life-system component instead of each actor script owning private health. See [[life_system|Life System]] for the planned `LifeComponent` spine.
 
 ### 3. Navigation
 
@@ -217,8 +220,11 @@ Key scripts:
 - `res://level/scripts/lyra_ai_phase1_manager.gd`
 - `res://level/scripts/lyra_ai_actor.gd`
 - `res://level/scripts/lyra_ai_target.gd`
+- `res://level/scripts/lyra_ai_combat_target.gd`
+- `res://level/scripts/lyra_ai_build_site.gd`
 - `res://level/scripts/lyra_ai_task_board.gd`
 - `res://level/scripts/lyra_ai_metrics.gd`
+- `res://level/scripts/lyra_ai_memory_store.gd`
 
 The prototype now uses `NavigationAgent3D` for movement over a generated sandbox nav mesh. The old isolated `AITestPad` remains available only through `--ai-test-pad` for fallback diagnostics.
 
@@ -242,8 +248,15 @@ Latest headless real-sandbox AI loop results:
 - Baseline 25-second run before the pass: 14 successful interactions, 0 weapon pickups, 21 stuck events, parser score `19.6762`.
 - 30 valid 12-second loops after improvements: average score `104.3337`, average interactions `15.8667`, average weapon pickups `3.9333`, average stuck events `1.3`.
 - Final 25-second comparison run: 24 successful interactions, 4 weapon pickups, 5 stuck events, parser score `185.52`.
+- Follow-up 40 valid 12-second loops: average score `95.5502`, average interactions `14.9`, average weapon pickups `3.5`, average stuck events `1.35`. The main failure cluster was `AI_PistolPickup_02`, which caused 20 of 54 stuck events.
+- After moving `AI_PistolPickup_02` from the nav boundary at `(27, 22)` to the nav-cell interior at `(25, 20)`, a fresh 10-loop verification produced 40/40 weapon pickups and no weapon-target stuck events. The same-seed 10-loop comparison improved average score `98.8507 -> 107.631`, interactions `151 -> 162`, weapon pickups `35 -> 40`, and stuck events `12 -> 10`.
+- Basic shooting milestone: a runtime `AI_TargetDummy_01` lets armed AI select `combat`, fire through `WeaponMaster.fire()`, resolve hits by raycast, and log `shot_fired`. A 5-seed 18-second headless batch produced 20 weapon pickups, 117 shots, 95 hits, 0 stuck events, and accuracy `0.812`.
+- First bigger-navigation milestone: generated nav now uses a 6x6 grid with outer target zones, including far food/water/resource markers and `AI_TargetDummy_02` in the expanded east corridor. A combat seek-distance filter prevents overlong combat routes through blocked sandbox geometry. A 10-seed 18-second batch produced 40 weapon pickups, 131 non-combat interactions, 186 shots, 148 hits, 30 hits on `AI_TargetDummy_02`, and 0 stuck events.
+- Concrete waypoint-navigation milestone: runtime `AINavWaypoints`, `lyra_ai_waypoint.gd`, an `explore` task-board goal, lane-specific scout routes, and `route_visit` metrics now prove actual route traversal. A final 5 fixed 30-second sequential batch produced 30 route visits, 4 distinct waypoint names in every run, 20 weapon pickups, 96 shots, 95 hits, and 0 stuck events.
+- First visible building milestone: runtime `AIBuildSites` now spawns `BuildSite_Barricade_01`; `lyra_ai_build_site.gd` renders a translucent foundation/progress marker and swaps to completed plank visuals after two resource deliveries. Resource-carrying actors can select `build`, deliver resources, and log `build_started`, `build_resource_delivered`, and `build_completed`. A 50-run 18-second batch produced 49/50 completed builds before tuning; the failing seed was fixed by increasing build interaction radius, and a post-fix 10-seed tail batch produced 10/10 completed builds, 0 stuck events, 40 weapon pickups, 97/97 hits, and 31 route visits.
+- First persistent-memory milestone: `lyra_ai_memory_store.gd` persists actor summaries to `user://lyra_ai_memory.json` and appends event history to `user://lyra_ai_memory_events.jsonl`. A two-run restart proof in `logs/neo_loops/20260426_114246_loop_1/` showed run 1 loaded 0 actor memories, run 2 loaded 6 actor memories, and all 6 gatherers emitted `ai_memory_restored`.
 
-The broad nav result is improved but still not final: the generated corridor nav supports larger routes and much more activity, but occasional stuck events remain. The next step is a real nav bake or explicit waypoint/corridor graph derived from actual sandbox collision geometry, rather than more hand-authored rectangles.
+The broad nav result is improved but still not final: the generated grid supports larger routes and much more activity, and the waypoint route layer now proves traversal across named corridors. The later structural step is a real nav bake derived from actual sandbox collision geometry, rather than more hand-authored rectangles.
 
 ## Notes
 

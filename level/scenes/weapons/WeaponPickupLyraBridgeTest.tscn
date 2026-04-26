@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c73u7e62b6hg4"]
+
+[ext_resource type="Script" path="res://level/scripts/weapons/weapon_pickup_lyra_bridge_test.gd" id="1_k7i27"]
+
+[node name="WeaponPickupLyraBridgeTest" type="Node3D"]
+script = ExtResource("1_k7i27")

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "evaluated",
+  "loop_index": 1,
+  "decision": "keep",
+  "goal": "Audit existing health/death/recovery code and propose the smallest shared life-system spine for Lyra AI and players",
+  "audit_scope": [
+    "level/scripts/player.gd",
+    "level/scripts/bachtavious_multiplayer_player.gd",
+    "level/scripts/lyra_ai_actor.gd",
+    "level/scripts/lyra_ai_combat_target.gd",
+    "level/scripts/destructible.gd",
+    "level/scripts/animated_destructible.gd",
+    "level/scripts/bullet.gd",
+    "simple_projectile.gd",
+    "level/scripts/weapons/weapon_resource.gd"
+  ],
+  "findings": [
+    "No shared life-system spine exists yet.",
+    "Stock player has take_damage but it immediately respawns instead of tracking health or lifecycle state.",
+    "Bachtavious/Lyra player can fire projectiles but does not expose take_damage or health state.",
+    "Lyra AI actors can shoot and log combat metrics but do not have health, downed, death, recovery, or revive behavior.",
+    "Combat target dummies have isolated health/take_damage/is_alive logic.",
+    "Destructibles have separate health/take_damage/destroy logic that should not be migrated first.",
+    "Projectile damage signatures are inconsistent: bullet.gd calls take_damage(damage, shooter_id), simple_projectile.gd calls take_damage(damage)."
+  ],
+  "proposal": {
+    "new_doc": "docs/wiki/life_system.md",
+    "component_path": "res://level/scripts/components/life_component.gd",
+    "first_slice": "Wire LifeComponent to Lyra AI actors and Bachtavious/player damage entrypoints, then prove life_damaged plus downed/death metrics in lyrasandbox.",
+    "defer": [
+      "destructible migration",
+      "full UI health bars",
+      "visual death/downed animations",
+      "SQLite persistence"
+    ]
+  },
+  "verification": {
+    "neo_check": "PASS under lyra_ai_headless after write-back",
+    "code_changed": false
+  },
+  "recommendation": "RECOMMEND KEEP"
+}

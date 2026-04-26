@@ -1,6 +1,18 @@
 # Enhanced Godot 3D Multiplayer Template
 
-This project is an enhanced version of the original [Godot 3D Multiplayer Template](https://godotengine.org/asset-library/asset/3377) developed in Godot Engine 4.3. It builds upon the base template by adding several new features such as room-based multiplayer, proximity chat, and more.
+This project is an enhanced version of the original [Godot 3D Multiplayer Template](https://godotengine.org/asset-library/asset/3377) developed in Godot Engine 4.5.1. It builds upon the base template by adding several new features such as room-based multiplayer, proximity chat, and more.
+
+## Repo Architecture
+
+This repository is a Godot project with a repo-local memory and documentation system.
+
+- `Neo` is the single persistent repo engineering agent identity. That contract is defined in `AGENTS.md`.
+- `docs/ai/` contains short operational memory for current project state, lessons, and handoff notes.
+- `docs/wiki/` contains deeper durable linked knowledge for subsystems, workflows, and research distillation.
+- `AGENTS.md` defines the read order, write-back rules, and repo operating contract for agents/tools working in this codebase.
+- `tools/` contains helper and validation scripts used by the project workflow, including experiment and AI data pipeline scripts.
+
+External assistants such as Gemini or Codex should be treated as operators acting on behalf of `Neo`, not as separate repo identities.
 
 ## How to run the project
 

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "evaluated",
+  "loop_index": 1,
+  "decision": "keep",
+  "evaluated_utc": "2026-04-26T16:45:40Z",
+  "goal": "Create a Lyra AI persistent memory log that survives restarting lyrasandbox",
+  "persistent_memory_path": "C:/Users/ruley/AppData/Roaming/Godot/app_userdata/godot-3d-multiplayer-enhanced/lyra_ai_memory.json",
+  "loop_memory_snapshot": "logs/neo_loops/20260426_114246_loop_1/lyra_ai_memory_after_run2.json",
+  "run1_log": "logs/neo_loops/20260426_114246_loop_1/run1.stdout.log",
+  "run2_log": "logs/neo_loops/20260426_114246_loop_1/run2.stdout.log",
+  "run1_metrics": "logs/neo_loops/20260426_114246_loop_1/run1_metrics.jsonl",
+  "run2_metrics": "logs/neo_loops/20260426_114246_loop_1/run2_metrics.jsonl",
+  "run1": {
+    "exit_code": 0,
+    "loaded_actor_memory_count": 0,
+    "memory_session_count": 1
+  },
+  "run2": {
+    "exit_code": 0,
+    "loaded_actor_memory_count": 6,
+    "memory_session_count": 2,
+    "restored_actor_count": 6
+  },
+  "evaluation": {
+    "recommendation": "RECOMMEND KEEP",
+    "reasons": [
+      "Persistent memory JSON survived restarting lyrasandbox.",
+      "Run 2 loaded six actor memories from the previous run.",
+      "Run 2 emitted ai_memory_restored events with remembered goals and interaction counts."
+    ]
+  }
+}

@@ -15,7 +15,7 @@ func _ready() -> void:
 	monitoring = true
 	monitorable = true
 	collision_layer = 2
-	collision_mask = 1
+	collision_mask = 3
 	_time_left = lifetime
 
 	if collision_shape:

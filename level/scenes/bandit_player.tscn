@@ -1,0 +1,97 @@
+[gd_scene load_steps=12 format=3 uid="uid://dp3j388agrrxw"]
+
+[ext_resource type="Script" uid="uid://dgqyfjdeqd5ct" path="res://level/scripts/bachtavious_multiplayer_player.gd" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://banditvisual01" path="res://assets/characters/player/Bandit/Bandit_Visual.tscn" id="2_bandit"]
+[ext_resource type="Script" uid="uid://pggpwre81838" path="res://level/scripts/states/state_machine.gd" id="3_sm"]
+[ext_resource type="Script" uid="uid://bc3h3jdd4bmvs" path="res://level/scripts/states/player_air.gd" id="4_air"]
+[ext_resource type="Script" uid="uid://dweits7kon61r" path="res://level/scripts/states/player_idle.gd" id="5_idle"]
+[ext_resource type="Script" uid="uid://cefsp6bpvabd6" path="res://level/scripts/states/player_run.gd" id="6_run"]
+[ext_resource type="Script" uid="uid://cplrijm5lb8lm" path="res://level/scripts/states/player_wall_run.gd" id="7_wallrun"]
+[ext_resource type="Script" uid="uid://coe8ay0wsh0yi" path="res://level/scripts/states/player_vault.gd" id="8_vault"]
+[ext_resource type="Script" uid="uid://tq43s4w640g8" path="res://level/scripts/states/player_slide.gd" id="9_slide"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bandit"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bandit"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Bandit/AnimationPlayer:current_animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("PlayerNick/Nickname:text")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_bandit")
+
+[node name="SpringArmOffset" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SpringArmOffset"]
+spring_length = 2.5
+
+[node name="Camera3D" type="Camera3D" parent="SpringArmOffset/SpringArm3D"]
+
+[node name="PlayerChat" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+
+[node name="Text" type="Label3D" parent="PlayerChat"]
+billboard = 1
+text = "Chat"
+
+[node name="PlayerNick" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+
+[node name="Nickname" type="Label3D" parent="PlayerNick"]
+billboard = 1
+text = "Bandit"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bandit")
+
+[node name="Bandit" parent="." instance=ExtResource("2_bandit")]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("3_sm")
+initial_state = NodePath("Idle")
+
+[node name="Air" type="Node" parent="StateMachine"]
+script = ExtResource("4_air")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_idle")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("6_run")
+
+[node name="WallRun" type="Node" parent="StateMachine"]
+script = ExtResource("7_wallrun")
+
+[node name="Vault" type="Node" parent="StateMachine"]
+script = ExtResource("8_vault")
+
+[node name="Slide" type="Node" parent="StateMachine"]
+script = ExtResource("9_slide")
+
+[node name="Scanner" type="Node3D" parent="."]
+
+[node name="ForwardRay" type="RayCast3D" parent="Scanner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -1.4)
+
+[node name="HeadRay" type="RayCast3D" parent="Scanner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+target_position = Vector3(0, 0, -1.4)
+
+[node name="LedgeRay" type="RayCast3D" parent="Scanner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -0.5)
+target_position = Vector3(0, -2.2, 0)

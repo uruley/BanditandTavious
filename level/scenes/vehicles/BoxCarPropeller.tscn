@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bftek1kofm84o"]
+
+[ext_resource type="Script" uid="uid://b4tm44ftjlq4k" path="res://level/scripts/vehicles/box_car_propeller.gd" id="1_be2l1"]
+[ext_resource type="PackedScene" uid="uid://boxcar001" path="res://assets/models/BoxCar.glb" id="2_boxcar"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_be2l1"]
+size = Vector3(1.8, 0.8, 2.6)
+
+[node name="BoxCarPropeller" type="CharacterBody3D"]
+script = ExtResource("1_be2l1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_be2l1")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="BoxCarModel" parent="Visual" instance=ExtResource("2_boxcar")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

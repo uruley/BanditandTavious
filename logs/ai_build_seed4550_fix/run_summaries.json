@@ -1,0 +1,19 @@
+﻿{
+    "run":  1,
+    "seed":  4550,
+    "exit_code":  0,
+    "total_events":  137,
+    "simple_loop_score":  343.8836,
+    "build_completed_count":  1,
+    "build_event_count":  4,
+    "stuck_event_count":  0,
+    "route_visit_count":  3,
+    "unique_waypoint_count":  2,
+    "shot_count":  10,
+    "shot_hit_count":  10,
+    "weapon_success":  4,
+    "build_success":  2,
+    "summary_path":  "logs/ai_build_seed4550_fix/run_0001.summary.json",
+    "metrics_path":  "logs/ai_build_seed4550_fix/run_0001.jsonl",
+    "log_path":  "logs/ai_build_seed4550_fix/run_0001.godot.log"
+}

@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://caqoyjsqjcgex"]
+
+[ext_resource type="PackedScene" uid="uid://d0eawm5qsv8ma" path="res://level/scenes/weapons/WeaponPickup.tscn" id="1_pickup"]
+[ext_resource type="Resource" path="res://level/data/weapons/future_shotgun.tres" id="2_weapon"]
+[ext_resource type="PackedScene" uid="uid://cnaaxias0m1kj" path="res://assets/weapons/Shotguns/FutureShotgun.tscn" id="3_visuals"]
+
+[node name="FutureShotgunPickup" instance=ExtResource("1_pickup")]
+transform = Transform3D(1, 0, 0, 0, -0.00043634968, 0.9999999, 0, -0.9999999, -0.00043634968, 0, 0, 0)
+weapon_resource = ExtResource("2_weapon")
+auto_pickup = false
+
+[node name="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0.75, 0)
+
+[node name="EditorPreview" parent="VisualRoot" index="0" instance=ExtResource("3_visuals")]

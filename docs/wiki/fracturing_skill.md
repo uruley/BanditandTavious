@@ -1,5 +1,11 @@
 # Fracturing & Destruction Workflow
 
+Related:
+- [[index|Wiki Index]]
+- [[destruction|Destruction]]
+- [[fracturing-skill/SKILL|Fracturing Skill Bundle]]
+- [[fracturing-skill/references/example_reference|Fracturing Skill Reference]]
+
 This guide explains how to use the automated Blender-to-Godot fracturing tool to create destructible objects.
 
 ## 1. Blender Preparation
@@ -38,3 +44,8 @@ python tools/blender_fracture_tool.py Cube 15 res://assets/fractured_cube.glb
 - Keep shard counts low (**5–15**) for most objects.
 - Use `cleanup_time` to remove shards after they've settled to save on physics calculations.
 - Ensure shards are on a separate collision layer if they don't need to interact with players or other complex objects.
+
+## Repo References
+
+- `docs/wiki/fracturing-skill/SKILL.md` contains the reusable operator workflow for fracture authoring.
+- `docs/wiki/fracturing-skill/references/example_reference.md` is linked so the subtree remains discoverable from the wiki graph.

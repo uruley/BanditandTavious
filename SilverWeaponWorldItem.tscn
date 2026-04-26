@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6ddm6xfkk7ac"]
+
+[ext_resource type="Script" uid="uid://de6ubcqplscwr" path="res://silver_weapon_world_item.gd" id="1_qnijq"]
+[ext_resource type="Resource" uid="uid://bwdy7oq2tsbw" path="res://level/data/weapons/rifle.tres" id="2_qnijq"]
+[ext_resource type="PackedScene" uid="uid://dvbybr4bo0lqs" path="res://SilverRifle.tscn" id="2_visual"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rifle_phys"]
+size = Vector3(0.2, 0.4, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rifle_interact"]
+size = Vector3(1.2, 1.2, 1.8)
+
+[node name="SilverWeaponWorldItem" type="RigidBody3D"]
+transform = Transform3D(-1, -8.742278e-08, 3.821371e-15, 0, -4.371139e-08, -1, 8.742278e-08, -1, 4.371139e-08, 0, 0, 0)
+collision_layer = 6
+collision_mask = 3
+script = ExtResource("1_qnijq")
+weapon_id = "silver_rifle"
+weapon_resource = ExtResource("2_qnijq")
+weapon_visual_scene = ExtResource("2_visual")
+world_item_scene = null
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="PistolModel" type="Node3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_rifle_phys")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 4
+
+[node name="InteractionCollision" type="CollisionShape3D" parent="InteractionArea"]
+shape = SubResource("BoxShape3D_rifle_interact")

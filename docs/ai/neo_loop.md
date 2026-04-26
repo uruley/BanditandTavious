@@ -15,15 +15,17 @@ Loop Mode is not the default repo behavior. It only starts when the user explici
 ## Loop Steps
 
 1. Read `docs/ai/current-state.md`
-2. Read `docs/ai/neo_goal.md`
-3. Inspect only the project files relevant to the current goal
-4. Propose one small change
-5. Apply the change
-6. Run `tools/neo_check.ps1`
-7. Compare the result against `docs/ai/neo_scoreboard.md`
-8. Keep or revert the change
-9. Update `docs/ai/current-state.md` and `docs/wiki/*` only with durable lessons
-10. Stop after `N` loops or when the goal is satisfied
+2. Read `docs/ai/neo_state.json`
+3. Read `docs/ai/neo_goal.md`
+4. Inspect only the project files relevant to the current goal
+5. Propose one small change
+6. Apply the change
+7. Create a per-loop artifact under `logs/neo_loops/YYYYMMDD_HHMMSS_loop_N/`
+8. Run `tools/neo_check.ps1`
+9. Compare the result against `docs/ai/neo_scoreboard.md`
+10. Keep or revert the change
+11. Update `docs/ai/current-state.md` and `docs/wiki/*` only with durable lessons
+12. Stop after `N` loops or when the goal is satisfied
 
 ## Operating Rules
 
@@ -31,6 +33,7 @@ Loop Mode is not the default repo behavior. It only starts when the user explici
 - Prefer one reversible change per loop.
 - Do not activate Loop Mode automatically on normal Codex or Gemini runs.
 - Use `tools/neo_check.ps1` as the standard repo-health checkpoint between loop iterations.
+- Use `tools/new_neo_loop_artifact.ps1` or `tools/neo_loop.ps1` to create replayable loop evidence.
 - Keep memory concise. If a loop produces too much history, archive it instead of expanding current operational files.
 
 ## Suggested Command

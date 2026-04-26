@@ -11,6 +11,7 @@ func find_and_reserve(goal: String, actor: Node3D, selection_mode: String = "nea
 	var actor_id := actor.name
 	var best_target: Node3D
 	var best_distance := -INF if selection_mode == "farthest" else INF
+	var needs_reservation := goal != "combat" and goal != "explore" and goal != "build"
 
 	for candidate_variant in _candidate_nodes_for_goal(goal):
 		var candidate := candidate_variant as Node3D
@@ -18,9 +19,9 @@ func find_and_reserve(goal: String, actor: Node3D, selection_mode: String = "nea
 			continue
 		if excluded_names.has(candidate.name):
 			continue
-		if _is_reserved_by_other(actor_id, candidate):
+		if needs_reservation and _is_reserved_by_other(actor_id, candidate):
 			continue
-		if candidate.has_method("can_reserve") and not candidate.call("can_reserve", actor_id):
+		if needs_reservation and candidate.has_method("can_reserve") and not candidate.call("can_reserve", actor_id):
 			continue
 
 		var distance := actor.global_position.distance_to(candidate.global_position)
@@ -30,9 +31,10 @@ func find_and_reserve(goal: String, actor: Node3D, selection_mode: String = "nea
 			best_target = candidate
 
 	if best_target != null:
-		if best_target.has_method("reserve") and not bool(best_target.call("reserve", actor_id)):
+		if needs_reservation and best_target.has_method("reserve") and not bool(best_target.call("reserve", actor_id)):
 			return null
-		reservations[actor_id] = best_target.get_path()
+		if needs_reservation:
+			reservations[actor_id] = best_target.get_path()
 		return best_target
 
 	return null
@@ -47,12 +49,33 @@ func release(actor: Node3D, target: Node3D) -> void:
 func _candidate_nodes_for_goal(goal: String) -> Array:
 	if goal == "weapon":
 		return get_tree().get_nodes_in_group("weapon_pickups")
+	if goal == "combat":
+		return get_tree().get_nodes_in_group("lyra_ai_combat_target")
+	if goal == "explore":
+		return get_tree().get_nodes_in_group("lyra_ai_waypoint")
+	if goal == "build":
+		return get_tree().get_nodes_in_group("lyra_ai_build_site")
 	return get_tree().get_nodes_in_group("lyra_ai_target_%s" % goal)
 
 
 func _is_usable_candidate(goal: String, actor: Node3D, candidate: Node3D) -> bool:
 	if candidate.is_queued_for_deletion():
 		return false
+	if goal == "combat":
+		var max_distance := float(actor.get("combat_seek_distance"))
+		if max_distance > 0.0 and actor.global_position.distance_to(candidate.global_position) > max_distance:
+			return false
+		return not candidate.has_method("is_alive") or bool(candidate.call("is_alive"))
+	if goal == "explore":
+		if actor.has_method("get_next_explore_waypoint"):
+			var waypoint_name := str(actor.call("get_next_explore_waypoint"))
+			if waypoint_name != "" and candidate.name != waypoint_name:
+				return false
+		return true
+	if goal == "build":
+		if int(actor.get("resource_count")) <= 0:
+			return false
+		return candidate.has_method("needs_resources") and bool(candidate.call("needs_resources"))
 	if goal != "weapon":
 		return true
 	if absf(candidate.global_position.y - actor.global_position.y) > 4.0:

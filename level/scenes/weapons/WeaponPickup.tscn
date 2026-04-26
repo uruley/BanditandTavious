@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0eawm5qsv8ma"]
+
+[ext_resource type="Script" uid="uid://cigoifwvmivoc" path="res://level/scripts/weapons/weapon_pickup.gd" id="1_1nvlv"]
+[ext_resource type="Resource" uid="uid://bwdy7oq2tsbw" path="res://level/data/weapons/rifle.tres" id="2_7rmkx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
+radius = 2.0
+
+[node name="WeaponPickup" type="Area3D"]
+collision_layer = 4
+script = ExtResource("1_1nvlv")
+weapon_resource = ExtResource("2_7rmkx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("SphereShape3D_pickup")
+
+[node name="VisualRoot" type="Node3D" parent="."]

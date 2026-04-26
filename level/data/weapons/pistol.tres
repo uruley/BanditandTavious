@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://c5a7j2k3l4m5n"]
+
+[ext_resource type="Script" uid="uid://dw6d3iej8ojns" path="res://level/scripts/weapons/weapon_resource.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cnaaxias0m1kj" path="res://assets/weapons/Shotguns/FutureShotgun.tscn" id="2_w2yup"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_name = "Pistol"
+weapon_visuals = ExtResource("2_w2yup")
+position_offset = Vector3(-0.075, 0.075, -0.11)
+rotation_offset = Vector3(-90, 0, 0)
+scale_offset = Vector3(1.4, 1, 1)
+damage = 15.0
+fire_rate = 0.2
+mag_size = 12

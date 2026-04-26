@@ -1,0 +1,85 @@
+﻿{
+    "timestamp_utc":  "2026-04-26T16:34:36Z",
+    "repo_root":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious",
+    "has_project":  true,
+    "main_scene":  "res://level/scenes/Sandbox.tscn",
+    "scene_load_status":  true,
+    "error_count":  0,
+    "required_files_ok":  true,
+    "missing_files":  [
+
+                      ],
+    "neo_state_ok":  true,
+    "neo_state_issues":  [
+
+                         ],
+    "neo_active_goal":  "Progress the Lyra AI sandbox through small verified milestones and strengthen Neo into an evidence-driven agent kernel.",
+    "neo_active_scene":  "res://level/scenes/lyrasandbox.tscn",
+    "neo_active_gate_profile":  "lyra_visual",
+    "neo_active_scene_load_status":  true,
+    "neo_recommended_next_loop":  "Register real live visual evidence for Lyra pickup/drop and weapon alignment, then run neo_check.ps1 with -GateProfileOverride lyra_visual.",
+    "neo_main_scene_matches_project":  true,
+    "latest_loop_artifact":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious\\logs\\neo_loops\\20260426_113034_loop_1",
+    "latest_loop_status":  "created",
+    "latest_loop_created_utc":  "2026-04-26T16:30:34Z",
+    "latest_loop_decision":  null,
+    "latest_loop_recommendation":  null,
+    "milestone_evidence":  {
+                               "lyra_metrics_present":  true,
+                               "latest_ai_metrics_path":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious\\logs\\ai_metrics.jsonl",
+                               "latest_ai_metrics_updated":  "2026-04-26T11:34:06",
+                               "ai_total_events":  45,
+                               "ai_invalid_json_lines":  0,
+                               "ai_interaction_count":  2,
+                               "ai_successful_interaction_count":  2,
+                               "ai_weapon_success_count":  1,
+                               "ai_shot_count":  0,
+                               "ai_shot_hit_count":  0,
+                               "ai_route_visit_count":  0,
+                               "ai_unique_waypoint_count":  0,
+                               "ai_build_event_count":  0,
+                               "ai_build_completed_count":  0,
+                               "ai_stuck_event_count":  0,
+                               "latest_batch_summary_present":  true,
+                               "latest_batch_summary_path":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious\\logs\\ai_lifecycle_probe\\batch_summary.json",
+                               "latest_batch_valid_runs":  1,
+                               "latest_batch_average_score":  104.2922,
+                               "latest_batch_total_build_completed":  1,
+                               "latest_batch_total_stuck_events":  0,
+                               "latest_batch_total_route_visits":  1,
+                               "latest_batch_total_shots":  1,
+                               "latest_batch_total_shot_hits":  1,
+                               "latest_godot_log_present":  true,
+                               "latest_godot_log_path":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious\\logs\\neo_visual_ai_capture_runner.godot.log",
+                               "latest_godot_log_error_line_count":  0,
+                               "latest_godot_log_warning_line_count":  4,
+                               "live_visual_evidence_present":  true,
+                               "latest_visual_evidence_path":  "logs\\visual_evidence\\20260426_113419_other\\evidence.png",
+                               "latest_visual_evidence_manifest_path":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious\\logs\\visual_evidence\\20260426_113419_other\\manifest.json",
+                               "latest_visual_evidence_type":  "other",
+                               "latest_visual_evidence_scene":  "res://level/scenes/lyrasandbox.tscn",
+                               "latest_visual_evidence_claim":  "Lyra AI characters are visible in the sandbox scene",
+                               "build_milestone_seen":  true,
+                               "route_milestone_seen":  true,
+                               "combat_milestone_seen":  true,
+                               "weapon_milestone_seen":  true,
+                               "stuck_events_detected":  false
+                           },
+    "milestone_gate":  {
+                           "status":  "FAIL",
+                           "profile":  "lyra_visual",
+                           "fail_reasons":  [
+                                                "latest loop artifact exists but status is \u0027created\u0027"
+                                            ],
+                           "warn_reasons":  [
+
+                                            ],
+                           "pass_reasons":  [
+                                                "registered live visual evidence is present",
+                                                "repo health checks are clean"
+                                            ],
+                           "milestone_signal_present":  true
+                       },
+    "git_available":  true,
+    "git_modified_count":  191
+}

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://bfdc2vciptkpu"]
+
+[ext_resource type="Script" uid="uid://dw6d3iej8ojns" path="res://level/scripts/weapons/weapon_resource.gd" id="1_qenrm"]
+[ext_resource type="PackedScene" uid="uid://cnaaxias0m1kj" path="res://assets/weapons/Shotguns/FutureShotgun.tscn" id="2_os8hi"]
+
+[resource]
+script = ExtResource("1_qenrm")
+weapon_name = "FutureShotgun"
+weapon_visuals = ExtResource("2_os8hi")
+damage = 20.0
+fire_rate = 1.0
+mag_size = 8
+metadata/_custom_type_script = "uid://dw6d3iej8ojns"

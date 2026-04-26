@@ -33,8 +33,8 @@ const ADS_H_OFFSET = 0.75
 @export var spring_arm_offset: Node3D = null
 @export var spring_arm: SpringArm3D = null
 @export var camera_node: Camera3D = null
-@export var weapon_root: Node3D = null
-@export var muzzle_marker: Marker3D = null
+@export var weapon_master: Node3D = null
+@export var current_weapon: WeaponResource = null
 @export var forward_ray: RayCast3D = null
 @export var head_ray: RayCast3D = null
 @export var ledge_ray: RayCast3D = null
@@ -44,9 +44,13 @@ var _camera_tween: Tween
 var _parkour_tween: Tween
 @onready var animation_player: AnimationPlayer = get_node_or_null("UAL1_Standard/AnimationPlayer")
 var _projectile_scene := preload("res://simple_projectile.tscn")
+var _weapon_world_item_scene := preload("res://WeaponWorldItem.tscn")
 var _one_shot_animation := ""
 var _shoot_was_pressed := false
 var _punch_was_pressed := false
+var _drop_was_pressed := false
+var _interact_was_pressed := false
+var _has_weapon := true
 var _is_aiming := false
 var _is_parkouring := false
 var _was_on_floor := true
@@ -75,9 +79,19 @@ func _ready() -> void:
 	if camera_node:
 		_camera_pitch = spring_arm.rotation.x if spring_arm else camera_node.rotation.x
 		camera_node.current = true
-	if weapon_root:
-		_weapon_rest_position = weapon_root.position
-		_weapon_rest_rotation = weapon_root.rotation
+	
+	if weapon_master == null:
+		weapon_master = get_node_or_null("UAL1_Standard/Armature/Skeleton3D/RightHand/WeaponMaster")
+		
+	if weapon_master:
+		_weapon_rest_position = weapon_master.position
+		_weapon_rest_rotation = weapon_master.rotation
+		_has_weapon = weapon_master.visible
+		if current_weapon:
+			weapon_master.set("weapon_resource", current_weapon)
+			if weapon_master.has_signal("fired"):
+				weapon_master.fired.connect(_on_weapon_fired)
+
 	if body_root:
 		_body_rest_rotation_y = body_root.rotation.y
 	
@@ -133,15 +147,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			spring_arm.rotation.x = _camera_pitch
 
 func _process(delta: float) -> void:
-	if weapon_root == null:
+	if weapon_master == null:
 		return
 	_recoil_position_offset = _recoil_position_offset.lerp(Vector3.ZERO, delta * RECOIL_RETURN_SPEED)
 	_recoil_rotation_offset = _recoil_rotation_offset.lerp(Vector3.ZERO, delta * RECOIL_RETURN_SPEED)
-	weapon_root.position = _weapon_rest_position + _recoil_position_offset
-	weapon_root.rotation = _weapon_rest_rotation + _recoil_rotation_offset
+	weapon_master.position = _weapon_rest_position + _recoil_position_offset
+	weapon_master.rotation = _weapon_rest_rotation + _recoil_rotation_offset
 	if body_root and _is_aiming and spring_arm_offset:
 		body_root.global_rotation.y = lerp_angle(body_root.global_rotation.y, spring_arm_offset.global_rotation.y, AIM_BODY_TURN_LERP)
-
 
 func _physics_process(delta: float) -> void:
 	if _is_parkouring:
@@ -156,18 +169,34 @@ func _physics_process(delta: float) -> void:
 		if not _check_parkour():
 			velocity.y = JUMP_VELOCITY
 
+	if _is_drop_just_pressed() and _has_weapon:
+		drop_weapon()
+	
+	if _is_interact_just_pressed():
+		_check_interaction()
+
 	var was_aiming = _is_aiming
-	_is_aiming = _is_aim_pressed()
+	_is_aiming = _is_aim_pressed() if _has_weapon else false
 	
 	if was_aiming != _is_aiming:
 		_toggle_ads(_is_aiming)
 
 	var is_crouching := Input.is_physical_key_pressed(KEY_CTRL)
-	if _is_shoot_just_pressed():
-		_play_one_shot("Pistol_Shoot")
-		_fire_projectile()
-		_apply_weapon_recoil()
-	elif _is_punch_just_pressed():
+
+	# Firing logic
+	if _has_weapon and weapon_master:
+		var want_to_fire := false
+		if current_weapon and current_weapon.is_automatic:
+			want_to_fire = _is_shoot_pressed()
+		else:
+			want_to_fire = _is_shoot_just_pressed()
+
+		if want_to_fire:
+			if weapon_master.has_method("fire") and weapon_master.fire():
+				_play_one_shot("Pistol_Shoot")
+				_apply_weapon_recoil()
+
+	if _is_punch_just_pressed():
 		_play_one_shot("Punch_Jab")
 
 	var input_direction := _get_move_input()
@@ -248,11 +277,83 @@ func _is_shoot_just_pressed() -> bool:
 	_shoot_was_pressed = is_pressed
 	return just_pressed
 
+func _is_shoot_pressed() -> bool:
+	var is_pressed := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	for device in Input.get_connected_joypads():
+		if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > TRIGGER_THRESHOLD:
+			is_pressed = true
+			break
+	return is_pressed
+
 func _is_punch_just_pressed() -> bool:
 	var is_pressed := Input.is_physical_key_pressed(KEY_F)
 	var just_pressed := is_pressed and not _punch_was_pressed
 	_punch_was_pressed = is_pressed
 	return just_pressed
+
+func _is_drop_just_pressed() -> bool:
+	var is_pressed := Input.is_physical_key_pressed(KEY_G)
+	var just_pressed := is_pressed and not _drop_was_pressed
+	_drop_was_pressed = is_pressed
+	return just_pressed
+
+func _is_interact_just_pressed() -> bool:
+	var is_pressed := Input.is_physical_key_pressed(KEY_E)
+	var just_pressed := is_pressed and not _interact_was_pressed
+	_interact_was_pressed = is_pressed
+	return just_pressed
+
+func drop_weapon() -> void:
+	if not _has_weapon or weapon_master == null:
+		return
+		
+	print("Dropping weapon...")
+	var drop_item = _weapon_world_item_scene.instantiate()
+	get_tree().current_scene.add_child(drop_item)
+	
+	drop_item.global_position = weapon_master.global_position
+	drop_item.global_rotation = weapon_master.global_rotation
+	
+	# Throw it forward a bit
+	var throw_dir = -global_transform.basis.z + Vector3(0, 0.5, 0)
+	drop_item.apply_central_impulse(throw_dir * 5.0)
+	
+	_has_weapon = false
+	weapon_master.visible = false
+	if _is_aiming:
+		_toggle_ads(false)
+		_is_aiming = false
+
+func pick_up_weapon(weapon_item: Node3D) -> void:
+	if _has_weapon or weapon_master == null:
+		return
+		
+	print("Picking up weapon...")
+	_has_weapon = true
+	weapon_master.visible = true
+	weapon_item.queue_free()
+
+func _check_interaction() -> void:
+	if forward_ray and forward_ray.is_colliding():
+		var collider = forward_ray.get_collider()
+		if collider and collider.has_method("interact"):
+			collider.interact(self)
+			return
+			
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsShapeQueryParameters3D.new()
+	var sphere = SphereShape3D.new()
+	sphere.radius = 2.0
+	query.shape = sphere
+	query.transform = global_transform
+	query.collision_mask = 5 # Layer 1 (Player) + Layer 3 (Interaction)
+	
+	var results = space_state.intersect_shape(query)
+	for result in results:
+		var obj = result["collider"]
+		if obj.has_method("interact"):
+			obj.interact(self)
+			break
 
 func _play_one_shot(animation_name: String) -> void:
 	if animation_player == null:
@@ -271,65 +372,39 @@ func _on_animation_finished(animation_name: StringName) -> void:
 func _check_parkour() -> bool:
 	if forward_ray == null or head_ray == null or ledge_ray == null:
 		return false
-		
 	if not forward_ray.is_colliding():
 		return false
-		
-	# If forward hits but head is clear = Vault/Hurdle
 	if not head_ray.is_colliding():
 		var wall_pos = forward_ray.get_collision_point()
-		# Position ledge ray over the wall
 		ledge_ray.global_position = wall_pos + (-global_transform.basis.z * 0.5) + Vector3(0, 1.0, 0)
 		ledge_ray.force_raycast_update()
-		
 		if ledge_ray.is_colliding():
 			var target_pos = ledge_ray.get_collision_point()
-			_do_parkour_move(target_pos, "parkour/ClimbUp_1m_RM") # Hand-down vault for low wall
+			_do_parkour_move(target_pos, "parkour/ClimbUp_1m_RM")
 			return true
-			
-	# If head hits but there is space above = Mantle
 	elif head_ray.is_colliding():
-		# Simple check for space above head
 		ledge_ray.global_position = global_position + (-global_transform.basis.z * 0.8) + Vector3(0, 3.0, 0)
 		ledge_ray.force_raycast_update()
-		
 		if ledge_ray.is_colliding():
 			var target_pos = ledge_ray.get_collision_point()
-			_do_parkour_move(target_pos, "parkour/NinjaJump_Start") # Jump-up for high ledge
+			_do_parkour_move(target_pos, "parkour/NinjaJump_Start")
 			return true
-			
 	return false
 
 func _do_parkour_move(target_pos: Vector3, anim: String) -> void:
-	print("--- Parkour Triggered ---")
-	print("Current Pos: ", global_position)
-	print("Ledge Hit Pos: ", target_pos)
-
 	_is_parkouring = true
-
 	if _parkour_tween:
 		_parkour_tween.kill()
-
 	_parkour_tween = create_tween().set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-
-	# Use exactly the hit point (since origin is at feet)
 	var final_pos = target_pos + Vector3(0, 0.05, 0)
-
-	print("Final Target Pos: ", final_pos)
 	_parkour_tween.tween_property(self, "global_position", final_pos, 0.8)
 	_play_one_shot(anim)
-
-	_parkour_tween.finished.connect(func(): 
-		_is_parkouring = false
-		print("Parkour Finished. Final Pos: ", global_position)
-	)
+	_parkour_tween.finished.connect(func(): _is_parkouring = false)
 
 func _toggle_ads(aiming: bool) -> void:
 	if _camera_tween:
 		_camera_tween.kill()
-	
 	_camera_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-	
 	if aiming:
 		_camera_tween.tween_property(camera_node, "fov", ADS_FOV, 0.2)
 		_camera_tween.tween_property(spring_arm, "spring_length", ADS_SPRING_LENGTH, 0.2)
@@ -341,48 +416,33 @@ func _toggle_ads(aiming: bool) -> void:
 
 func _get_move_input() -> Vector2:
 	var input_direction := Vector2.ZERO
-	if Input.is_physical_key_pressed(KEY_A):
-		input_direction.x -= 1.0
-	if Input.is_physical_key_pressed(KEY_D):
-		input_direction.x += 1.0
-	if Input.is_physical_key_pressed(KEY_W):
-		input_direction.y -= 1.0
-	if Input.is_physical_key_pressed(KEY_S):
-		input_direction.y += 1.0
+	if Input.is_physical_key_pressed(KEY_A): input_direction.x -= 1.0
+	if Input.is_physical_key_pressed(KEY_D): input_direction.x += 1.0
+	if Input.is_physical_key_pressed(KEY_W): input_direction.y -= 1.0
+	if Input.is_physical_key_pressed(KEY_S): input_direction.y += 1.0
 	return input_direction.normalized() if input_direction.length_squared() > 1.0 else input_direction
 
-func _apply_body_rotation(horizontal_velocity: Vector3) -> void:
-	if body_root == null or horizontal_velocity.length_squared() <= 0.001:
-		return
-	var target_rotation := atan2(-horizontal_velocity.x, -horizontal_velocity.z)
-	body_root.rotation.y = lerp_angle(body_root.rotation.y, target_rotation, BODY_TURN_LERP)
-
 func _apply_weapon_recoil() -> void:
-	if weapon_root == null:
-		return
+	if weapon_master == null: return
 	_recoil_position_offset -= RECOIL_POSITION_KICK
 	_recoil_rotation_offset += RECOIL_ROTATION_KICK
 
 func _fire_projectile() -> void:
-	if muzzle_marker == null or _projectile_scene == null:
-		return
+	# Find muzzle marker on current weapon
+	var muzzle = weapon_master.get_node_or_null("Muzzle")
+	if muzzle == null or _projectile_scene == null: return
 	var projectile := _projectile_scene.instantiate()
-	if projectile == null:
-		return
-	projectile.name = "Bullet"
-	projectile.global_position = muzzle_marker.global_position
-	var direction := _get_projectile_direction(muzzle_marker.global_position)
+	projectile.global_position = muzzle.global_position
+	var direction := _get_projectile_direction(muzzle.global_position)
 	projectile.set("direction", direction)
 	projectile.set("speed", PROJECTILE_SPEED)
-	projectile.look_at(muzzle_marker.global_position + direction, Vector3.UP)
+	projectile.look_at(muzzle.global_position + direction, Vector3.UP)
 	get_tree().current_scene.add_child(projectile)
 
 func _get_projectile_direction(origin: Vector3) -> Vector3:
-	if camera_node == null:
-		return -global_transform.basis.z
+	if camera_node == null: return -global_transform.basis.z
 	var viewport := get_viewport()
-	if viewport == null:
-		return -camera_node.global_transform.basis.z
+	if viewport == null: return -camera_node.global_transform.basis.z
 	var view_center := viewport.get_visible_rect().size * 0.5
 	var ray_origin := camera_node.project_ray_origin(view_center)
 	var ray_direction := camera_node.project_ray_normal(view_center)
@@ -390,6 +450,11 @@ func _get_projectile_direction(origin: Vector3) -> Vector3:
 	query.exclude = [self]
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	var target: Vector3 = ray_origin + ray_direction * PROJECTILE_RANGE
-	if hit.has("position"):
-		target = hit["position"]
+	if hit.has("position"): target = hit["position"]
 	return (target - origin).normalized()
+
+func _on_weapon_fired(_resource: WeaponResource) -> void:
+	_fire_projectile()
+
+func _get_projectile_speed() -> float:
+	return PROJECTILE_SPEED

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "evaluated",
+  "loop_index": 1,
+  "artifact_path": "logs/neo_loops/20260426_103106_loop_1",
+  "evaluated_utc": "2026-04-26T15:31:13Z",
+  "decision": "keep",
+  "evaluation": {
+    "recommendation": "RECOMMEND KEEP",
+    "reasons": [
+      "artifact helper created the expected loop files",
+      "neo_check reported the latest loop artifact without errors"
+    ]
+  },
+  "after_summary": {
+    "error_count": 0,
+    "required_files_ok": true,
+    "scene_load_status": true,
+    "neo_state_ok": true,
+    "latest_loop_status": "created"
+  }
+}

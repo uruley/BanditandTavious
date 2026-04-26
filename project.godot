@@ -24,6 +24,7 @@ driver/enable_input=true
 [autoload]
 
 Network="*res://level/scripts/network.gd"
+PerfMon="*res://level/scripts/performance_monitor.gd"
 
 [dotnet]
 
@@ -132,10 +133,15 @@ audio_test={
 ])
 }
 
+[interaction]
+
+layer=2.0
+
 [layer_names]
 
 3d_physics/layer_1="player"
 3d_physics/layer_2="world"
+3d_physics/layer_3="interaction"
 
 [physics]
 

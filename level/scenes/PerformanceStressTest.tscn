@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpmcimw1vhwfa"]
+
+[ext_resource type="Script" uid="uid://bdqhi1iwyuwjn" path="res://level/scripts/performance_stress_test.gd" id="1_nflx1"]
+[ext_resource type="PackedScene" uid="uid://dhlyyf80cp6vt" path="res://assets/fractured_sphere.glb" id="2_csa81"]
+[ext_resource type="PackedScene" uid="uid://s22j2ah5hln8" path="res://assets/weapons/A3500X_silver_rigged.glb" id="3_hi1y6"]
+
+[node name="Node" type="Node3D"]
+script = ExtResource("1_nflx1")
+
+[node name="PerformanceStressTest" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="PerformanceStressTest"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PerformanceStressTest"]
+transform = Transform3D(-0.26353642, 0.96464944, 8.983998e-10, 0.043826632, 0.011973172, 0.9989674, 0.9636534, 0.26326433, -0.0454327, -41.116653, 40.8263, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="PerformanceStressTest"]
+use_collision = true
+size = Vector3(100, 1, 100)
+
+[node name="UI" type="CanvasLayer" parent="PerformanceStressTest"]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PerformanceStressTest/UI"]
+
+[node name="SpawnAI100" type="Button" parent="PerformanceStressTest/UI/VBoxContainer"]
+layout_mode = 2
+text = "+100 AI"
+
+[node name="SpawnDest50" type="Button" parent="PerformanceStressTest/UI/VBoxContainer"]
+layout_mode = 2
+text = "+50 Destructibles"
+
+[node name="ToggleGraphics" type="Button" parent="PerformanceStressTest/UI/VBoxContainer"]
+layout_mode = 2
+text = "Toggle High Graphics"
+
+[node name="ToggleLogging" type="Button" parent="PerformanceStressTest/UI/VBoxContainer"]
+layout_mode = 2
+text = "Start Logging"
+
+[node name="ClearAll" type="Button" parent="PerformanceStressTest/UI/VBoxContainer"]
+layout_mode = 2
+text = "Clear All"
+
+[node name="SpawnRoot" type="Node3D" parent="PerformanceStressTest"]
+
+[node name="Camera3D" type="Camera3D" parent="PerformanceStressTest"]
+transform = Transform3D(0.9996505, -0.020801589, 0.016317023, 0.0017106328, 0.66678727, 0.7452461, -0.026382284, -0.7449576, 0.66658974, -17.212837, 24.704876, 0)
+
+[node name="fractured_sphere" parent="PerformanceStressTest" instance=ExtResource("2_csa81")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.102268, 55.257107, 7.6553116)
+
+[node name="A3500X_silver_rigged" parent="PerformanceStressTest" instance=ExtResource("3_hi1y6")]
+transform = Transform3D(1, 0, 0, 0, 0.11686141, -0.9931482, 0, 0.9931482, 0.11686141, 5.993582, 7.0531855, 13.274371)

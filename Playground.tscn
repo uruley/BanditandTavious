@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cb2x7kttj6kbc"]
+[gd_scene load_steps=22 format=3 uid="uid://cb2x7kttj6kbc"]
 
 [ext_resource type="Material" path="res://assets/Environment/Nature/Landscape/Ground068_1K-JPG.tres" id="1_threo"]
 [ext_resource type="Script" uid="uid://dyb7yqfq6mvio" path="res://character_body_3d.gd" id="2_s2wwn"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://3ocplmkcoskj" path="res://BlackPistol.tscn" id="4_ta15a"]
 [ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="5_3px5j"]
 [ext_resource type="PackedScene" uid="uid://xav86mjdu683" path="res://portal.tscn" id="6_portal"]
+[ext_resource type="Script" uid="uid://cy33gs1w3pcow" path="res://portal.gd" id="8_ta15a"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yclh6"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -66,17 +67,15 @@ mesh = SubResource("PlaneMesh_bia53")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground1/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_u0nt3")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("weapon_root", "muzzle_marker")]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(-1, 0, 2.5351817e-06, 0, 1, 0, -2.5351817e-06, 0, -1, 0, -0.008021027, 0)
 script = ExtResource("2_s2wwn")
-weapon_root = NodePath("UAL1_Standard/Armature/Skeleton3D/RightHand/FAB converted")
-muzzle_marker = NodePath("UAL1_Standard/Armature/Skeleton3D/RightHand/FAB converted/Muzzle")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8763294, 0)
 shape = SubResource("CapsuleShape3D_u0nt3")
 
-[node name="UAL1_Standard" parent="CharacterBody3D" instance=ExtResource("3_bia53")]
+[node name="UAL1_Standard" type="Node3D" parent="CharacterBody3D" instance=ExtResource("3_bia53")]
 
 [node name="SpringArmOffset" type="Node3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
@@ -87,6 +86,21 @@ spring_length = 2.5
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/SpringArmOffset/SpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.2, 0)
 current = true
+
+[node name="Scanner" type="Node3D" parent="CharacterBody3D"]
+
+[node name="ForwardRay" type="RayCast3D" parent="CharacterBody3D/Scanner"]
+target_position = Vector3(0, 0, -2.5)
+collision_mask = 5
+collide_with_areas = true
+
+[node name="HeadRay" type="RayCast3D" parent="CharacterBody3D/Scanner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="LedgeRay" type="RayCast3D" parent="CharacterBody3D/Scanner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1)
+target_position = Vector3(0, -1.5, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2714732, 0.5158148, -18.488522)
@@ -108,10 +122,10 @@ mesh = SubResource("BoxMesh_u0nt3")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_dub7a")
 
-[node name="FAB converted" parent="." instance=ExtResource("4_ta15a")]
+[node name="FAB converted" type="Node3D" parent="." instance=ExtResource("4_ta15a")]
 transform = Transform3D(-0.007033572, 0, 0.99997526, 0, 1, 0, -0.99997526, 0, -0.007033572, 1.6834714, 0.8909582, 9.252813)
 
-[node name="FAB converted2" parent="." instance=ExtResource("4_ta15a")]
+[node name="FAB converted2" type="Node3D" parent="." instance=ExtResource("4_ta15a")]
 transform = Transform3D(-0.007033572, 0, 0.99997526, 0, 1, 0, -0.99997526, 0, -0.007033572, 1.4995112, 0.8909582, 9.252813)
 
 [node name="Wall" type="MeshInstance3D" parent="."]
@@ -134,14 +148,16 @@ mesh = SubResource("PlaneMesh_ta15a")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D4/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_s2wwn")
 
-[node name="PortalA" parent="." instance=ExtResource("6_portal")]
+[node name="PortalA" type="Area3D" parent="." instance=ExtResource("6_portal")]
 transform = Transform3D(1.9951353, 0, 0.13940845, 0, 2, 0, -0.13940845, 0, 1.9951353, 5, 1.5, -1.8404331)
 collision_layer = 4
+script = ExtResource("8_ta15a")
 linked_portal_path = NodePath("../PortalB")
 
-[node name="PortalB" parent="." instance=ExtResource("6_portal")]
+[node name="PortalB" type="Area3D" parent="." instance=ExtResource("6_portal")]
 transform = Transform3D(0.0498414, 0, -1.9993789, 0, 2, 0, 1.9993789, 0, 0.0498414, -5.281126, 18.05007, -9.080715)
 collision_layer = 4
+script = ExtResource("8_ta15a")
 linked_portal_path = NodePath("../PortalA")
 
 [node name="AimUI" type="CanvasLayer" parent="."]

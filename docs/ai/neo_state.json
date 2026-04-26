@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "updated_on": "2026-04-26",
+  "agent_identity": "Neo",
+  "active_goal": "Progress the Lyra AI sandbox through small verified milestones and strengthen Neo into an evidence-driven agent kernel.",
+  "active_scene": "res://level/scenes/lyrasandbox.tscn",
+  "main_scene": "res://level/scenes/Sandbox.tscn",
+  "active_gate_profile": "lyra_ai_headless",
+  "focus_area": "Lyra AI sandbox plus Neo kernel upgrades",
+  "last_verified_run": {
+    "date": "2026-04-26",
+    "summary": "Audited existing health/death/recovery code and proposed the smallest shared LifeComponent spine for Lyra AI and players.",
+    "evidence": [
+      "docs/ai/current-state.md",
+      "docs/ai/session-notes.md",
+      "docs/wiki/log.md",
+      "docs/wiki/life_system.md",
+      "logs/neo_loops/20260426_121251_loop_1/result.json",
+      "level/scripts/player.gd",
+      "level/scripts/bachtavious_multiplayer_player.gd",
+      "level/scripts/lyra_ai_actor.gd",
+      "level/scripts/lyra_ai_combat_target.gd",
+      "level/scripts/destructible.gd",
+      "simple_projectile.gd"
+    ]
+  },
+  "top_blockers": [
+    "Neo now has named milestone gate profiles, but each profile still needs more precise thresholds over time.",
+    "The active Lyra AI headless gate should focus on metrics/logs and not require visual evidence.",
+    "There is no shared health/death/recovery system yet for Lyra AI actors and players.",
+    "Lyra AI memory now persists and restores actor summaries, but restored memory does not yet influence behavior.",
+    "The lyra_visual gate has generic AI-character visual proof, but Lyra pickup/drop and weapon-alignment captures are still not registered.",
+    "Sandbox.tscn Terrain3D spawn placement is not yet live-verified.",
+    "Lyra pickup/drop and weapon alignment still need in-editor visual verification."
+  ],
+  "recommended_next_loop": "Implement the first shared life-system slice: add a reusable LifeComponent, wire it to Lyra AI actors and Bachtavious/player damage entrypoints, and prove life_damaged plus downed/death metrics in lyrasandbox.",
+  "evidence_paths": [
+    "docs/wiki/neo_architecture.md",
+    "docs/ai/neo_goal.md",
+    "docs/ai/neo_scoreboard.md",
+    "docs/ai/current-state.md",
+    "logs/research/",
+    "logs/neo_loops/",
+    "logs/visual_evidence/",
+    "logs/"
+  ],
+  "trust_levels": {
+    "lyra_ai_headless_metrics": "high",
+    "lyra_ai_persistent_memory": "high",
+    "life_system_architecture": "medium",
+    "lyra_ai_live_visual_verification": "medium",
+    "sandbox_spawn_validated": "low",
+    "neo_kernel_completeness": "high"
+  }
+}

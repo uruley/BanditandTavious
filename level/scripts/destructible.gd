@@ -3,19 +3,25 @@ extends RigidBody3D
 @export var fractured_scene: PackedScene
 @export var shard_impulse: float = 2.0
 @export var cleanup_time: float = 10.0
-@export var impact_threshold: float = 0.1
+@export var impact_threshold: float = 2.0
 @export var health: float = 3.0
 @export var mass_resistance: float = 2.0
+@export var invulnerability_time: float = 0.5
 
 var last_velocity: Vector3 = Vector3.ZERO
 var is_destroyed = false
+var spawn_time: float = 0.0
 
 func _ready():
 	print("!!! DESTRUCTIBLE SYSTEM ONLINE: ", name)
+	spawn_time = Time.get_ticks_msec() / 1000.0
 	# Ensure physics is listening
 	contact_monitor = true
 	max_contacts_reported = 10
 	body_entered.connect(_on_body_entered)
+
+func _is_invulnerable() -> bool:
+	return (Time.get_ticks_msec() / 1000.0) - spawn_time < invulnerability_time
 
 func _integrate_forces(state):
 	# Crucial: Jolt velocity can zero out on the frame of impact,
@@ -25,12 +31,11 @@ func _integrate_forces(state):
 		last_velocity = current_vel
 
 func _physics_process(delta):
-	if is_destroyed: return
+	if is_destroyed or _is_invulnerable(): return
 	
 	# METHOD 1: Direct Contact Check (Best for Jolt)
 	var bodies = get_colliding_bodies()
 	if bodies.size() > 0:
-		print("!!! DIRECT CONTACT with: ", bodies[0].name, " Speed: ", last_velocity.length())
 		check_and_destroy(last_velocity.length())
 		return
 
@@ -44,13 +49,11 @@ func _physics_process(delta):
 	query.exclude = [get_rid()]
 	var result = space_state.intersect_ray(query)
 	if result:
-		print("!!! PREDICTIVE IMPACT with: ", result.collider.name)
 		check_and_destroy(last_velocity.length())
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	# METHOD 3: Standard Signal
-	if is_destroyed: return
-	print("!!! SIGNAL IMPACT with: ", body.name)
+	if is_destroyed or _is_invulnerable(): return
 	check_and_destroy(last_velocity.length())
 
 func check_and_destroy(speed: float):
@@ -67,9 +70,16 @@ func destroy(impulse_direction: Vector3 = Vector3.ZERO):
 		return
 		
 	var shards = fractured_scene.instantiate()
+	shards.add_to_group("shards")
+	for child in shards.get_children():
+		if child is Node:
+			child.add_to_group("shards")
+
 	# Add to level root so shards don't move with the (soon to be deleted) box
 	get_parent().add_child(shards)
 	shards.global_transform = global_transform
+	# ENSURE SCALE IS PRESERVED
+	shards.scale = scale
 	
 	for child in shards.get_children():
 		if child is RigidBody3D:

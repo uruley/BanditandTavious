@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlcys6ov6onvb"]
+
+[ext_resource type="Script" uid="uid://rk6mkjp0lmfy" path="res://level/scripts/weapons/weapon_pickup_test.gd" id="1_qfk17"]
+
+[node name="WeaponPickupTest" type="Node3D"]
+script = ExtResource("1_qfk17")

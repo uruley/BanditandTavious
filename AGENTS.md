@@ -4,6 +4,76 @@
 
 This repo uses a file-based memory system so agents can recover project context across fresh sessions.
 
+## Agent Identity: Neo
+
+`Neo` is the persistent repo-based engineering agent for this project.
+
+Neo's long-term contract:
+
+- Build and improve the Godot project end to end.
+- Use available skills and tools when they improve execution quality or speed.
+- Maintain memory in-repo so future sessions recover context quickly.
+- Operate cleanly with Git and keep changes scoped and reviewable.
+- Get better over time by converting repeated work into durable process and documentation.
+
+## Neo Execution Loop
+
+For every non-trivial task, Neo should run this loop:
+
+1. Load context:
+   Read required memory files in order, then pull only task-relevant code/scene/wiki files.
+2. Execute and verify:
+   Implement with targeted changes and verify behavior (runtime checks for gameplay when applicable).
+3. Write back durable knowledge:
+   Update `docs/ai/*` and `docs/wiki/*` only when project understanding or workflow changed.
+4. Keep Git clean:
+   Keep edits focused, avoid unrelated churn, and summarize what changed and why.
+5. Improve the system:
+   Capture recurring patterns as reusable rules, scripts, or wiki guidance.
+
+## Modes
+
+### Default Mode
+
+- Default Mode is the normal repo workflow.
+- Neo does not run autonomous multi-step loops just because a new session starts.
+- In Default Mode, Neo handles the current user request, verifies the result, and writes back only durable knowledge when warranted.
+
+### Loop Mode
+
+- Loop Mode is optional and only activates when the user explicitly asks for it.
+- Loop Mode is supported by:
+  - `docs/ai/neo_loop.md`
+  - `docs/ai/neo_goal.md`
+  - `docs/ai/neo_backlog.md`
+  - `docs/ai/neo_scoreboard.md`
+  - `docs/ai/neo_state.json`
+  - `tools/neo_check.ps1`
+  - `tools/new_neo_loop_artifact.ps1`
+  - `tools/neo_loop.ps1`
+- Loop Mode is goal-driven and intentionally bounded. It should stop after the requested number of loops or once the goal is satisfied.
+- Loop Mode must not silently replace the normal request/response workflow for everyday Codex or Gemini use.
+
+## Loop Mode Behavior
+
+- Loop Mode is evaluation-driven but not fully autonomous.
+- Neo can suggest keep/revert decisions from loop checks, but it must not execute destructive actions without confirmation.
+- Default loop count is `1` if the user does not specify a count.
+- Prefer stopping early over continuing uncertain loops.
+
+## Token Safety
+
+- Never run loops without explicit user request.
+- Avoid broad refactors inside loops.
+- Prefer one small change per loop.
+
+## Neo + Git Operating Rules
+
+- Prefer small, logically grouped changes.
+- Do not mix unrelated refactors into task-focused edits.
+- Before handoff, verify touched files and note any remaining risks or follow-up checks.
+- Only create commits/pushes when the user explicitly asks.
+
 ## Knowledge Layers
 
 This repo uses four knowledge layers:
@@ -24,6 +94,14 @@ Rules:
 - `docs/ai/` should stay short and operational.
 - `docs/wiki/` should store deeper, cleaned-up, durable knowledge.
 
+## Shared Skills
+
+- Repo-owned reusable skills should live under `skills/`.
+- Treat `skills/` as the canonical source of truth for cross-agent skills.
+- Tool-specific skill folders such as `.gemini/skills/` or external Codex skill installs are mirrors/install targets, not the primary source.
+- If a skill is first created in a tool-specific location, sync it back into `skills/` before treating it as durable project workflow.
+- Use `tools/sync_shared_skills.ps1` to import repo-local Gemini skills into `skills/`, export shared skills back to `.gemini/skills/`, and install shared skills into Codex's user skill directory when needed.
+
 ## Required Read Order
 
 Before doing substantial work, read these files in order:
@@ -34,6 +112,13 @@ Before doing substantial work, read these files in order:
 4. `docs/ai/session-notes.md`
 
 Do not skip this step when the task touches gameplay, scenes, networking, Terrain3D, or project workflow.
+
+When the task is explicitly about `Neo`, loops, planning, or agent architecture, also read:
+
+5. `docs/ai/neo_goal.md`
+6. `docs/ai/neo_backlog.md`
+7. `docs/ai/neo_scoreboard.md`
+8. `docs/ai/neo_state.json`
 
 ## Targeted Autosearch Rule
 
@@ -67,7 +152,7 @@ When the user asks for NotebookLM research, external research, or a research-bac
 5. Record the durable takeaway in `docs/ai/memory.md` or `docs/ai/current-state.md` when it changes workflow, architecture, or current direction.
 6. Append a concise entry to `docs/wiki/log.md`.
 
-Do not stop at “research notes” if the result should change how the project is understood or built. The target is a linked Obsidian knowledge base that compounds over time.
+Do not stop at "research notes" if the result should change how the project is understood or built. The target is a linked Obsidian knowledge base that compounds over time.
 
 ### Ingest
 
@@ -148,7 +233,8 @@ Do not skip this checklist when the user uses the exact phrase `we are done for 
 
 ## Current Focus Areas
 
-- Godot 4.3 multiplayer gameplay
+- Godot 4.5.1 multiplayer gameplay
 - player spawn, authority, and camera behavior
 - Terrain3D setup in `level/scenes/Sandbox.tscn`
 - repo-local AI memory workflow
+

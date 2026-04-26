@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4ehr7jo80pcc"]
+
+[ext_resource type="Script" path="res://weapon_world_item.gd" id="1_gftai"]
+[ext_resource type="Resource" uid="uid://c5a7j2k3l4m5n" path="res://level/data/weapons/pistol.tres" id="2_pistol"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gftai"]
+size = Vector3(0.2, 0.2, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yosko"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[node name="WeaponWorldItem" type="RigidBody3D"]
+collision_layer = 6
+collision_mask = 3
+script = ExtResource("1_gftai")
+weapon_resource = ExtResource("2_pistol")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="PistolModel" type="Node3D" parent="Visuals"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_gftai")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 1
+
+[node name="InteractionCollision" type="CollisionShape3D" parent="InteractionArea"]
+shape = SubResource("BoxShape3D_yosko")

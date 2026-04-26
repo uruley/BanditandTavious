@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b2kmphlygwkba"]
+
+[ext_resource type="PackedScene" uid="uid://d0eawm5qsv8ma" path="res://level/scenes/weapons/WeaponPickup.tscn" id="1_pickup"]
+[ext_resource type="Resource" uid="uid://bwdy7oq2tsbw" path="res://level/data/weapons/rifle.tres" id="2_weapon"]
+
+[node name="RiflePickup" instance=ExtResource("1_pickup")]
+weapon_resource = ExtResource("2_weapon")
+auto_pickup = false
+
+[node name="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)

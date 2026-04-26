@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvqy1srq1rsud"]
+
+[ext_resource type="Script" uid="uid://be51ubmgh4xt8" path="res://level/scripts/vehicles/box_car_propeller_test.gd" id="1_f3nmr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f3nmr"]
+size = Vector3(32, 0.1, 32)
+
+[node name="BoxCarPropellerTest" type="Node3D"]
+script = ExtResource("1_f3nmr")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_f3nmr")
+
+[node name="FloorVisual" type="CSGBox3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 0)
+size = Vector3(32, 0.1, 32)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 8)
+current = true
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9393727, -0.2576124, 0.22630675, 0, 0.6599831, 0.7512804, -0.3428978, -0.70573235, 0.61997014, 0, 0, 0)
+light_energy = 2.5
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]

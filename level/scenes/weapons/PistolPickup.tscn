@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://level/scenes/weapons/WeaponPickup.tscn" id="1_pickup"]
+[ext_resource type="Resource" path="res://level/data/weapons/pistol.tres" id="2_weapon"]
+
+[node name="PistolPickup" instance=ExtResource("1_pickup")]
+weapon_resource = ExtResource("2_weapon")
+auto_pickup = false

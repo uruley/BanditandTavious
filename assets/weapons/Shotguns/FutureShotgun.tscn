@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnaaxias0m1kj"]
+
+[ext_resource type="PackedScene" uid="uid://oudtytds73r2" path="res://assets/weapons/Shotguns/futuristic+rifle+3d+model.glb" id="1_model"]
+
+[node name="FutureShotgun" type="Node3D"]
+
+[node name="Model" parent="." instance=ExtResource("1_model")]

@@ -1,0 +1,28 @@
+﻿{
+    "timestamp_utc":  "2026-04-26T15:31:06Z",
+    "repo_root":  "C:\\Users\\ruley\\AppData\\Roaming\\Godot\\app_userdata\\BanditandTavious",
+    "has_project":  true,
+    "main_scene":  "res://level/scenes/Sandbox.tscn",
+    "scene_load_status":  true,
+    "error_count":  0,
+    "required_files_ok":  true,
+    "missing_files":  [
+
+                      ],
+    "neo_state_ok":  true,
+    "neo_state_issues":  [
+
+                         ],
+    "neo_active_goal":  "Progress the Lyra AI sandbox through small verified milestones and strengthen Neo into an evidence-driven agent kernel.",
+    "neo_active_scene":  "res://level/scenes/lyrasandbox.tscn",
+    "neo_active_scene_load_status":  true,
+    "neo_recommended_next_loop":  "Teach neo_check to summarize milestone-specific evidence such as Lyra AI metrics, Godot logs, and live verification artifacts.",
+    "neo_main_scene_matches_project":  true,
+    "latest_loop_artifact":  null,
+    "latest_loop_status":  null,
+    "latest_loop_created_utc":  null,
+    "latest_loop_decision":  null,
+    "latest_loop_recommendation":  null,
+    "git_available":  true,
+    "git_modified_count":  187
+}

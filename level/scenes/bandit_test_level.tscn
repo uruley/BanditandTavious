@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://uwsdod643jw2"]
+
+[ext_resource type="PackedScene" path="res://level/scenes/bandit_player.tscn" id="1_bandit"]
+
+[node name="BanditTestLevel" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7648422, -0.48398814, 0.42517278, 0, 0.6599831, 0.7512804, -0.64421767, -0.574611, 0.5047829, 0, 0, 0)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(30, 1, 30)
+
+[node name="Player" parent="." instance=ExtResource("1_bandit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

@@ -2,9 +2,13 @@
 
 Related:
 - [[current-state|Current State]]
+- [[ai_masterplan|AI Masterplan]]
+- [[neo_goal_sheet|Neo Goal Sheet]]
 - [[lessons|Lessons]]
 - [[session-notes|Session Notes]]
 - [[../wiki/ai_systems|AI Systems]]
+- [[../wiki/persistent_sandbox_ai|Persistent Sandbox AI Master Plan]]
+- [[../wiki/life_system|Life System]]
 - [[../wiki/destruction|Destruction]]
 - [[../wiki/index|Wiki Index]]
 
@@ -37,6 +41,7 @@ Related:
 - New decoupled animation system template: `res://BanditAnimationSystem.tscn`
 - AI sandbox scene: `res://level/scenes/BanditAI.tscn`
 - Performance benchmarking scene: `res://level/scenes/PerformanceStressTest.tscn`
+- Vehicle prototype scenes: `res://level/scenes/vehicles/BoxCarPropeller.tscn` and `res://level/scenes/vehicles/BoxCarPropellerTest.tscn`
 
 ## Important Scripts
 
@@ -62,12 +67,15 @@ Related:
 - `level/scripts/bandit_ai_level.gd`: scene-level setup for the `BanditAI` sandbox
 - `level/scripts/bandit_ai_actor.gd`: shared placeholder AI actor logic for enemy, friendly, and villager capsules
 - `level/scripts/bandit_ai_activity_logger.gd`: JSONL activity logger for `BanditAI` that writes snapshots to `user://bandit_ai_activity.jsonl`
-- `level/scripts/lyra_ai_phase1_manager.gd`: runtime manager for the first Lyra sandbox AI slice, spawning capsule gatherers, a real sandbox navigation region, optional fallback test pad, food/water/resource targets, reservations, and metrics.
-- `level/scripts/lyra_ai_actor.gd`: capsule gatherer Utility AI + FSM controller for food/water/resource collection.
-- `level/scripts/lyra_ai_target.gd`, `lyra_ai_task_board.gd`, and `lyra_ai_metrics.gd`: target metadata, target reservation, and JSONL metrics support for the Lyra AI prototype.
+- `level/scripts/lyra_ai_phase1_manager.gd`: runtime manager for the first Lyra sandbox AI slice, spawning capsule gatherers, a real sandbox navigation region, optional fallback test pad, food/water/resource targets, waypoint patrol markers, reservations, and metrics.
+- `level/scripts/lyra_ai_actor.gd`: capsule gatherer Utility AI + FSM controller for food/water/resource collection, weapon pickup, combat, and scout waypoint exploration.
+- `level/scripts/lyra_ai_target.gd`, `lyra_ai_waypoint.gd`, `lyra_ai_task_board.gd`, and `lyra_ai_metrics.gd`: target metadata, waypoint markers, target reservation/lookup, and JSONL metrics support for the Lyra AI prototype.
+- `level/scripts/lyra_ai_memory_store.gd`: persistent Lyra AI memory store that writes actor summaries to `user://lyra_ai_memory.json` and event history to `user://lyra_ai_memory_events.jsonl`, then restores remembered actor summaries on the next `lyrasandbox` launch.
 - `level/scripts/lyra_ai_phase1_manager.gd` also supports loop CLI options `--ai-test`, `--duration`, `--ai-count`, `--seed`, `--ai-test-pad`, `--ai-local-nav`, and `--metrics-path`.
 - `level/scripts/performance_monitor.gd`: Global Autoload HUD (**F9**) and CSV logger for runtime performance benchmarking.
 - `level/scripts/performance_stress_test.gd`: Controller for spawning AI and destructible batches in the performance sandbox.
+- `level/scripts/vehicles/box_car_propeller.gd`: code-driven prototype vehicle movement plus wheel, steering, and rear-propeller visual animation.
+- `level/scripts/vehicles/box_car_propeller_test.gd`: preview and headless motion verification harness for the box-car propeller prototype.
 - `tools/ai_activity_to_sqlite.py`: offline converter from `bandit_ai_activity.jsonl` to SQLite database `logs/bandit_ai_activity.db`
 - `tools/run_research_cycle.ps1`: headless multi-cycle experiment runner for TrainingGround-style research loops
 - `tools/summarize_experiment.py`: evolution log analyzer that emits cycle summaries, research-gap flags, and coach suggestions
@@ -112,6 +120,11 @@ See also: [[../wiki/terrain3d|Terrain3D]]
 - Agents should write back only durable knowledge, not noisy transcripts.
 - `Neo` should follow a repeatable loop: load context -> execute/verify -> write back durable knowledge -> keep Git clean -> capture improvement rules.
 - `Neo` also has an optional operator-triggered Loop Mode documented in `docs/ai/neo_loop.md` and powered by `tools/neo_check.ps1` / `tools/neo_loop.ps1`; it must not run automatically on every session.
+- `docs/ai/neo_goal_sheet.md` is the concise operator-facing tracker for staying on goal; it summarizes the north star, current track, completed milestones, next three goals, drift risks, and required proof.
+- The target long-term agent design for `Neo` is documented in `docs/wiki/neo_architecture.md`; the current repo has identity, memory, loop, research components, initial canonical `docs/ai/neo_state.json`, ranked `docs/ai/neo_backlog.md`, replayable loop artifacts under `logs/neo_loops/`, `neo_check.ps1` milestone evidence summaries, named `PASS`/`WARN`/`FAIL` gate profiles, and manifest-backed visual evidence registration under `logs/visual_evidence/`, but still lacks richer per-profile thresholds and automatic promotion tooling.
+- For visible Neo claims, use `tools/register_neo_visual_evidence.ps1` to copy a real screenshot/video into `logs/visual_evidence/YYYYMMDD_HHMMSS_<type>/` with `manifest.json`. The `lyra_visual` gate should fail until a manifest-backed capture proves the visual claim.
+- `tools/capture_lyra_ai_visual.gd` is the reliable visual-capture path for generic Lyra AI actor visibility. It avoids OS screenshots of the menu/player camera by placing a temporary camera on a runtime `lyra_ai_actor` and saving a viewport PNG for registration.
+- `docs/raw/masterplans/master_plan.pdf` establishes the long-term AI north star as a persistent sandbox: Godot plus SQLite first, durable world state and NPC memory before model training, LLMs only on slow planning/reflection/dialogue/research loops, and verified before/after evidence for accepted AI improvements. The distilled wiki page is `docs/wiki/persistent_sandbox_ai.md`.
 - For nontrivial systems and architecture changes, prefer a research-first workflow: search NotebookLM, distill the result into `docs/wiki/`, then implement against that synthesized guidance.
 - Treat `docs/wiki/` as the durable system-overview layer for patterns the team is actively learning or refining; once a workflow repeatedly succeeds, it should be captured there as a reusable pattern or future skill candidate.
 - NotebookLM and other research should be compiled into linked Obsidian knowledge, not left as isolated report pages. Update existing domain pages when possible, add cross-links, and write back the parts that change project direction or workflow.
@@ -120,6 +133,14 @@ See also: [[../wiki/terrain3d|Terrain3D]]
 - The first Lyra AI prototype is wired into `level/scenes/lyrasandbox.tscn` through `LyraAIPrototype`; it now defaults to a real sandbox nav zone near the playable props and keeps the old `AITestPad` only as an opt-in `--ai-test-pad` fallback.
 - The broad Lyra AI nav experiment uses 6 role-biased actors (`forager`, `hauler`, `scout`) and target cooldowns after stuck events, but current headless metrics show blocked long routes; do not treat broad sandbox navigation as solved until a real nav bake or waypoint/corridor graph replaces hand-authored rectangles.
 - The Lyra AI prototype now has a larger generated corridor-style sandbox nav mesh, runtime-corrected food/water/resource target positions, reachable runtime weapon pickups, and actor-side `WeaponInventoryComponent` support so capsule AI can pick up `WeaponPickup` weapons during headless runs.
+- Runtime AI weapon pickups should be placed inside nav-cell interiors, not directly on generated nav quad boundaries. The April 25, 2026 loop pass found `AI_PistolPickup_02` at `(27, 22)` caused a repeat stuck cluster; moving it to `(25, 20)` removed weapon-target stuck events in verification.
+- The Lyra AI shooting milestone uses a runtime `AI_TargetDummy_01` combat target, a `combat` utility goal for armed AI, `WeaponMaster.fire()` for cooldown/effects, and raycast hit resolution that logs `shot_fired` metrics.
+- The first bigger-navigation pass expanded the generated nav to a 6x6 grid and added a second combat dummy in the east corridor. A combat seek-distance filter prevents actors from accepting far combat targets that route through blocked sandbox geometry; this kept a 10-seed expanded-nav batch at 0 stuck events.
+- The concrete Lyra waypoint-navigation pass adds runtime `AINavWaypoints`, `lyra_ai_waypoint.gd`, an `explore` task-board goal, scout lane routes, `route_visit` metrics, and parser route summaries. Final 5 fixed 30-second seeds produced 30 route visits, 4 distinct waypoint names per run (`WP_CentralMarket`, `WP_EastOuter`, `WP_NorthEast`, `WP_SpawnLane`), 20 weapon pickups, 96 shots, 95 hits, and 0 stuck events.
+- The first visible Lyra building milestone adds runtime `AIBuildSites`, `lyra_ai_build_site.gd`, a visible `BuildSite_Barricade_01` that progresses from foundation marker to completed planks after two resource deliveries, a `build` utility goal for resource-carrying actors, and `build_started` / `build_resource_delivered` / `build_completed` metrics. A 50-run 18-second batch produced 49/50 completed builds before tuning; increasing `build_distance` to `4.5` fixed the failing seed, and a post-fix 10-seed tail batch produced 10/10 completed builds, 0 stuck events, 40 weapon pickups, 97/97 hits, and 31 route visits.
+- The first Lyra AI persistent-memory slice is implemented. `AIMemoryStore` is created by `lyra_ai_phase1_manager.gd`, records AI metrics into `user://lyra_ai_memory.json`, and restores actor summaries on restart. Loop evidence in `logs/neo_loops/20260426_114246_loop_1/` proves run 1 loaded 0 actor memories and run 2 loaded 6 actor memories plus emitted 6 `ai_memory_restored` events.
+- Current Lyra memory persistence is telemetry/restoration only. It records remembered goals, interactions, weapon pickups, shots, route visits, build state, and stuck counts, but it does not yet alter utility scoring or actor behavior from memory.
+- `docs/wiki/life_system.md` is the current design proposal for the next shared gameplay spine: a reusable `LifeComponent` for health, damage, downed/death, recovery, revive, respawn, metrics, and memory events across Lyra AI actors and players.
 - For repeated Lyra AI headless loops, pass a unique `--metrics-path res://logs/...jsonl` or rely on `lyra_ai_metrics.gd` removing the previous metrics file before opening it; reusing one fixed JSONL path caused stale null/trailing bytes in batch runs.
 - The active Lyra weapon pickup path is now `WeaponPickup.tscn` -> `weapon_pickup.gd` -> `WeaponInventoryComponent` -> `WeaponMaster`. Use `PistolPickup.tscn` or `RiflePickup.tscn` for placed level pickups; `WeaponWorldItem.tscn` and `SilverWeaponWorldItem.tscn` are legacy compatibility scenes.
 - In the Lyra/Bachtavious path, `E` interacts with nearby pickups and `G` drops the current weapon. `PistolPickup.tscn`, `RiflePickup.tscn`, and dropped pickups use `auto_pickup = false`; `consume_on_pickup` only decides whether the pickup disappears after a successful equip.

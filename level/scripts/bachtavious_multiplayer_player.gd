@@ -27,6 +27,13 @@ const VAULT_MAX_HEIGHT_RATIO := 0.8
 const MANTLE_MAX_HEIGHT_RATIO := 1.4
 const LEDGE_MIN_NORMAL_Y := 0.6
 const DEBUG_SCREENSHOT_KEY := KEY_F12
+const PICKUP_QUERY_MASK := 7
+const PICKUP_INTERACTION_RADIUS := 4.0
+
+# MANUAL WEAPON COORDINATES (Edit these until it looks right!)
+const RIFLE_POS := Vector3(0.008, 0.158, -0.105)
+const RIFLE_ROT := Vector3(0.072, -1.745, -1.395)
+const RIFLE_SCALE := Vector3(0.91, 0.91, 0.91)
 
 @onready var nickname: Label3D = $PlayerNick/Nickname
 @onready var chat_label: Label3D = $PlayerChat/Text
@@ -37,8 +44,9 @@ const DEBUG_SCREENSHOT_KEY := KEY_F12
 @export var spring_arm: SpringArm3D = null
 @export var camera_node: Camera3D = null
 @export var animation_tree: AnimationTree = null
-@export var weapon_root: Node3D = null
-@export var muzzle_marker: Marker3D = null
+@export var weapon_master: Node3D = null # WeaponMaster container
+@export var weapon_inventory: WeaponInventoryComponent = null
+@export var current_weapon: WeaponResource = null
 @export var forward_ray: RayCast3D = null
 @export var head_ray: RayCast3D = null
 @export var ledge_ray: RayCast3D = null
@@ -48,9 +56,14 @@ var _camera_pitch := 0.0
 var _camera_tween: Tween
 var _parkour_tween: Tween
 var _projectile_scene := preload("res://simple_projectile.tscn")
+var _weapon_world_item_scene := preload("res://WeaponWorldItem.tscn")
+var _current_weapon_world_scene : PackedScene = null
 var _one_shot_animation := ""
 var _shoot_was_pressed := false
 var _punch_was_pressed := false
+var _drop_was_pressed := false
+var _interact_was_pressed := false
+var _has_weapon := true
 var _is_aiming := false
 var _is_parkouring := false
 var _state_animation_lock := ""
@@ -82,9 +95,17 @@ func _ready() -> void:
 		camera_node.h_offset = DEFAULT_H_OFFSET
 	if spring_arm:
 		spring_arm.spring_length = DEFAULT_SPRING_LENGTH
-	if weapon_root:
-		_weapon_rest_position = weapon_root.position
-		_weapon_rest_rotation = weapon_root.rotation
+	if weapon_master:
+		_weapon_rest_position = weapon_master.position
+		_weapon_rest_rotation = weapon_master.rotation
+		_has_weapon = weapon_master.visible
+		if current_weapon:
+			weapon_master.set("weapon_resource", current_weapon)
+		elif weapon_master.get("weapon_resource") is WeaponResource:
+			current_weapon = weapon_master.get("weapon_resource") as WeaponResource
+		if weapon_master.has_signal("fired") and not weapon_master.fired.is_connected(_on_weapon_fired):
+			weapon_master.fired.connect(_on_weapon_fired)
+	_configure_weapon_inventory()
 	if body_root:
 		_body_rest_rotation_y = body_root.rotation.y
 	chat_label.hide()
@@ -115,20 +136,20 @@ func _resolve_nodes() -> void:
 		animation_tree = get_node_or_null("Lyra/AnimationTree") as AnimationTree
 	if animation_tree == null:
 		animation_tree = get_node_or_null("Bachtavious/AnimationTree") as AnimationTree
-	if weapon_root == null:
-		if body_root:
-			weapon_root = body_root.get_node_or_null("Armature/Skeleton3D/RightHand/FAB converted")
-	if weapon_root == null:
-		weapon_root = get_node_or_null("Lyra/Armature/Skeleton3D/RightHand/FAB converted")
-	if weapon_root == null:
-		weapon_root = get_node_or_null("Bachtavious/Armature/Skeleton3D/RightHand/FAB converted")
-	if muzzle_marker == null:
-		if body_root:
-			muzzle_marker = body_root.get_node_or_null("Armature/Skeleton3D/RightHand/FAB converted/Muzzle")
-	if muzzle_marker == null:
-		muzzle_marker = get_node_or_null("Lyra/Armature/Skeleton3D/RightHand/FAB converted/Muzzle")
-	if muzzle_marker == null:
-		muzzle_marker = get_node_or_null("Bachtavious/Armature/Skeleton3D/RightHand/FAB converted/Muzzle")
+	
+	if weapon_master == null and body_root:
+		weapon_master = body_root.get_node_or_null("Armature/Skeleton3D/RightHand/WeaponMaster")
+	if weapon_master == null:
+		weapon_master = get_node_or_null("Bachtavious/Armature/Skeleton3D/RightHand/WeaponMaster")
+	if weapon_inventory == null:
+		weapon_inventory = get_node_or_null("WeaponInventory") as WeaponInventoryComponent
+	if weapon_inventory == null:
+		weapon_inventory = find_child("WeaponInventory", true, false) as WeaponInventoryComponent
+	if weapon_inventory == null:
+		weapon_inventory = WeaponInventoryComponent.new()
+		weapon_inventory.name = "WeaponInventory"
+		add_child(weapon_inventory)
+
 	if forward_ray == null:
 		forward_ray = get_node_or_null("Scanner/ForwardRay")
 	if head_ray == null:
@@ -142,6 +163,20 @@ func _resolve_nodes() -> void:
 		_animation_player = get_node_or_null("Lyra/AnimationPlayer") as AnimationPlayer
 	if _animation_player == null:
 		_animation_player = get_node_or_null("Bachtavious/AnimationPlayer") as AnimationPlayer
+
+func _configure_weapon_inventory() -> void:
+	if weapon_inventory == null:
+		return
+	if weapon_master:
+		weapon_inventory.weapon_master_path = weapon_inventory.get_path_to(weapon_master)
+	if current_weapon:
+		weapon_inventory.current_weapon = current_weapon
+	elif weapon_inventory.current_weapon:
+		current_weapon = weapon_inventory.current_weapon
+	if not weapon_inventory.weapon_equipped.is_connected(_on_inventory_weapon_equipped):
+		weapon_inventory.weapon_equipped.connect(_on_inventory_weapon_equipped)
+	if not weapon_inventory.weapon_dropped.is_connected(_on_inventory_weapon_dropped):
+		weapon_inventory.weapon_dropped.connect(_on_inventory_weapon_dropped)
 
 func _disable_preview_nodes() -> void:
 	if Engine.is_editor_hint():
@@ -196,7 +231,6 @@ func _consolidate_libraries() -> void:
 			var parkour_lib = load(parkour_lib_path)
 			if parkour_lib:
 				_animation_player.add_animation_library("parkour", parkour_lib)
-				print("DEBUG: Loaded parkour library. Animations: ", _animation_player.get_animation_list())
 
 	if not _animation_player.has_animation_library("locomotion"):
 		var locomotion_lib_path := "res://assets/animations/locomotion_base.res"
@@ -230,16 +264,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			spring_arm.rotation.x = _camera_pitch
 
 func _process(delta: float) -> void:
-	if weapon_root == null:
+	if weapon_master == null:
 		return
 	_recoil_position_offset = _recoil_position_offset.lerp(Vector3.ZERO, delta * RECOIL_RETURN_SPEED)
 	_recoil_rotation_offset = _recoil_rotation_offset.lerp(Vector3.ZERO, delta * RECOIL_RETURN_SPEED)
-	weapon_root.position = _weapon_rest_position + _recoil_position_offset
-	weapon_root.rotation = _weapon_rest_rotation + _recoil_rotation_offset
+	weapon_master.position = _weapon_rest_position + _recoil_position_offset
+	weapon_master.rotation = _weapon_rest_rotation + _recoil_rotation_offset
 	if body_root and _is_aiming and spring_arm_offset:
 		body_root.global_rotation.y = lerp_angle(body_root.global_rotation.y, spring_arm_offset.global_rotation.y, AIM_BODY_TURN_LERP)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
 
@@ -253,15 +287,28 @@ func _physics_process(delta: float) -> void:
 		freeze()
 		return
 
+	if _is_drop_just_pressed() and _has_weapon:
+		drop_weapon()
+	
+	if _is_interact_just_pressed():
+		_check_interaction()
+
 	var was_aiming := _is_aiming
-	_is_aiming = _is_aim_pressed()
+	_is_aiming = _is_aim_pressed() if _has_weapon else false
 	if was_aiming != _is_aiming:
 		_toggle_ads(_is_aiming)
 
-	if _is_shoot_just_pressed():
-		_play_one_shot("Pistol_Shoot")
-		_fire_projectile()
-		_apply_weapon_recoil()
+	if _has_weapon and weapon_master:
+		var want_to_fire := false
+		if current_weapon and current_weapon.is_automatic:
+			want_to_fire = _is_shoot_pressed()
+		else:
+			want_to_fire = _is_shoot_just_pressed()
+
+		if want_to_fire:
+			if weapon_master.has_method("fire") and weapon_master.fire():
+				_play_one_shot("Pistol_Shoot")
+				_apply_weapon_recoil()
 	elif _is_punch_just_pressed():
 		_play_one_shot("Punch_Jab")
 
@@ -271,7 +318,7 @@ func freeze() -> void:
 	velocity = Vector3.ZERO
 	_update_animation(false, false)
 
-func animate_body(vel: Vector3) -> void:
+func animate_body(_vel: Vector3) -> void:
 	var is_crouching := Input.is_physical_key_pressed(KEY_CTRL)
 	var is_sprinting := Input.is_physical_key_pressed(KEY_SHIFT) and not is_crouching
 	var just_landed := not _was_on_floor and is_on_floor()
@@ -343,11 +390,187 @@ func _is_shoot_just_pressed() -> bool:
 	_shoot_was_pressed = is_pressed
 	return just_pressed
 
+func _is_shoot_pressed() -> bool:
+	var is_pressed := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	for device in Input.get_connected_joypads():
+		if Input.get_joy_axis(device, JOY_AXIS_TRIGGER_RIGHT) > TRIGGER_THRESHOLD:
+			is_pressed = true
+			break
+	return is_pressed
+
 func _is_punch_just_pressed() -> bool:
 	var is_pressed := Input.is_physical_key_pressed(KEY_F)
 	var just_pressed := is_pressed and not _punch_was_pressed
 	_punch_was_pressed = is_pressed
 	return just_pressed
+
+func _is_drop_just_pressed() -> bool:
+	var is_pressed := Input.is_physical_key_pressed(KEY_G)
+	var just_pressed := is_pressed and not _drop_was_pressed
+	_drop_was_pressed = is_pressed
+	return just_pressed
+
+func _is_interact_just_pressed() -> bool:
+	var is_pressed := Input.is_physical_key_pressed(KEY_E)
+	var just_pressed := is_pressed and not _interact_was_pressed
+	_interact_was_pressed = is_pressed
+	return just_pressed
+
+func drop_weapon() -> void:
+	if not _has_weapon or weapon_master == null:
+		return
+		
+	print("Dropping weapon...")
+	if weapon_inventory and weapon_inventory.current_weapon:
+		var drop_transform := weapon_master.global_transform
+		drop_transform.origin += (-global_transform.basis.z * 1.0) + Vector3.UP * 0.2
+		var dropped := weapon_inventory.drop_current_weapon(drop_transform)
+		if dropped:
+			current_weapon = null
+			_has_weapon = false
+			if _is_aiming:
+				_toggle_ads(false)
+				_is_aiming = false
+			return
+
+	var drop_scene = _current_weapon_world_scene if _current_weapon_world_scene else _weapon_world_item_scene
+	var drop_item = drop_scene.instantiate()
+	get_tree().current_scene.add_child(drop_item)
+	if current_weapon:
+		drop_item.set("weapon_resource", current_weapon)
+	if drop_item.get("world_item_scene") == null:
+		drop_item.set("world_item_scene", drop_scene)
+	
+	drop_item.global_position = weapon_master.global_position
+	drop_item.global_rotation = weapon_master.global_rotation
+	
+	# Throw it forward a bit
+	var throw_dir = -global_transform.basis.z + Vector3(0, 0.5, 0)
+	drop_item.apply_central_impulse(throw_dir * 5.0)
+	
+	_has_weapon = false
+	current_weapon = null
+	weapon_master.visible = false
+
+	if _is_aiming:
+		_toggle_ads(false)
+		_is_aiming = false
+
+func pick_up_weapon(weapon_item: Node3D) -> void:
+	if weapon_master == null:
+		return
+		
+	var resource = weapon_item.get("weapon_resource") as WeaponResource
+	
+	# LEGACY FALLBACK: If the item has no resource, load the default pistol
+	if not resource:
+		print("Legacy weapon detected, loading default pistol.tres")
+		resource = load("res://level/data/weapons/pistol.tres")
+		
+	if resource:
+		print("Picking up weapon: ", resource.weapon_name)
+		if weapon_inventory and weapon_inventory.try_pick_up(resource, weapon_item):
+			_current_weapon_world_scene = weapon_item.get("world_item_scene")
+			weapon_item.queue_free()
+			return
+		_equip_weapon_resource(resource)
+	
+	_current_weapon_world_scene = weapon_item.get("world_item_scene")
+	_has_weapon = true
+	weapon_master.visible = true
+	weapon_item.queue_free()
+
+func try_pick_up_weapon_resource(resource: WeaponResource, source: Node = null) -> bool:
+	if resource == null:
+		return false
+	if weapon_inventory:
+		return weapon_inventory.try_pick_up(resource, source)
+	return _equip_weapon_resource(resource)
+
+func _equip_weapon_resource(resource: WeaponResource) -> bool:
+	if resource == null or weapon_master == null:
+		return false
+	current_weapon = resource
+	weapon_master.set("weapon_resource", resource)
+	if weapon_master.has_signal("fired"):
+		if not weapon_master.fired.is_connected(_on_weapon_fired):
+			weapon_master.fired.connect(_on_weapon_fired)
+	_has_weapon = true
+	weapon_master.visible = true
+	return true
+
+func _set_node_visible_recursive(node: Node, set_visible: bool) -> void:
+	if node is Node3D:
+		node.visible = set_visible
+	if node is GeometryInstance3D:
+		# Also handle internal visibility for geometry
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if set_visible else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for child in node.get_children():
+		_set_node_visible_recursive(child, set_visible)
+
+func _force_node_render_recursive(node: Node) -> void:
+	if node is Node3D:
+		node.visible = true
+	if node is VisualInstance3D:
+		node.layers = 1 # Force to Layer 1 (Main)
+	for child in node.get_children():
+		_force_node_render_recursive(child)
+
+func _check_interaction() -> void:
+	# Use forward ray if available, otherwise use a small area check
+	if forward_ray and forward_ray.is_colliding():
+		var collider = forward_ray.get_collider()
+		if _try_interact_with(collider):
+			return
+			
+	# Fallback: check for overlapping objects in a small radius
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsShapeQueryParameters3D.new()
+	var sphere = SphereShape3D.new()
+	sphere.radius = 2.0
+	query.shape = sphere
+	query.transform = global_transform
+	query.collision_mask = PICKUP_QUERY_MASK
+	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.exclude = [self]
+	
+	var results = space_state.intersect_shape(query)
+	for result in results:
+		var obj = result["collider"]
+		if _try_interact_with(obj):
+			return
+
+	if _try_nearest_weapon_pickup():
+		return
+
+func _try_nearest_weapon_pickup() -> bool:
+	var best_pickup: Node3D = null
+	var best_distance_sq := INF
+	var max_distance_sq := PICKUP_INTERACTION_RADIUS * PICKUP_INTERACTION_RADIUS
+	for node in get_tree().get_nodes_in_group("weapon_pickups"):
+		var pickup := node as Node3D
+		if pickup == null or not is_instance_valid(pickup) or pickup.is_queued_for_deletion():
+			continue
+		var distance_sq := global_position.distance_squared_to(pickup.global_position)
+		if distance_sq > max_distance_sq or distance_sq >= best_distance_sq:
+			continue
+		best_distance_sq = distance_sq
+		best_pickup = pickup
+	if best_pickup == null:
+		return false
+	return _try_interact_with(best_pickup)
+
+func _try_interact_with(node: Node) -> bool:
+	var current := node
+	while current:
+		if current != self and current.has_method("interact"):
+			var result = current.interact(self)
+			if result is bool:
+				return result
+			return true
+		current = current.get_parent()
+	return false
 
 func _play_one_shot(animation_name: String) -> void:
 	if _animation_player == null:
@@ -397,7 +620,7 @@ func _ensure_animation_tree() -> AnimationTree:
 		animation_tree.name = "AnimationTree"
 		body_root.add_child(animation_tree)
 	animation_tree.anim_player = animation_tree.get_path_to(_animation_player)
-	animation_tree.callback_mode_process = 2 # Manual
+	animation_tree.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 	animation_tree.active = false
 	return animation_tree
 
@@ -632,7 +855,7 @@ func _get_move_input() -> Vector2:
 	return input_direction.normalized() if input_direction.length_squared() > 1.0 else input_direction
 
 func _apply_weapon_recoil() -> void:
-	if weapon_root == null:
+	if weapon_master == null:
 		return
 	_recoil_position_offset -= RECOIL_POSITION_KICK
 	_recoil_rotation_offset += RECOIL_ROTATION_KICK
@@ -650,10 +873,15 @@ func _capture_debug_screenshot() -> void:
 			push_warning("Screenshot save failed: %s" % path)
 
 func _fire_projectile() -> void:
-	if muzzle_marker == null:
+	if weapon_master == null:
 		return
-	var direction := _get_projectile_direction(muzzle_marker.global_position)
-	spawn_projectile.rpc(muzzle_marker.global_position, direction)
+	var muzzle = weapon_master.get_node_or_null("Muzzle")
+	if muzzle == null:
+		return
+	var direction := _get_projectile_direction(muzzle.global_position)
+	var damage_val := current_weapon.damage if current_weapon else 1.0
+	var speed_val := PROJECTILE_SPEED
+	spawn_projectile.rpc(muzzle.global_position, direction, damage_val, speed_val)
 
 func _get_projectile_direction(origin: Vector3) -> Vector3:
 	if camera_node == null:
@@ -673,10 +901,11 @@ func _get_projectile_direction(origin: Vector3) -> Vector3:
 	return (target - origin).normalized()
 
 @rpc("any_peer", "call_local")
-func spawn_projectile(pos: Vector3, dir: Vector3) -> void:
-	if _projectile_scene == null:
+func spawn_projectile(pos: Vector3, dir: Vector3, damage_val: float = 1.0, speed_val: float = PROJECTILE_SPEED) -> void:
+	var projectile_scene_to_spawn := _get_projectile_scene()
+	if projectile_scene_to_spawn == null:
 		return
-	var projectile = _projectile_scene.instantiate()
+	var projectile = projectile_scene_to_spawn.instantiate()
 	if projectile == null:
 		return
 	projectile.name = "Bullet"
@@ -684,9 +913,15 @@ func spawn_projectile(pos: Vector3, dir: Vector3) -> void:
 	
 	projectile.global_position = pos
 	projectile.set("direction", dir)
-	projectile.set("speed", PROJECTILE_SPEED)
+	projectile.set("speed", speed_val)
+	projectile.set("damage", damage_val)
 	projectile.set("shooter", self)
 	projectile.look_at(pos + dir, Vector3.UP)
+
+func _get_projectile_scene() -> PackedScene:
+	if current_weapon and current_weapon.projectile_scene:
+		return current_weapon.projectile_scene
+	return _projectile_scene
 
 func is_running() -> bool:
 	return Input.is_physical_key_pressed(KEY_SHIFT)
@@ -705,3 +940,20 @@ func display_chat_message(message: String) -> void:
 	chat_label.show()
 	await get_tree().create_timer(10.0).timeout
 	chat_label.hide()
+
+func _on_inventory_weapon_equipped(resource: WeaponResource) -> void:
+	current_weapon = resource
+	_has_weapon = resource != null
+	if weapon_master == null and weapon_inventory:
+		weapon_master = weapon_inventory.get_weapon_master()
+	if weapon_master:
+		weapon_master.visible = _has_weapon
+		if weapon_master.has_signal("fired") and not weapon_master.fired.is_connected(_on_weapon_fired):
+			weapon_master.fired.connect(_on_weapon_fired)
+
+func _on_inventory_weapon_dropped(_resource: WeaponResource) -> void:
+	current_weapon = null
+	_has_weapon = false
+
+func _on_weapon_fired(_resource: WeaponResource) -> void:
+	_fire_projectile()

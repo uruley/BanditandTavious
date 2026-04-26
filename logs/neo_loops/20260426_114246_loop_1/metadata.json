@@ -1,0 +1,9 @@
+﻿{
+    "schema_version":  1,
+    "created_utc":  "2026-04-26T16:42:46Z",
+    "loop_index":  1,
+    "goal":  "Create a Lyra AI persistent memory log that survives restarting lyrasandbox",
+    "active_scene":  "res://level/scenes/lyrasandbox.tscn",
+    "recommended_next_loop":  "Verify two sequential lyrasandbox runs: first writes user://lyra_ai_memory.json, second loads it and logs ai_memory_loaded.",
+    "status":  "evaluated"
+}

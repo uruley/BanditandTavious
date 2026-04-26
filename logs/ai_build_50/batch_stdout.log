@@ -1,0 +1,67 @@
+Run 1/50 seed 4501: build=1 stuck=0 score=343.8825
+Run 2/50 seed 4502: build=1 stuck=0 score=343.8857
+Run 3/50 seed 4503: build=1 stuck=0 score=329.8857
+Run 4/50 seed 4504: build=1 stuck=0 score=343.8847
+Run 5/50 seed 4505: build=1 stuck=1 score=312.8857
+Run 6/50 seed 4506: build=1 stuck=0 score=329.8857
+Run 7/50 seed 4507: build=1 stuck=0 score=301.8857
+Run 8/50 seed 4508: build=1 stuck=0 score=343.8847
+Run 9/50 seed 4509: build=1 stuck=0 score=344.8847
+Run 10/50 seed 4510: build=1 stuck=0 score=343.8857
+Run 11/50 seed 4511: build=1 stuck=0 score=343.8857
+Run 12/50 seed 4512: build=1 stuck=1 score=355.8857
+Run 13/50 seed 4513: build=1 stuck=0 score=329.8847
+Run 14/50 seed 4514: build=1 stuck=0 score=343.8857
+Run 15/50 seed 4515: build=1 stuck=0 score=343.8847
+Run 16/50 seed 4516: build=1 stuck=0 score=329.8857
+Run 17/50 seed 4517: build=1 stuck=0 score=343.8847
+Run 18/50 seed 4518: build=1 stuck=0 score=329.8847
+Run 19/50 seed 4519: build=1 stuck=0 score=329.8803
+Run 20/50 seed 4520: build=1 stuck=0 score=273.8847
+Run 21/50 seed 4521: build=1 stuck=0 score=343.7229
+Run 22/50 seed 4522: build=1 stuck=0 score=329.7269
+Run 23/50 seed 4523: build=1 stuck=0 score=329.7374
+Run 24/50 seed 4524: build=1 stuck=0 score=358.7348
+Run 25/50 seed 4525: build=1 stuck=0 score=329.7269
+Run 26/50 seed 4526: build=1 stuck=0 score=343.7253
+Run 27/50 seed 4527: build=1 stuck=0 score=329.7283
+Run 28/50 seed 4528: build=1 stuck=0 score=343.7416
+Run 29/50 seed 4529: build=1 stuck=0 score=329.7309
+Run 30/50 seed 4530: build=1 stuck=0 score=331.7336
+Run 31/50 seed 4531: build=1 stuck=0 score=329.7296
+Run 32/50 seed 4532: build=1 stuck=1 score=326.7295
+Run 33/50 seed 4533: build=1 stuck=0 score=329.724
+Run 34/50 seed 4534: build=1 stuck=0 score=301.7307
+Run 35/50 seed 4535: build=1 stuck=0 score=329.7346
+Run 36/50 seed 4536: build=1 stuck=0 score=329.7269
+Run 37/50 seed 4537: build=1 stuck=0 score=329.7294
+Run 38/50 seed 4538: build=1 stuck=0 score=329.7242
+Run 39/50 seed 4539: build=1 stuck=0 score=345.7242
+Run 40/50 seed 4540: build=1 stuck=0 score=343.7282
+Run 41/50 seed 4541: build=1 stuck=0 score=343.7362
+Run 42/50 seed 4542: build=1 stuck=0 score=343.7296
+Run 43/50 seed 4543: build=1 stuck=0 score=345.7349
+Run 44/50 seed 4544: build=1 stuck=0 score=343.7282
+Run 45/50 seed 4545: build=1 stuck=0 score=358.7336
+Run 46/50 seed 4546: build=1 stuck=0 score=287.7282
+Run 47/50 seed 4547: build=1 stuck=0 score=329.7282
+Run 48/50 seed 4548: build=1 stuck=0 score=343.7296
+Run 49/50 seed 4549: build=1 stuck=0 score=329.7283
+Run 50/50 seed 4550: build=0 stuck=5 score=230.7309
+{
+    "runs_requested":  50,
+    "valid_runs":  50,
+    "duration_sec":  18,
+    "actor_count":  6,
+    "start_seed":  4501,
+    "build_completed_runs":  49,
+    "total_build_completed":  49,
+    "total_build_events":  196,
+    "total_stuck_events":  8,
+    "total_route_visits":  151,
+    "total_shots":  480,
+    "total_shot_hits":  466,
+    "total_weapon_success":  200,
+    "total_build_success":  98,
+    "average_score":  331.7519
+}

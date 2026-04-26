@@ -2,7 +2,7 @@
 
 ## Goal
 
-- GOAL: Improve Lyra AI sandbox navigation/interactions and prove capsule AI weapon pickup through headless loops without broad scene churn.
+- GOAL: Improve Lyra AI sandbox behavior through small verified systems: navigation/interactions, visible building, combat proof, persistent memory, and a shared life-system spine.
 
 ## Baseline
 
@@ -31,5 +31,5 @@
 
 ## Latest Check
 
-- STATUS: Kept. 30 valid 12-second loops averaged score `104.3337`, 15.8667 interactions, 3.9333 weapon pickups, and 1.3 stuck events. Final 25-second comparison produced 24 interactions, 4 weapon pickups, 5 stuck events, and score `185.52`.
-- LAST_UPDATED: 2026-04-25
+- STATUS: PASS / KEEP. One-loop life-system audit completed. No shared health/death/recovery spine exists yet; `docs/wiki/life_system.md` now defines the smallest proposed `LifeComponent` slice. Final `tools/neo_check.ps1` still passes under `lyra_ai_headless` with 0 log errors.
+- LAST_UPDATED: 2026-04-26
